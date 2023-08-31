@@ -25,3 +25,4 @@ if __name__ == '__main__':
         with open(new_file, 'w', encoding='utf-8') as f:
             f.write(md)
         os.remove(file)
+# 读取文件
