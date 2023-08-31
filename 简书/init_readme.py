@@ -14,7 +14,7 @@ for file_name in file_names:
         s[file_name] = []
         file_names2 = os.listdir(os.path.join(directory_path, file_name))
         for file_name2 in file_names2:
-            s[file_name].append("[{}]({})".format(file_name2.split(".")[0], os.path.join(os.path.join(directory_path, file_name), file_name2)))
+            s[file_name].append("[{}]({})".format(file_name2.split(".")[0], directory_path + "/"+ file_name + "/" + file_name2))
 
 re_s = reversed(s.items())
 for key, value in re_s:
