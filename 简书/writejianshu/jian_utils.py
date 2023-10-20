@@ -102,6 +102,7 @@ class FileUtil:
     def init_readme(fileName = "README.md" , pg = "note_o"):
         FileUtil.init_o_readme("README.md", "note_o")
         FileUtil.init_o_readme("README_JIAN.md", "note")
+        FileUtil.init_oline_readme()
 
     @staticmethod
     def init_o_readme(fileName = "README.md" , pg = "note_o"):
@@ -130,6 +131,33 @@ class FileUtil:
                     # file.write(item + "<br>\n")
                 file.write(dd.format(open2,key, content))
                 open2 = ""
+
+    @staticmethod
+    def init_oline_readme(fileName = "README_ONLINE.md"):
+        try:
+            data = note_list()
+            s = {}
+            # 遍历文件名列表并打印
+
+            for item in data:
+                title = item["title"].split(".")[0] + ".md"
+                slug = item["slug"]
+                year = title[:4]
+                if s.get(year) is None:
+                    s[year] = []
+                s[year].append("[{}]({})".format(title.split(".")[0],   "https://www.jianshu.com/p/" + slug))
+            re_s = s.items()
+            with open("../"+ fileName, 'w', encoding='utf-8') as file:
+                open2 = "open"
+                for key, value in re_s:
+                    content = ""
+                    for item in value:
+                        content += item + "<br>\n"
+                        # file.write(item + "<br>\n")
+                    file.write(dd.format(open2,key, content))
+                    open2 = ""
+        except Exception as e:
+         print(e)
 
 DIR= '../note/'
 DIR_O= '../note_o/'
