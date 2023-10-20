@@ -213,7 +213,7 @@ def note_list():
     response = requests.get('https://www.jianshu.com/author/notebooks/14385934/notes', cookies=cookies, headers=headers)
     return response.json()
 def jianshu_to_local():
-    new_article = note_list()[1]
+    new_article = note_list()[0]
     title = new_article["title"].split(".")[0] + ".md"
     (filepath, filename) = os.path.split(FileUtil.get_last_file())
     content = get_content(new_article["id"])
