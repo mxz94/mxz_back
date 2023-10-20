@@ -99,7 +99,12 @@ class FileUtil:
         return
 
     @staticmethod
-    def init_readme():
+    def init_readme(fileName = "README.md" , pg = "note_o"):
+        FileUtil.init_o_readme("README.md", "note_o")
+        FileUtil.init_o_readme("README_JIAN.md", "note")
+
+    @staticmethod
+    def init_o_readme(fileName = "README.md" , pg = "note_o"):
         # 使用os.listdir()获取目录下所有文件和文件夹的列表
         file_names = os.listdir(directory_path)
         s = {}
@@ -109,14 +114,14 @@ class FileUtil:
                 s[file_name] = []
                 file_names2 = os.listdir(os.path.join(directory_path, file_name))
                 for file_name2 in file_names2:
-                    s[file_name].append("[{}]({})".format(file_name2.split(".")[0],   "./note_o/"+ file_name + "/" + file_name2))
+                    s[file_name].append("[{}]({})".format(file_name2.split(".")[0],   "./"+pg+"/"+ file_name + "/" + file_name2))
 
         re_s = reversed(s.items())
         for key, value in re_s:
             value.reverse()
 
         re_s = reversed(s.items())
-        with open("../README.md", 'w', encoding='utf-8') as file:
+        with open("../"+ fileName, 'w', encoding='utf-8') as file:
             open2 = "open"
             for key, value in re_s:
                 content = ""
