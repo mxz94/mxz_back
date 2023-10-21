@@ -2,6 +2,7 @@ import os
 import re
 import sys
 
+import html2text
 import qiniu
 import requests
 
@@ -72,16 +73,18 @@ class FileUtil:
     def process_content_new(content):
         if content == '':
             return
+        if content.find("<p>") != -1:
+            content = html2text.html2text(content)
         img_list = re.findall(r"\!\[[^\]]*\]\((.+?)\)", content, re.S)
         flag = 0
         for iu in img_list:
-            img_url = iu.split('?')[0]
+            img_url = iu.split('?')[0].replace("\n", '')
             print('[Process:]' + img_url)
             if img_url.startswith(('http://', 'https://')):
                 flag = 1
                 try:
                     FileUtil.download_image_file(img_url)
-                    content = content.replace(img_url, os.path.join("../"+IMG_DIR, os.path.basename(img_url)))
+                    content = content.replace(iu, "../"+IMG_DIR+ "/" + os.path.basename(img_url))
                 except Exception as e:
                     print("[ 不合法的 image url]:" + img_url)
 

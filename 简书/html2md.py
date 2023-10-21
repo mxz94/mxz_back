@@ -4,8 +4,8 @@ import os
 import html2text
 import sys
 
-DIR = "./files"
-DIR_NEW = "./files"
+DIR = "./note"
+DIR_NEW = "./note_o"
 args = sys.argv
 if len(args) == 2:
     DIR_NEW = DIR = args[1]
@@ -24,5 +24,5 @@ if __name__ == '__main__':
         new_file = file.replace(DIR, DIR_NEW).replace(".html", ".md")
         with open(new_file, 'w', encoding='utf-8') as f:
             f.write(md)
-        os.remove(file)
+        # os.remove(file)
 # 读取文件
