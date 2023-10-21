@@ -2,6 +2,7 @@
 <details open><summary>2023</summary>
 <p>
 
+[2023-10-20(和同学吃饭)](https://www.jianshu.com/p/2bdb80066178)<br>
 [2023-10-20(好想走)](https://www.jianshu.com/p/c0490f99474c)<br>
 [2023-10-19(孩子的眼睛真的大啊)](https://www.jianshu.com/p/c21568576690)<br>
 [2023-10-18(昨天下雨范回来了)](https://www.jianshu.com/p/00d27f95c09d)<br>
