@@ -70,7 +70,7 @@ class FileUtil:
         run(cmd_str, shell=True)
 
     @staticmethod
-    def process_content_new(content):
+    def process_content_new(content, on_line = False):
         if content == '':
             return
         if content.find("<p>") != -1:
@@ -80,16 +80,19 @@ class FileUtil:
         for iu in img_list:
             img_url = iu.split('?')[0].replace("\n", '')
             print('[Process:]' + img_url)
-            if img_url.startswith(('http://', 'https://')):
-                flag = 1
-                try:
-                    FileUtil.download_image_file(img_url)
-                    content = content.replace(iu, "../"+IMG_DIR+ "/" + os.path.basename(img_url))
-                except Exception as e:
-                    print("[ 不合法的 image url]:" + img_url)
-
+            if on_line:
+                content = content.replace(iu, img_url)
             else:
-                print("[ 不合法的 image url]:" + img_url)
+                if img_url.startswith(('http://', 'https://')):
+                    flag = 1
+                    try:
+                        FileUtil.download_image_file(img_url)
+                        content = content.replace(iu, "../"+IMG_DIR+ "/" + os.path.basename(img_url))
+                    except Exception as e:
+                        print("[ 不合法的 image url]:" + img_url)
+
+                else:
+                    print("[ 不合法的 image url]:" + img_url)
         return content
 
     @staticmethod
@@ -253,7 +256,7 @@ def jianshu_to_local():
     title = new_article["title"].split(".")[0] + ".md"
     (filepath, filename) = os.path.split(FileUtil.get_last_file())
     content = get_content(new_article["id"])
-    FileUtil.write_file(DIR+title[:4]+"/"+ title, content)
+    FileUtil.write_file(DIR+title[:4]+"/"+ title, FileUtil.process_content_new(content, True))
     FileUtil.write_file(DIR_O+title[:4]+"/"+title, FileUtil.process_content_new(content))
     return filename
 
