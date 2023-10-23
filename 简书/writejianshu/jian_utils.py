@@ -171,16 +171,13 @@ class FileUtil:
          print(e)
 
     @staticmethod
-    def notice_ding(title, content, link):
-        json_data= {
-            "actionCard": {
-                "title": "简书："+title,
-                "text": content,
-                "btnOrientation": "0",
-                "singleTitle" : "阅读全文",
-                "singleURL" : link
-            },
-            "msgtype": "actionCard"
+    def notice_ding(title, content, link, time):
+        json_data = {
+            "msgtype": "markdown",
+            "markdown": {
+                "title": "简书：" + title,
+                "text": "# {} \n\n".format(title) + "{}\n > ###### {}发布 [查看]({}) \n".format(content, time, link)
+            }
         }
         response = requests.post('https://oapi.dingtalk.com/robot/send?access_token=7fff5466a5711119b2059f1c65df3ab80c8a65025342f651c60c81618d9f4362', json=json_data)
         print(response.json())
@@ -287,7 +284,7 @@ def jianshu_to_local():
         content = get_content(new_article["id"])
         on_content = FileUtil.process_content_new(content, True)
         FileUtil.write_file(DIR+title[:4]+"/"+ title, on_content)
-        FileUtil.notice_ding(title, on_content, "https://www.jianshu.com/p/" + new_article["slug"])
+        FileUtil.notice_ding(title, on_content, "https://www.jianshu.com/p/" + new_article["slug"], time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(new_article["content_updated_at"])))
         FileUtil.write_file(DIR_O+title[:4]+"/"+title, FileUtil.process_content_new(content))
     return name
 
