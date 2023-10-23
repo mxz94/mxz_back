@@ -12,13 +12,6 @@ import re
 
 import requests
 
-proxy = '127.0.0.1:7890'
-
-proxies = {
-    'http': 'http://' + proxy,
-    'https': 'https://' + proxy
-}
-
 folder_path = "../note_o/2023"
 IMG_DIR = "../img"
 directory_path = "../note_o"
@@ -254,7 +247,7 @@ def get_content(id:str):
     response = requests.get('https://www.jianshu.com/author/notes/{}/content'.format(id), cookies=cookies, headers=headers)
     return response.json()["content"]
 def notice_wechat(title: str):
-    response = requests.get('https://sctapi.ftqq.com/SCT142512TIZeFu7Dj22drBfQgwT0KPIdI.send?title={}'.format(title), proxies=proxies)
+    response = requests.get('https://sctapi.ftqq.com/SCT142512TIZeFu7Dj22drBfQgwT0KPIdI.send?title={}'.format(title))
     return response.json()
 
 def note_list():
@@ -304,6 +297,5 @@ if __name__ == '__main__':
         FileUtil.run_cmd("git push -f")
         notice_wechat(filename)
     except Exception as e:
-        print(e)
-        notice_wechat("str(e)")
+        notice_wechat(str(e))
 
