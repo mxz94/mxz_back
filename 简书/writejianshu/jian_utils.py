@@ -317,7 +317,6 @@ if __name__ == '__main__':
         FileUtil.run_cmd("git add -A")
         FileUtil.run_cmd("git commit -m '{}'".format(filename))
         FileUtil.run_cmd("git push -f")
-        notice_wechat(filename)
     except Exception as e:
         notice_wechat(str(e))
 
