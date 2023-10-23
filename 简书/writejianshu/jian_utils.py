@@ -286,7 +286,7 @@ def jianshu_to_local():
         FileUtil.write_file(DIR+title[:4]+"/"+ title, on_content)
         FileUtil.notice_ding(title, on_content, "https://www.jianshu.com/p/" + new_article["slug"], time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(new_article["content_updated_at"])))
         FileUtil.write_file(DIR_O+title[:4]+"/"+title, FileUtil.process_content_new(content))
-    return name
+    return name,
 
 
 def local_to_jianshu():
@@ -313,10 +313,11 @@ if __name__ == '__main__':
     # print(FileUtil.notice_ding("title", "on_content", "https://www.jianshu.com/p/"))
     try:
         filename = jianshu_to_local()
-        FileUtil.init_readme()
-        FileUtil.run_cmd("git add -A")
-        FileUtil.run_cmd("git commit -m '{}'".format(filename))
-        FileUtil.run_cmd("git push -f")
+        if filename != "title:":
+            FileUtil.init_readme()
+            FileUtil.run_cmd("git add -A")
+            FileUtil.run_cmd("git commit -m '{}'".format(filename))
+            FileUtil.run_cmd("git push -f")
     except Exception as e:
         notice_wechat(str(e))
 
