@@ -1,6 +1,10 @@
+import base64
 import datetime
+import hashlib
+import hmac
 import os
 import re
+import urllib
 
 import requests
 
@@ -80,3 +84,4 @@ class FileUtil:
             f.write(r.content)
             print(" # 写入DONE")
         return
+
