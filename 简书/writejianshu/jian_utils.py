@@ -286,13 +286,16 @@ if __name__ == '__main__':
     # print("2  local_to_jianshu")
     # age = input("select sync type： 1  jianshu_to_local (default) 2  local_to_jianshu\n")
     # if age == '' or age == '1':
-    filename = jianshu_to_local()
+    #     filename = jianshu_to_local()
     # else:
     #     filename = local_to_jianshu()
-    FileUtil.init_readme()
-    FileUtil.run_cmd("git add -A")
-    FileUtil.run_cmd("git commit -m '{}'".format(filename))
-    FileUtil.run_cmd("git push -f")
-    notice_wechat(filename)
-
+    try:
+        filename = jianshu_to_local()
+        FileUtil.init_readme()
+        FileUtil.run_cmd("git add -A")
+        FileUtil.run_cmd("git commit -m '{}'".format(filename))
+        FileUtil.run_cmd("git push -f")
+        notice_wechat(filename)
+    except Exception as e:
+        print(e)
 
