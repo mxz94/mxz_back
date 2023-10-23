@@ -1,20 +1,10 @@
-import base64
-import hashlib
-import hmac
-import os
-import re
-import sys
-import time
-import urllib
-
-import html2text
-import qiniu
-import requests
-
 import datetime
 import os
 import re
+import time
 
+import html2text
+import qiniu
 import requests
 
 folder_path = "../note_o/2023"
@@ -176,7 +166,7 @@ class FileUtil:
             "msgtype": "markdown",
             "markdown": {
                 "title": "简书：" + title,
-                "text": "# {} \n\n".format(title) + "{}\n > ###### {}发布 [查看]({}) \n".format(content, time, link)
+                "text": "# {} \n  \n".format(title) + "{}\n > ###### {}发布 [查看]({}) \n".format(content, time, link)
             }
         }
         response = requests.post('https://oapi.dingtalk.com/robot/send?access_token=7fff5466a5711119b2059f1c65df3ab80c8a65025342f651c60c81618d9f4362', json=json_data)
