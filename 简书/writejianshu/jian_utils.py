@@ -246,9 +246,23 @@ def write_content(content:str, id:str):
 def get_content(id:str):
     response = requests.get('https://www.jianshu.com/author/notes/{}/content'.format(id), cookies=cookies, headers=headers)
     return response.json()["content"]
+
+def notice_ding(title, content, link):
+    json_data= {
+        "actionCard": {
+            "title": title,
+            "text": content,
+            "btnOrientation": "0",
+            "singleTitle" : "阅读全文",
+            "singleURL" : link
+        },
+        "msgtype": "actionCard"
+    }
+    response = requests.post('https://oapi.dingtalk.com/robot/send?access_token=7fff5466a5711119b2059f1c65df3ab80c8a65025342f651c60c81618d9f4362',  headers=headers, json=json_data)
 def notice_wechat(title: str):
+
     response = requests.get('https://sctapi.ftqq.com/SCT142512TIZeFu7Dj22drBfQgwT0KPIdI.send?title={}'.format(title))
-    return response.json()
+
 
 def note_list():
     response = requests.get('https://www.jianshu.com/author/notebooks/14385934/notes', cookies=cookies, headers=headers)
@@ -263,7 +277,9 @@ def jianshu_to_local():
             break;
         name = name +","+ title
         content = get_content(new_article["id"])
-        FileUtil.write_file(DIR+title[:4]+"/"+ title, FileUtil.process_content_new(content, True))
+        on_content = FileUtil.process_content_new(content, True)
+        FileUtil.write_file(DIR+title[:4]+"/"+ title, on_content)
+        notice_ding(title, on_content, "https://www.jianshu.com/p/" + new_article["slug"])
         FileUtil.write_file(DIR_O+title[:4]+"/"+title, FileUtil.process_content_new(content))
     return name
 
