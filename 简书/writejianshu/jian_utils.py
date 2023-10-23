@@ -255,7 +255,7 @@ def jianshu_to_local():
     new_article = note_list()[0]
     title = new_article["title"].split(".")[0] + ".md"
     (filepath, filename) = os.path.split(FileUtil.get_last_file())
-    if title == filename:
+    if title != filename:
         content = get_content(new_article["id"])
         FileUtil.write_file(DIR+title[:4]+"/"+ title, FileUtil.process_content_new(content, True))
         FileUtil.write_file(DIR_O+title[:4]+"/"+title, FileUtil.process_content_new(content))
