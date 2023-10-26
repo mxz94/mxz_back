@@ -1,8 +1,10 @@
 import base64
+import configparser
 import hashlib
 import hmac
 import os
 import re
+import shutil
 import sys
 import time
 import urllib
@@ -17,9 +19,31 @@ import re
 
 import requests
 
-folder_path = "../note_o/2023"
+
+file = 'config.ini'
+
+# 创建配置文件对象
+con = configparser.ConfigParser()
+
+# 读取文件
+con.read(file, encoding='utf-8')
+
+
+class ConfigUtils:
+    @staticmethod
+    def get_now_day():
+        current_time = datetime.now()
+        formatted_time = current_time.strftime("%Y-%m-%d")
+        return formatted_time
+    @staticmethod
+    def get(key:str, section='default'):
+        items = con.items(section) 	# 返回结果为元组
+        items = dict(items)
+        return items.get(key)
+
+folder_path = "../temp/2023"
 IMG_DIR = "../img"
-directory_path = "../note_o"
+directory_path = "../temp"
 dd = '''
 <details {}><summary>{}</summary>
 <p>
@@ -30,6 +54,10 @@ dd = '''
 </details>
 '''
 class FileUtil:
+    @staticmethod
+    def check_dir(dir:str):
+        if not os.path.exists(dir):
+            os.makedirs(dir)
     @staticmethod
     def get_last_file():
         files = os.listdir(folder_path)
@@ -182,6 +210,10 @@ class FileUtil:
         response = requests.post('https://oapi.dingtalk.com/robot/send?access_token=7fff5466a5711119b2059f1c65df3ab80c8a65025342f651c60c81618d9f4362', json=json_data)
         print(response.json())
 
+    @staticmethod
+    def notice_wechat(title: str):
+        response = requests.get('https://sctapi.ftqq.com/SCT142512TIZeFu7Dj22drBfQgwT0KPIdI.send?title={}'.format(title))
+
 DIR= '../note/'
 DIR_O= '../note_o/'
 
@@ -223,7 +255,7 @@ def upload_image(file:str):
     }
     response = requests.get('https://www.jianshu.com/upload_images/token.json', params=params, cookies=cookies, headers=headers)
     data = response.json()
-    ret, info = qiniu.put_file(data["token"], data["key"], "../img/{}".format(filename))
+    ret, info = qiniu.put_file(data["token"], data["key"], "../img/{}/{}".format(filename[:4], filename))
     return ret['url']
 
 
@@ -250,7 +282,6 @@ def publize(id):
     response = requests.post('https://www.jianshu.com/author/notes/{}/publicize'.format(id), cookies=cookies, headers=headers, json={})
     print("publize" +  response.text)
 def write_content(content:str, id:str):
-    content = replace_img_url(content)
     json_data = {
         'id': id,
         'autosave_control': 1,
@@ -258,15 +289,12 @@ def write_content(content:str, id:str):
     }
     response = requests.put('https://www.jianshu.com/author/notes/'+id, cookies=cookies, headers=headers, json=json_data)
     print("write_content" +  response.text)
-    publize(id)
+    # publize(id)
 
 def get_content(id:str):
     response = requests.get('https://www.jianshu.com/author/notes/{}/content'.format(id), cookies=cookies, headers=headers)
     return response.json()["content"]
 
-def notice_wechat(title: str):
-
-    response = requests.get('https://sctapi.ftqq.com/SCT142512TIZeFu7Dj22drBfQgwT0KPIdI.send?title={}'.format(title))
 
 
 def note_list():
@@ -294,13 +322,83 @@ def local_to_jianshu():
     (filepath, filename) = os.path.split(last_file)
     new_name = note_list()[0]['title']
     if not filename.startswith(new_name):
-        content = FileUtil.read_file(last_file)
-        article = create_article(filename)
+        content = replace_img_url(FileUtil.read_file(last_file))
+        article = create_article(filename.split(".")[0])
         write_content(content, str(article["id"]))
-        print("https://www.jianshu.com/p/" + article["slug"])
+        link = "https://www.jianshu.com/p/" + article["slug"]
+        FileUtil.write_file(DIR+filename[:4]+"/"+ filename, content)
+        FileUtil.notice_ding(filename, content, link, time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(article["content_updated_at"])))
+        FileUtil.notice_wechat(link)
+        return filename
     else:
         print("https://www.jianshu.com/p/" + note_list()[0]["slug"])
-    return filename
+        return None
+
+def dayone_to_local():
+    article_path = ConfigUtils.get("icloud_path")
+    if article_path is None:
+        article_path = ConfigUtils.get("ali_path")
+        from aligo import Aligo
+        class CustomAligo(Aligo):
+            """自定义 aligo """
+            V3_FILE_DELETE = '/v3/file/delete'
+            def delete_file(self, file_id: str, drive_id: str = None) -> bool:
+                """删除文件"""
+                drive_id = drive_id or self.default_drive_id
+                response = self.post(self.V3_FILE_DELETE, body={
+                    'drive_id': drive_id,
+                    'file_id': file_id
+                })
+                return response.status_code == 204
+
+        ali = CustomAligo()  # 第一次使用，会弹出二维码，供扫描登录
+        fileList = ali.get_file_list("6538c5556b80c1ccbb4a40629284e0909be6e6fe")
+        ali.download_files(fileList, article_path)
+        for e in fileList:
+            ali.delete_file(file_id=e.file_id, drive_id=e.drive_id)
+
+    FileUtil.check_dir(article_path)
+    files = os.listdir(article_path)
+    md_file = None
+    jpg_file = None
+    for file in files:
+        if file.endswith(".txt"):
+            md_file = os.path.join(article_path, file)
+        if file.endswith(".jpeg"):
+            jpg_file = os.path.join(article_path, file)
+    if md_file is None:
+        return None
+    with open(md_file, 'r', encoding="utf-8") as file:
+        now_day = ConfigUtils.get_now_day()
+        year = now_day[:4]
+        fileName = '{}({}).md'.format(now_day, file.readline().replace("\n", ""))
+        content = file.read()
+        if jpg_file is not None:
+            target_folder = "../img/{}/".format(year)
+            if not os.path.exists(target_folder):
+                os.makedirs(target_folder)
+            shutil.copy(jpg_file, os.path.join(target_folder, now_day + '.jpeg'))
+            content = content  + "\n" + "![](../{}{})".format(target_folder, now_day + '.jpeg')
+
+        if not os.path.exists("../temp/{}/".format(now_day[:4])):
+            os.makedirs("../temp/{}/".format(now_day[:4]))
+
+        with open('../temp/{}/{}'.format(now_day[:4], fileName), 'w', encoding="utf-8") as file:
+            file.write(content)
+    shutil.rmtree(article_path)
+    return md_file
+
+def day_local_jian():
+    try:
+        dayone_to_local()
+        fileName = local_to_jianshu()
+        if fileName is not None:
+            FileUtil.init_readme()
+            FileUtil.run_cmd("git add -A")
+            FileUtil.run_cmd("git commit -m '{}'".format(fileName))
+            FileUtil.run_cmd("git push -f")
+    except Exception as e:
+        FileUtil.notice_wechat(str(e))
 
 if __name__ == '__main__':
     # print("1  jianshu_to_local")
@@ -311,13 +409,18 @@ if __name__ == '__main__':
     # else:
     #     filename = local_to_jianshu()
     # print(FileUtil.notice_ding("title", "on_content", "https://www.jianshu.com/p/"))
-    try:
-        filename = jianshu_to_local()
-        if filename != "title:":
-            FileUtil.init_readme()
-            FileUtil.run_cmd("git add -A")
-            FileUtil.run_cmd("git commit -m '{}'".format(filename))
-            FileUtil.run_cmd("git push -f")
-    except Exception as e:
-        notice_wechat(str(e))
+
+    # 1. jianshu - local - github
+    # try:
+    #     filename = jianshu_to_local()
+    #     if filename != "title:":
+    #         FileUtil.init_readme()
+    #         FileUtil.run_cmd("git add -A")
+    #         FileUtil.run_cmd("git commit -m '{}'".format(filename))
+    #         FileUtil.run_cmd("git push -f")
+    # except Exception as e:
+    #     notice_wechat(str(e))
+
+    #  1. dayone- yun - local - jianshu - github
+    day_local_jian()
 
