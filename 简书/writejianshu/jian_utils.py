@@ -277,7 +277,7 @@ def write_content(content:str, id:str):
     }
     response = requests.put('https://www.jianshu.com/author/notes/'+id, cookies=cookies, headers=headers, json=json_data)
     print("write_content" +  response.text)
-    # publize(id)
+    publize(id)
 
 def get_content(id:str):
     response = requests.get('https://www.jianshu.com/author/notes/{}/content'.format(id), cookies=cookies, headers=headers)
@@ -342,8 +342,8 @@ def dayone_to_local():
         ali = CustomAligo()  # 第一次使用，会弹出二维码，供扫描登录
         fileList = ali.get_file_list("6538c5556b80c1ccbb4a40629284e0909be6e6fe")
         ali.download_files(fileList, article_path)
-        # for e in fileList:
-        #     ali.delete_file(file_id=e.file_id, drive_id=e.drive_id)
+        for e in fileList:
+            ali.delete_file(file_id=e.file_id, drive_id=e.drive_id)
 
     FileUtil.check_dir(article_path)
     files = os.listdir(article_path)
@@ -389,7 +389,9 @@ def day_local_jian():
         print(e)
         # FileUtil.notice_wechat(str(e))
 
-if __name__ == '__main__':
+
+
+# if __name__ == '__main__':
     # print("1  jianshu_to_local")
     # print("2  local_to_jianshu")
     # age = input("select sync type： 1  jianshu_to_local (default) 2  local_to_jianshu\n")
@@ -411,5 +413,51 @@ if __name__ == '__main__':
     #     notice_wechat(str(e))
 
     #  1. dayone- yun - local - jianshu - github
-    day_local_jian()
+    # day_local_jian()
 
+import random
+import time
+
+from paho.mqtt import client as mqtt_client
+
+broker = 'p767a1ef.ala.cn-hangzhou.emqxsl.cn'
+port = 8883
+topic = 't/a'
+client_id = f'python-mqtt-{random.randint(0, 1000)}'
+# 如果 broker 需要鉴权，设置用户名密码
+username = 'emqx'
+password = 'emqx'
+
+def connect_mqtt():
+    def on_connect(client, userdata, flags, rc):
+        if rc == 0:
+            print("Connected to MQTT Broker!")
+        else:
+            print("Failed to connect, return code %d\n", rc)
+    # Set Connecting Client ID
+    client = mqtt_client.Client(client_id)
+    # Set CA certificate
+    client.tls_set(ca_certs='./emqxsl-ca.crt')
+    client.username_pw_set(username, password)
+    client.on_connect = on_connect
+    client.connect(broker, port)
+    return client
+
+
+
+def subscribe(client: mqtt_client):
+    def on_message(client, userdata, msg):
+        print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+        day_local_jian()
+    client.subscribe(topic)
+    client.on_message = on_message
+
+
+def run():
+    client = connect_mqtt()
+    subscribe(client)
+    client.loop_forever()
+
+
+if __name__ == '__main__':
+    run()
