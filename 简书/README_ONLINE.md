@@ -2,7 +2,7 @@
 <details open><summary>2023</summary>
 <p>
 
-[2023-10-20(好想走)](https://www.jianshu.com/p/d3f5d041a88f)<br>
+[2023-10-20(好想走)](https://www.jianshu.com/p/d2093ae11d11)<br>
 [2023-10-24(头晕请假，孩子爱滑梯)](https://www.jianshu.com/p/65ee856a376e)<br>
 [2023-10-22(还是因为房子)](https://www.jianshu.com/p/9b35d22267ad)<br>
 [2023-10-21(和同学吃饭)](https://www.jianshu.com/p/2bdb80066178)<br>
