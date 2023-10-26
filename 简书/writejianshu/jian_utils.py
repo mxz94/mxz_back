@@ -51,8 +51,8 @@ class FileUtil:
         files = os.listdir(folder_path)
 
         # 排序文件列表，按修改时间降序排列
-        files.sort(key=lambda x: os.path.getmtime(os.path.join(folder_path, x)), reverse=True)
-
+        # files.sort(key=lambda x: os.path.getmtime(os.path.join(folder_path, x)), reverse=True)
+        files.sort(reverse=True)
         # 获取最新的文件（第一个文件）
         if files:
             latest_file = files[0]
@@ -196,6 +196,26 @@ class FileUtil:
             }
         }
         response = requests.post('https://oapi.dingtalk.com/robot/send?access_token=7fff5466a5711119b2059f1c65df3ab80c8a65025342f651c60c81618d9f4362', json=json_data)
+        print(response.json())
+    @staticmethod
+    def notice_ding_error(e: str):
+        json_data = {
+            "at": {
+                "atMobiles":[
+                    "180xxxxxx"
+                ],
+                "atUserIds":[
+                    "user123"
+                ],
+                "isAtAll": True
+            },
+            "text": {
+                "content":f"简书`{e}`"
+            },
+            "msgtype":"text"
+        }
+
+        response = requests.post('https://oapi.dingtalk.com/robot/send?access_token=04ae95082327176ae45c70859b70b8f3043fa143c46d587236f6ddecce117a4f', json=json_data)
         print(response.json())
 
     @staticmethod
@@ -387,7 +407,8 @@ def day_local_jian():
             FileUtil.run_cmd("git push -f")
     except Exception as e:
         print(e)
-        # FileUtil.notice_wechat(str(e))
+        FileUtil.notice_wechat(str(e))
+        FileUtil.notice_ding_error(str(e))
 
 
 
@@ -448,6 +469,7 @@ def connect_mqtt():
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+        FileUtil.notice_ding_error(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         day_local_jian()
     client.subscribe(topic)
     client.on_message = on_message
@@ -458,6 +480,14 @@ def run():
     subscribe(client)
     client.loop_forever()
 
+def run_loop():
+    interval = 3600
+    while True:
+        # 在此处执行您的任务
+        print("执行定时任务...")
+        day_local_jian()
+        # 等待一段时间后再次执行任务
+        time.sleep(interval)
 
 if __name__ == '__main__':
     run()
