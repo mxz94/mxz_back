@@ -3,7 +3,6 @@ import datetime
 import os
 import re
 import shutil
-import time
 
 import html2text
 import qiniu
