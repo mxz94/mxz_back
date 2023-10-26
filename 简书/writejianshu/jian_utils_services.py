@@ -298,7 +298,7 @@ def write_content(content:str, id:str):
     }
     response = requests.put('https://www.jianshu.com/author/notes/'+id, cookies=cookies, headers=headers, json=json_data)
     print("write_content" +  response.text)
-    # publize(id)
+    publize(id)
 
 def get_content(id:str):
     response = requests.get('https://www.jianshu.com/author/notes/{}/content'.format(id), cookies=cookies, headers=headers)
