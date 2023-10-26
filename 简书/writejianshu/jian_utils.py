@@ -1,24 +1,13 @@
-import base64
 import configparser
-import hashlib
-import hmac
+import datetime
 import os
 import re
 import shutil
-import sys
 import time
-import urllib
 
 import html2text
 import qiniu
 import requests
-
-import datetime
-import os
-import re
-
-import requests
-
 
 file = 'config.ini'
 
@@ -32,18 +21,15 @@ con.read(file, encoding='utf-8')
 class ConfigUtils:
     @staticmethod
     def get_now_day():
-        current_time = datetime.now()
-        formatted_time = current_time.strftime("%Y-%m-%d")
-        return formatted_time
+        return str(datetime.date.today())
     @staticmethod
     def get(key:str, section='default'):
         items = con.items(section) 	# 返回结果为元组
         items = dict(items)
         return items.get(key)
 
-folder_path = "../temp/2023"
 IMG_DIR = "../img"
-directory_path = "../temp"
+directory_path = "../note_o"
 dd = '''
 <details {}><summary>{}</summary>
 <p>
@@ -60,6 +46,8 @@ class FileUtil:
             os.makedirs(dir)
     @staticmethod
     def get_last_file():
+        year = ConfigUtils.get_now_day()[:4]
+        folder_path = directory_path + "/" + year
         files = os.listdir(folder_path)
 
         # 排序文件列表，按修改时间降序排列
@@ -354,8 +342,8 @@ def dayone_to_local():
         ali = CustomAligo()  # 第一次使用，会弹出二维码，供扫描登录
         fileList = ali.get_file_list("6538c5556b80c1ccbb4a40629284e0909be6e6fe")
         ali.download_files(fileList, article_path)
-        for e in fileList:
-            ali.delete_file(file_id=e.file_id, drive_id=e.drive_id)
+        # for e in fileList:
+        #     ali.delete_file(file_id=e.file_id, drive_id=e.drive_id)
 
     FileUtil.check_dir(article_path)
     files = os.listdir(article_path)
@@ -380,10 +368,10 @@ def dayone_to_local():
             shutil.copy(jpg_file, os.path.join(target_folder, now_day + '.jpeg'))
             content = content  + "\n" + "![](../{}{})".format(target_folder, now_day + '.jpeg')
 
-        if not os.path.exists("../temp/{}/".format(now_day[:4])):
-            os.makedirs("../temp/{}/".format(now_day[:4]))
+        if not os.path.exists("../note_o/{}/".format(now_day[:4])):
+            os.makedirs("../note_o/{}/".format(now_day[:4]))
 
-        with open('../temp/{}/{}'.format(now_day[:4], fileName), 'w', encoding="utf-8") as file:
+        with open('../note_o/{}/{}'.format(now_day[:4], fileName), 'w', encoding="utf-8") as file:
             file.write(content)
     shutil.rmtree(article_path)
     return md_file
@@ -398,7 +386,8 @@ def day_local_jian():
             FileUtil.run_cmd("git commit -m '{}'".format(fileName))
             FileUtil.run_cmd("git push -f")
     except Exception as e:
-        FileUtil.notice_wechat(str(e))
+        print(e)
+        # FileUtil.notice_wechat(str(e))
 
 if __name__ == '__main__':
     # print("1  jianshu_to_local")
