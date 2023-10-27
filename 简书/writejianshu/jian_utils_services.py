@@ -380,7 +380,9 @@ def dayone_to_local():
     with open(md_file, 'r', encoding="utf-8") as file:
         now_day = ConfigUtils.get_now_day()
         year = now_day[:4]
-        fileName = '{}({}).md'.format(now_day, file.readline().replace("\n", ""))
+        fileName = file.readline().replace("\n", "")
+        if not fileName.startswith(year):
+            fileName = '{}({}).md'.format(now_day, fileName)
         content = file.read()
         if jpg_file is not None:
             target_folder = "../img/{}/".format(year)
