@@ -380,7 +380,8 @@ def dayone_to_local():
         year = now_day[:4]
         fileName = file.readline().replace("\n", "")
         if not fileName.startswith(year):
-            fileName = '{}({}).md'.format(now_day, fileName)
+            fileName = '{}({})'.format(now_day, fileName)
+        fileName = fileName + ".md"
         content = file.read()
         if jpg_file is not None:
             target_folder = "../img/{}/".format(year)
