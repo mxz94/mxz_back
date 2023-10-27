@@ -2,7 +2,10 @@
 <details open><summary>2023</summary>
 <p>
 
-[2023-10-20(好想走)](https://www.jianshu.com/p/d2093ae11d11)<br>
+[2023-10-26(写了一个记日记的脚本)](https://www.jianshu.com/p/a0ff6b3bf0ca)<br>
+[2023-05-25(给孩子买了个玩具)](https://www.jianshu.com/p/2ef226adfe54)<br>
+[2023-05-28（孩子输液跑针了）](https://www.jianshu.com/p/19853cb00938)<br>
+[2023-10-26(写了一个记日记的脚本)](https://www.jianshu.com/p/312ec8bcc49a)<br>
 [2023-10-24(头晕请假，孩子爱滑梯)](https://www.jianshu.com/p/65ee856a376e)<br>
 [2023-10-22(还是因为房子)](https://www.jianshu.com/p/9b35d22267ad)<br>
 [2023-10-21(和同学吃饭)](https://www.jianshu.com/p/2bdb80066178)<br>
