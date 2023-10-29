@@ -150,7 +150,7 @@ class FileUtil:
             value.reverse()
 
         re_s = reversed(s.items())
-        with open("../"+ fileName, 'w', encoding='utf-8') as file:
+        with open("D:\mxz\mxz_back\简书/"+ fileName, 'w', encoding='utf-8') as file:
             open2 = "open"
             for key, value in re_s:
                 content = ""
@@ -175,7 +175,7 @@ class FileUtil:
                     s[year] = []
                 s[year].append("[{}]({})".format(title.split(".")[0],   "https://www.jianshu.com/p/" + slug))
             re_s = s.items()
-            with open("../"+ fileName, 'w', encoding='utf-8') as file:
+            with open("D:\mxz\mxz_back\简书/"+ fileName, 'w', encoding='utf-8') as file:
                 open2 = "open"
                 for key, value in re_s:
                     content = ""

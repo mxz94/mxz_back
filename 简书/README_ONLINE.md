@@ -2,8 +2,8 @@
 <details open><summary>2023</summary>
 <p>
 
+[2023-10-28(睡不着)](https://www.jianshu.com/p/362b4c6a09cc)<br>
 [2023-10-27(闲的找活干)](https://www.jianshu.com/p/439bd308a263)<br>
-[2023-10-26(写了一个记日记的脚本)](https://www.jianshu.com/p/a0ff6b3bf0ca)<br>
 [2023-05-25(给孩子买了个玩具)](https://www.jianshu.com/p/2ef226adfe54)<br>
 [2023-05-28（孩子输液跑针了）](https://www.jianshu.com/p/19853cb00938)<br>
 [2023-10-26(写了一个记日记的脚本)](https://www.jianshu.com/p/312ec8bcc49a)<br>
