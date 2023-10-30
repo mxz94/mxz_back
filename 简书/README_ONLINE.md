@@ -2,6 +2,7 @@
 <details open><summary>2023</summary>
 <p>
 
+[2023-10-29(带着宝子去玩)](https://www.jianshu.com/p/80a78a7b2d6b)<br>
 [2023-10-28(睡不着)](https://www.jianshu.com/p/362b4c6a09cc)<br>
 [2023-10-27(闲的找活干)](https://www.jianshu.com/p/439bd308a263)<br>
 [2023-05-25(给孩子买了个玩具)](https://www.jianshu.com/p/2ef226adfe54)<br>
