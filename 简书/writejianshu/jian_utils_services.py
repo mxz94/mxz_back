@@ -8,6 +8,7 @@ import time
 import html2text
 import qiniu
 import requests
+from github import Github, Repository
 
 file = 'D:\mxz\mxz_back\简书\writejianshu\config.ini'
 
@@ -17,6 +18,22 @@ con = configparser.ConfigParser()
 # 读取文件
 con.read(file, encoding='utf-8')
 
+class GithubUtils:
+
+    @staticmethod
+    def get_repo(token: str, repo: str):
+        return Github(token).get_repo(repo)
+
+
+    @staticmethod
+    def create_issue(repo: Repository, file: str):
+        (filePath,name) = os.path.split(file)
+        title = name.split(".")[0]
+        label = title[:4] if title.startswith("20") else "1994"
+
+        with open(file, "r", encoding="utf8") as f:
+                content = f.read() + "\n" +  "[{}](https://github.com/{}/blob/master/简书/note_o/{}/{})".format(title, repo.full_name, label, name)
+                repo.create_issue(title, content,labels = [label])
 
 class ConfigUtils:
     @staticmethod
@@ -25,6 +42,19 @@ class ConfigUtils:
     @staticmethod
     def get(key:str, section='default'):
         items = con.items(section) 	# 返回结果为元组
+        items = dict(items)
+        return items.get(key)
+    @staticmethod
+    def set(key:str, value:str, section='default'):
+        con.set(section, key, value )
+        with open(file, 'w', encoding="utf-8") as configfile:
+            con.write(configfile)
+
+    @staticmethod
+    def get_local(key:str, section='default'):
+        con2 = configparser.ConfigParser()
+        con2.read(ConfigUtils.get("local_config"), encoding='utf-8')
+        items = con2.items(section) 	# 返回结果为元组
         items = dict(items)
         return items.get(key)
 
@@ -405,6 +435,7 @@ def day_local_jian():
     try:
         dayone_to_local()
         fileName = local_to_jianshu()
+        locl_to_github()
         if fileName is not None:
             FileUtil.init_readme()
             FileUtil.run_cmd("git add -A")
@@ -415,6 +446,14 @@ def day_local_jian():
         FileUtil.notice_wechat(str(e))
         FileUtil.notice_ding_error(str(e))
 
+def locl_to_github():
+    last_file = FileUtil.get_last_file()
+    (filepath, filename) = os.path.split(last_file)
+    new_name = ConfigUtils.get("issue_title")
+    if not filename.startswith(new_name):
+        repo = GithubUtils.get_repo(ConfigUtils.get_local("git_token"), "mxz94/mxz_back")
+        GithubUtils.create_issue(repo, last_file.replace("note_o", "note"))
+        ConfigUtils.set("issue_title", filename)
 
 import random
 import time
@@ -449,7 +488,7 @@ def connect_mqtt():
 def subscribe(client: mqtt_client):
     def on_message(client, userdata, msg):
         print(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
-        FileUtil.notice_ding_error(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
+        # FileUtil.notice_ding_error(f"Received `{msg.payload.decode()}` from `{msg.topic}` topic")
         day_local_jian()
     client.subscribe(topic)
     client.on_message = on_message

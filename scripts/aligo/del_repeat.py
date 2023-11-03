@@ -22,6 +22,8 @@ class AlbumListFilesRequest(DatClass):
 class CustomAligo(Aligo):
     """自定义 aligo """
     V3_FILE_DELETE = '/v3/file/delete'
+    V1_COPY_SHARE = '/v1/sharedAlbum/copyFilesToAlbum'
+    V1_COPY_SHARE_LIST = '/v1/sharedAlbum/list'
 
     def delete_file(self, file_id: str, drive_id: str = None) -> bool:
         """删除文件"""
@@ -32,6 +34,20 @@ class CustomAligo(Aligo):
         })
         return response.status_code == 204
 
+    def share_copy_files_to_album(self, fileId_list: List, drive_id, sharedAlbumId, toAlbumId):
+        driveFileList = []
+        for fileId in fileId_list:
+            driveFileList.append({"drive_id", drive_id, "file_id", fileId})
+        data = {
+            "driveFileList": driveFileList,
+            "sharedAlbumId": sharedAlbumId,
+            "toAlbumId": toAlbumId
+        }
+        response = self.post(self.V1_COPY_SHARE, body=data, host="https://api.alipan.com/adrive")
+        return response
+    def share_album_list(self):
+        response = self.post(self.V1_COPY_SHARE_LIST, body={}, host="https://api.alipan.com/adrive")
+        return response
     def batch_delete_files(self, file_id_list: List[str], drive_id: str = None):
         """批量删除文件"""
         drive_id = drive_id or self.default_drive_id
