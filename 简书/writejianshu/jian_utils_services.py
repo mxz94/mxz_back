@@ -434,7 +434,9 @@ def dayone_to_local():
 def day_local_jian():
     try:
         dayone_to_local()
+        time.sleep(10)
         fileName = local_to_jianshu()
+        time.sleep(3)
         locl_to_github()
         if fileName is not None:
             FileUtil.init_readme()

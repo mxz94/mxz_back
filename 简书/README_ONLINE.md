@@ -2,6 +2,8 @@
 <details open><summary>2023</summary>
 <p>
 
+[2023-11-04(骑着新车上班)](https://www.jianshu.com/p/a710dec14735)<br>
+[2023-10-31(回来又吵架)](https://www.jianshu.com/p/5a57b169f706)<br>
 [2023-10-29(带着宝子去玩)](https://www.jianshu.com/p/80a78a7b2d6b)<br>
 [2023-10-28(睡不着)](https://www.jianshu.com/p/362b4c6a09cc)<br>
 [2023-10-27(闲的找活干)](https://www.jianshu.com/p/439bd308a263)<br>
