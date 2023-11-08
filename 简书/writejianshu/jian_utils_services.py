@@ -520,7 +520,7 @@ def run():
     client.loop_forever()
 
 def run_loop():
-    interval = 1
+    interval = 3600
     while True:
         # 在此处执行您的任务
         print("执行定时任务...")
@@ -529,6 +529,6 @@ def run_loop():
         time.sleep(interval)
 
 if __name__ == '__main__':
-    t1 = Thread(target=run)
+    t1 = Thread(target=run_loop)
     t1.start()
-    run_loop()
+    run()
