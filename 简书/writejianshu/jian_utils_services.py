@@ -4,6 +4,7 @@ import os
 import re
 import shutil
 import time
+from threading import Thread
 
 import html2text
 import qiniu
@@ -256,6 +257,23 @@ class FileUtil:
 DIR= r'D:\mxz\mxz_back\简书/note/'
 DIR_O= r'D:\mxz\mxz_back\简书/note_o/'
 
+def getCookies():
+    import http.cookies
+    import json
+
+    cookie_str = "_ga=GA1.2.737969924.1685589635; _ga_Y1EKTCT110=GS1.2.1696579475.16.1.1696579533.0.0.0; Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068=1695798359,1696579447,1697534452; gdt_fp=f3a8181abe74958c45d1fb42ee9b7fe0; remember_user_token=W1s2OTA4MjEyXSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNjk5NDM1Mzg2LjczNzE2OTUiXQ%3D%3D--abdb720c712210efdd9235cc5f0c49dc30f423f9; read_mode=day; default_font=font2; locale=zh-CN; _m7e_session_core=6d27f523614428d039e548dad38e4cc0; artFromType=null; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2218866f985e0100b-07b74986a20881-26031a51-3686400-18866f985e111c7%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218866f985e0100b-07b74986a20881-26031a51-3686400-18866f985e111c7%22%7D"
+
+    cookies = http.cookies.SimpleCookie()
+    cookies.load(cookie_str)
+
+    cookie_dict = {}
+    for key, morsel in cookies.items():
+        cookie_dict[key] = morsel.value
+
+    # 转换为 JSON 对象
+    return  json.dumps(cookie_dict, ensure_ascii=False)
+
+
 cookies = {
     '_ga': 'GA1.2.737969924.1685589635',
     '_ga_Y1EKTCT110': 'GS1.2.1696579475.16.1.1696579533.0.0.0',
@@ -502,7 +520,7 @@ def run():
     client.loop_forever()
 
 def run_loop():
-    interval = 3600
+    interval = 1
     while True:
         # 在此处执行您的任务
         print("执行定时任务...")
@@ -511,4 +529,6 @@ def run_loop():
         time.sleep(interval)
 
 if __name__ == '__main__':
-    run()
+    t1 = Thread(target=run)
+    t1.start()
+    run_loop()

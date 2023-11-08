@@ -2,6 +2,7 @@
 <details open><summary>2023</summary>
 <p>
 
+[2023-11-08(教资成绩出来了)](https://www.jianshu.com/p/9901b7941393)<br>
 [2023-11-04(骑着新车上班)](https://www.jianshu.com/p/a710dec14735)<br>
 [2023-10-31(回来又吵架)](https://www.jianshu.com/p/5a57b169f706)<br>
 [2023-10-29(带着宝子去玩)](https://www.jianshu.com/p/80a78a7b2d6b)<br>
