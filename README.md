@@ -1,3 +1,3 @@
 # mxz_back
 
-[简书](./简书/README.md) | [jian](./简书/README_JIAN.md) | [online](./简书/README_ONLINE.md)
+[简书](content/README.md) | [jian](content/README_JIAN.md) | [online](content/README_ONLINE.md)

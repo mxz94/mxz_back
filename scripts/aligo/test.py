@@ -3,11 +3,10 @@ import sqlite3
 import time
 from typing import List
 
-import aligo
 from aligo import BaseFile
 
 from scripts.aligo import aligo_utils
-from 简书.writejianshu.jian_utils import FileUtil
+from scripts.writenote.jian_utils import FileUtil
 
 con = sqlite3.connect("ali.db")
 ali = aligo_utils.ali
