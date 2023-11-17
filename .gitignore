@@ -1,0 +1,7 @@
+**/__pycache__
+mxz_back.iml
+!/.idea/
+!/.idea/
+/node_modules/
+/.astro/
+/.vscode/
