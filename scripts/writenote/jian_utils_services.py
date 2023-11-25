@@ -284,7 +284,7 @@ def getCookies():
     import http.cookies
     import json
 
-    cookie_str = "_ga=GA1.2.737969924.1685589635; _ga_Y1EKTCT110=GS1.2.1696579475.16.1.1696579533.0.0.0; Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068=1695798359,1696579447,1697534452; gdt_fp=f3a8181abe74958c45d1fb42ee9b7fe0; remember_user_token=W1s2OTA4MjEyXSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNjk5NDM1Mzg2LjczNzE2OTUiXQ%3D%3D--abdb720c712210efdd9235cc5f0c49dc30f423f9; read_mode=day; default_font=font2; locale=zh-CN; _m7e_session_core=6d27f523614428d039e548dad38e4cc0; artFromType=null; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2218866f985e0100b-07b74986a20881-26031a51-3686400-18866f985e111c7%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218866f985e0100b-07b74986a20881-26031a51-3686400-18866f985e111c7%22%7D"
+    cookie_str = "_ga=GA1.2.316202546.1695480391; Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068=1699181179; _ga_Y1EKTCT110=GS1.2.1699183942.3.0.1699183942.0.0.0; read_mode=day; default_font=font2; locale=zh-CN; remember_user_token=W1s2OTA0MzE1XSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNzAwOTE0NDY2LjA4MjgxMiJd--8603698ab407f9a75724e1c5d4dcbca2bfd320ce; web_login_version=MTcwMDkxNDQ2Ng%3D%3D--74a54859ae71b706a9cbb6557bf6e889a828ee96; _m7e_session_core=0381aac27a41a47d706ce49ebf956bec; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%7D"
 
     cookies = http.cookies.SimpleCookie()
     cookies.load(cookie_str)
@@ -298,34 +298,34 @@ def getCookies():
 
 
 cookies = {
-    '_ga': 'GA1.2.737969924.1685589635',
-    '_ga_Y1EKTCT110': 'GS1.2.1696579475.16.1.1696579533.0.0.0',
-    'Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068': '1695798359,1696579447,1697534452',
-    'Hm_lpvt_0c0e9d9b1e7d617b3e6842e85b9fb068': '1697534452',
-    'locale': 'zh-CN',
-    'gdt_fp': 'f3a8181abe74958c45d1fb42ee9b7fe0',
-    'mobile-index-modal': '1',
+    '_ga': 'GA1.2.316202546.1695480391',
+    'Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068': '1699181179',
+    '_ga_Y1EKTCT110': 'GS1.2.1699183942.3.0.1699183942.0.0.0',
     'read_mode': 'day',
     'default_font': 'font2',
-    'remember_user_token': 'W1s2OTA0MzE1XSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNjk3NjEzNTc0LjI3NTE4MjUiXQ%3D%3D--32887858f7a41cc65b26bd9c99984e6444b3b376',
-    '_m7e_session_core': 'ccfcfc3e76cad18f647db7009fcaf380',
-    'sensorsdata2015jssdkcross': '%7B%22distinct_id%22%3A%2218866f985e0100b-07b74986a20881-26031a51-3686400-18866f985e111c7%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218866f985e0100b-07b74986a20881-26031a51-3686400-18866f985e111c7%22%7D',
+    'locale': 'zh-CN',
+    'remember_user_token': 'W1s2OTA0MzE1XSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNzAwOTE0NDY2LjA4MjgxMiJd--8603698ab407f9a75724e1c5d4dcbca2bfd320ce',
+    'web_login_version': 'MTcwMDkxNDQ2Ng%3D%3D--74a54859ae71b706a9cbb6557bf6e889a828ee96',
+    '_m7e_session_core': '0381aac27a41a47d706ce49ebf956bec',
+    'sensorsdata2015jssdkcross': '%7B%22distinct_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%7D',
 }
+
 headers = {
-    'Host': 'www.jianshu.com',
-    'sec-ch-ua': '"Chromium";v="118", "Microsoft Edge";v="118", "Not=A?Brand";v="99"',
+    'authority': 'www.jianshu.com',
     'accept': 'application/json',
-    'content-type': 'application/json; charset=UTF-8',
-    'sec-ch-ua-mobile': '?0',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36',
-    'sec-ch-ua-platform': '"Windows"',
-    'origin': 'https://www.jianshu.com',
-    'sec-fetch-site': 'same-origin',
-    'sec-fetch-mode': 'cors',
-    'sec-fetch-dest': 'empty',
-    'referer': 'https://www.jianshu.com/writer',
     'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+    # 'cookie': '_ga=GA1.2.316202546.1695480391; Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068=1699181179; _ga_Y1EKTCT110=GS1.2.1699183942.3.0.1699183942.0.0.0; read_mode=day; default_font=font2; locale=zh-CN; remember_user_token=W1s2OTA0MzE1XSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNzAwOTE0NDY2LjA4MjgxMiJd--8603698ab407f9a75724e1c5d4dcbca2bfd320ce; web_login_version=MTcwMDkxNDQ2Ng%3D%3D--74a54859ae71b706a9cbb6557bf6e889a828ee96; _m7e_session_core=0381aac27a41a47d706ce49ebf956bec; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%7D',
+    'if-none-match': 'W/"4a70973d5c4e6e77e1b7944653a4b13d"',
+    'referer': 'https://www.jianshu.com/writer',
+    'sec-ch-ua': '"Microsoft Edge";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'same-origin',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
 }
+
 
 def upload_image(file:str):
     (filepath, filename) = os.path.split(file)
