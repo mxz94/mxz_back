@@ -8,21 +8,24 @@ import Card from "@components/Card";
 import LinkButton from "@components/LinkButton.astro";
 import slugify from "@utils/slugify";
 import type { CollectionEntry } from "astro:content";
+import getTranslaction from "../utils/getTranslaction";
 
 export interface Props {
   pageNum: number;
   totalPages: number;
+    nav:string;
   posts: CollectionEntry<"blog">[];
 }
 
-const { pageNum, totalPages, posts } = Astro.props;
+const { pageNum, totalPages, posts ,nav} = Astro.props;
 
 const prev = pageNum > 1 ? "" : "disabled";
 const next = pageNum < totalPages ? "" : "disabled";
+const nav2 = getTranslaction(nav)
 ---
 
-<Layout title={`Posts | ${SITE.title}`}>
-  <Header activeNav="posts" />
+<Layout title={`${nav2} | ${SITE.title}`}>
+  <Header activeNav={nav} />
   <Main pageTitle="" pageDesc="">
     <ul>
       {

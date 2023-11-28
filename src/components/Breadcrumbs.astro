@@ -1,5 +1,8 @@
 ---
 // Remove current url path and remove trailing slash if exists
+
+import getUniqueTags from "../utils/getUniqueTags";
+import getTranslaction from "../utils/getTranslaction";
 const currentUrlPath = Astro.url.pathname.replace(/\/+$/, "");
 
 // Get url array from path
@@ -9,13 +12,15 @@ const breadcrumbList = currentUrlPath.split("/").slice(1);
 // if breadcrumb is Home > Posts > 1 <etc>
 // replace Posts with Posts (page number)
 breadcrumbList[0] === "posts" &&
-  breadcrumbList.splice(0, 2, `Posts (page ${breadcrumbList[1] || 1})`);
+  breadcrumbList.splice(0, 2, `日记 (页码 ${breadcrumbList[1] || 1})`);
+
+
 ---
 
 <nav class="breadcrumb" aria-label="breadcrumb">
   <ul>
     <li>
-      <a href="/">Home</a>
+      <a href="/">首页</a>
       <span aria-hidden="true">&nbsp;&gt;&nbsp;</span>
     </li>
     {
@@ -27,12 +32,12 @@ breadcrumbList[0] === "posts" &&
               aria-current="page"
             >
               {/* make the last part lowercase in Home > Tags > some-tag */}
-              {decodeURIComponent(breadcrumb)}
+              {getTranslaction(decodeURIComponent(breadcrumb))}
             </span>
           </li>
         ) : (
           <li>
-            <a href={`/${breadcrumb}`}>{breadcrumb}</a>
+            <a href={`/${breadcrumb}`}>{getTranslaction(breadcrumb)}</a>
             <span aria-hidden="true">&nbsp;&gt;&nbsp;</span>
           </li>
         )

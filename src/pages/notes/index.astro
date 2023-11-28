@@ -5,6 +5,7 @@ import getPageNumbers from "@utils/getPageNumbers";
 
 import { getCollection } from "astro:content";
 import Notes from "../../layouts/Notes.astro";
+import Posts from "../../layouts/Posts.astro";
 
 const posts = await getCollection("blog", ({id}) =>{
     return isNaN(id.split("/")[0]);
@@ -17,4 +18,4 @@ const totalPages = getPageNumbers(sortedPosts.length);
 const paginatedPosts = sortedPosts.slice(0, SITE.postPerPage);
 ---
 
-<Notes posts={paginatedPosts} pageNum={1} totalPages={totalPages.length}  />
+<Posts posts={paginatedPosts} pageNum={1} totalPages={totalPages.length}  nav="notes" />

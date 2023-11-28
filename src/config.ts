@@ -4,7 +4,7 @@ export const SITE: Site = {
   website: "https://mxz-back.pages.dev/", // replace this with your deployed domain
   author: "mxz",
   desc: "马兰汐的博客",
-  title: "MxzNotePaper",
+  title: "首页",
   ogImage: "astropaper-og.jpg",
   lightAndDarkMode: true,
   postPerPage: 10,
