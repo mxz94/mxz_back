@@ -5,3 +5,4 @@ mxz_back.iml
 /node_modules/
 /.astro/
 /.vscode/
+/dist/
