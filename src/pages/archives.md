@@ -1,22 +1,18 @@
 ---
+layout: ../layouts/ArchivesLayout.astro
+title: ""
+---
 
-        layout: ../layouts/ArchivesLayout.astro
-        title: ""
-        ---
+# note
 
-
-        # note
-
-        [教资面试(信息的一般特征)](https://mxz-back.pages.dev/posts/教资面试信息的一般特征)<br>
-
+[教资面试(信息的一般特征)](https://mxz-back.pages.dev/posts/教资面试信息的一般特征)<br>
 [教资科目二](https://mxz-back.pages.dev/posts/教资科目二)<br>
 [教资科目三](https://mxz-back.pages.dev/posts/教资科目三)<br>
 [教资科目一](https://mxz-back.pages.dev/posts/教资科目一)<br>
 
-        # 2023
+# 2023
 
-        [2023-12-07(昨晚做了一个不好的梦)](https://mxz-back.pages.dev/posts/2023-12-07昨晚做了一个不好的梦)<br>
-
+[2023-12-07(昨晚做了一个不好的梦)](https://mxz-back.pages.dev/posts/2023-12-07昨晚做了一个不好的梦)<br>
 [2023-11-25(昨天回来孩子被接走了)](https://mxz-back.pages.dev/posts/2023-11-25昨天回来孩子被接走了)<br>
 [2023-11-17(太强势了，吵架)](https://mxz-back.pages.dev/posts/2023-11-17太强势了吵架)<br>
 [2023-11-11(宝贝学会说话了)](https://mxz-back.pages.dev/posts/2023-11-11宝贝学会说话了)<br>
