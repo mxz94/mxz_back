@@ -1,21 +1,20 @@
 ---
-        layout: ../layouts/ArchivesLayout.astro
-        title: ""
-        ---
+layout: ../layouts/ArchivesLayout.astro
+title: ""
+---
+
+# note
         
-        
-        # note
-        
-        [教资面试(信息的一般特征)](https://mxz-back.pages.dev/posts/教资面试信息的一般特征)<br>
+[教资面试(信息的一般特征)](https://mxz-back.pages.dev/posts/教资面试信息的一般特征)<br>
 [教资科目二](https://mxz-back.pages.dev/posts/教资科目二)<br>
 [教资科目三](https://mxz-back.pages.dev/posts/教资科目三)<br>
 [教资科目一](https://mxz-back.pages.dev/posts/教资科目一)<br>
 
         
         
-        # 2023
+# 2023
         
-        [2023-12-09(考了教资面)](https://mxz-back.pages.dev/posts/2023-12-09考了教资面)<br>
+[2023-12-09(考了教资面)](https://mxz-back.pages.dev/posts/2023-12-09考了教资面)<br>
 [2023-12-07(昨晚做了一个不好的梦)](https://mxz-back.pages.dev/posts/2023-12-07昨晚做了一个不好的梦)<br>
 [2023-11-25(昨天回来孩子被接走了)](https://mxz-back.pages.dev/posts/2023-11-25昨天回来孩子被接走了)<br>
 [2023-11-17(太强势了，吵架)](https://mxz-back.pages.dev/posts/2023-11-17太强势了吵架)<br>
@@ -62,9 +61,9 @@
 
         
         
-        # 2022
+# 2022
         
-        [2022-12-01(命中注定)](https://mxz-back.pages.dev/posts/2022-12-01命中注定)<br>
+[2022-12-01(命中注定)](https://mxz-back.pages.dev/posts/2022-12-01命中注定)<br>
 [2022-11-30(新手机到了)](https://mxz-back.pages.dev/posts/2022-11-30新手机到了)<br>
 [2022-11-21（都结束了，你还有心情-）](https://mxz-back.pages.dev/posts/2022-11-21都结束了你还有心情-)<br>
 [2022-11-01(新月份的开始，幸福的开始)](https://mxz-back.pages.dev/posts/2022-11-01新月份的开始幸福的开始)<br>
@@ -142,9 +141,9 @@
 
         
         
-        # 2021
+# 2021
         
-        [2021-12-27_28_30（看雪中悍刀行，去看电动车）](https://mxz-back.pages.dev/posts/2021-12-27_28_30看雪中悍刀行去看电动车)<br>
+[2021-12-27_28_30（看雪中悍刀行，去看电动车）](https://mxz-back.pages.dev/posts/2021-12-27_28_30看雪中悍刀行去看电动车)<br>
 [2021-12-25（试妆同学聚会）](https://mxz-back.pages.dev/posts/2021-12-25试妆同学聚会)<br>
 [2021-12-24_25_26（试妆同学聚会）](https://mxz-back.pages.dev/posts/2021-12-24_25_26试妆同学聚会)<br>
 [2021-12-19_20（产检辅j培训）](https://mxz-back.pages.dev/posts/2021-12-19_20产检辅j培训)<br>
@@ -324,9 +323,9 @@
 
         
         
-        # 2020
+# 2020
         
-        [2020-12-30（划水）](https://mxz-back.pages.dev/posts/2020-12-30划水)<br>
+[2020-12-30（划水）](https://mxz-back.pages.dev/posts/2020-12-30划水)<br>
 [2020-12-29（老是生气）](https://mxz-back.pages.dev/posts/2020-12-29老是生气)<br>
 [2020-12-23-25（回家吃饭）](https://mxz-back.pages.dev/posts/2020-12-23-25回家吃饭)<br>
 [2020-12-22（落枕第二天）](https://mxz-back.pages.dev/posts/2020-12-22落枕第二天)<br>
@@ -384,9 +383,9 @@
 
         
         
-        # 2010
+# 2010
         
-        [2010-10-01(狗)](https://mxz-back.pages.dev/posts/2010-10-01狗)<br>
+[2010-10-01(狗)](https://mxz-back.pages.dev/posts/2010-10-01狗)<br>
 [2010-10-01(房东们)](https://mxz-back.pages.dev/posts/2010-10-01房东们)<br>
 [2010-10-01(小计)](https://mxz-back.pages.dev/posts/2010-10-01小计)<br>
 [2010-10-01(6年前写的)](https://mxz-back.pages.dev/posts/2010-10-016年前写的)<br>

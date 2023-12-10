@@ -238,15 +238,14 @@ class FileUtil:
         re_s = reversed(s.items())
 
         start = '''---
-        layout: ../layouts/ArchivesLayout.astro
-        title: ""
-        ---
-        
-        '''
+layout: ../layouts/ArchivesLayout.astro
+title: ""
+---
+'''
         dd = '''
-        # {}
+# {}
         
-        {}
+{}
         
         '''
         file_path = src + r"\src\pages\archives.md"  # 替换为你想要创建的文件路径
@@ -603,4 +602,4 @@ def run_loop():
 if __name__ == '__main__':
     # t1 = Thread(target=run_loop)
     # t1.start()
-    run()
+    FileUtil.init_archives_readme()
