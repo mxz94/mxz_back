@@ -1,6 +1,6 @@
 ---
 pubDatetime: 2023-12-12T16:00:00Z
-title: java源码
+title: Java集合框架
 tags:
   - "java"
 ---

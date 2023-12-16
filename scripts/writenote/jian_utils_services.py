@@ -235,7 +235,9 @@ class FileUtil:
         for file_name in file_names:
             if not os.path.isfile(os.path.join(directory_path, file_name)):
                 s[file_name] = []
-                file_names2 = os.listdir(os.path.join(directory_path, file_name))
+                file_names2 = []
+                for  root, dirs, files in os.walk(os.path.join(directory_path, file_name)):
+                    file_names2 += files
                 for file_name2 in file_names2:
                     title = file_name2.split(".")[0]
                     u = title.replace("(", "").replace(")", "").replace("，","").replace(",","").replace("（", "").replace("）", "")
@@ -244,7 +246,8 @@ class FileUtil:
         re_s = reversed(s.items())
         for key, value in re_s:
             value.reverse()
-            FileUtil.move_first_to_last(value)
+            if key.startswith("20") and value[0].endswith("展望)"):
+                FileUtil.move_first_to_last(value)
 
         re_s = reversed(s.items())
 
