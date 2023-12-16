@@ -130,9 +130,15 @@ export const SOCIALS: SocialObjects = [
   },
   {
     name: "Telegram",
-    href: "https://github.com/satnaing/astro-paper",
+    href: "https://t.me/ma741852",
     linkTitle: `${SITE.title} on Telegram`,
-    active: false,
+    active: true,
+  },
+  {
+    name: "Run",
+    href: "https://mxz-run.pages.dev/",
+    linkTitle: `${SITE.title} on Run`,
+    active: true,
   },
   {
     name: "Mastodon",
