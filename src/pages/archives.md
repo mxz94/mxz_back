@@ -5,11 +5,11 @@ title: ""
 
 # note
 
+[Java集合框架](https://mxz-back.pages.dev/posts/Java集合框架)<br>
+[教资面试(信息的一般特征)](https://mxz-back.pages.dev/posts/教资面试信息的一般特征)<br>
 [教资科目二](https://mxz-back.pages.dev/posts/教资科目二)<br>
 [教资科目三](https://mxz-back.pages.dev/posts/教资科目三)<br>
 [教资科目一](https://mxz-back.pages.dev/posts/教资科目一)<br>
-[java](https://mxz-back.pages.dev/posts/java)<br>
-[教资面试(信息的一般特征)](https://mxz-back.pages.dev/posts/教资面试信息的一般特征)<br>
 
 # 2023
 
@@ -385,7 +385,7 @@ title: ""
 
 # 2010
 
+[2010-10-01(狗)](https://mxz-back.pages.dev/posts/2010-10-01狗)<br>
 [2010-10-01(房东们)](https://mxz-back.pages.dev/posts/2010-10-01房东们)<br>
 [2010-10-01(小计)](https://mxz-back.pages.dev/posts/2010-10-01小计)<br>
 [2010-10-01(6年前写的)](https://mxz-back.pages.dev/posts/2010-10-016年前写的)<br>
-[2010-10-01(狗)](https://mxz-back.pages.dev/posts/2010-10-01狗)<br>
