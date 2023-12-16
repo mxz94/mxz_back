@@ -11,6 +11,10 @@ import qiniu
 import requests
 from github import Github, Repository
 
+os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
+os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
+
+
 src = r"D:\mxz\mxz_back"
 
 file = src + r'\scripts\writenote\config.ini'
@@ -448,7 +452,12 @@ def local_to_jianshu():
     (filepath, filename) = os.path.split(last_file)
     new_name = note_list()[0]['title']
     if not filename.startswith(new_name):
-        content = replace_img_url(FileUtil.read_file(last_file))
+        try:
+            content = replace_img_url(FileUtil.read_file(last_file))
+        except Exception as e:
+            #     抛出自定义异常
+            FileUtil.notice_ding_error(str(e))
+            raise Exception('图片简书上传失败！')
         article = create_article(filename.split(".")[0])
         write_content(content, str(article["id"]))
         link = "https://www.jianshu.com/p/" + article["slug"]
@@ -522,7 +531,11 @@ def day_local_jian():
     try:
         dayone_to_local()
         time.sleep(10)
-        fileName = local_to_jianshu()
+        try:
+            fileName = local_to_jianshu()
+        except Exception as e:
+            FileUtil.notice_ding_error("简书异常")
+            raise e
         time.sleep(3)
         locl_to_github()
         FileUtil.init_archives_readme()
@@ -602,4 +615,8 @@ def run_loop():
 if __name__ == '__main__':
     # t1 = Thread(target=run_loop)
     # t1.start()
-    FileUtil.init_archives_readme()
+    run()
+    # FileUtil.init_archives_readme()
+    # imgurl = upload_image(r"D:\mxz\mxz_back\src\content\img\2023\2023-12-07.jpeg")
+    # print(imgurl)
+    # FileUtil.download_image_file(imgurl, ConfigUtils.get_now_day())

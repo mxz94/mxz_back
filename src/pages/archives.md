@@ -4,16 +4,16 @@ title: ""
 ---
 
 # note
-        
+
 [教资面试(信息的一般特征)](https://mxz-back.pages.dev/posts/教资面试信息的一般特征)<br>
 [教资科目二](https://mxz-back.pages.dev/posts/教资科目二)<br>
 [教资科目三](https://mxz-back.pages.dev/posts/教资科目三)<br>
 [教资科目一](https://mxz-back.pages.dev/posts/教资科目一)<br>
+[java](https://mxz-back.pages.dev/posts/java)<br>
 
-        
-        
 # 2023
-        
+
+[2023-12-15(买了小鱼)](https://mxz-back.pages.dev/posts/2023-12-15买了小鱼)<br>
 [2023-12-09(考了教资面)](https://mxz-back.pages.dev/posts/2023-12-09考了教资面)<br>
 [2023-12-07(昨晚做了一个不好的梦)](https://mxz-back.pages.dev/posts/2023-12-07昨晚做了一个不好的梦)<br>
 [2023-11-25(昨天回来孩子被接走了)](https://mxz-back.pages.dev/posts/2023-11-25昨天回来孩子被接走了)<br>
@@ -59,10 +59,8 @@ title: ""
 [2023-02-04（不尊重我）](https://mxz-back.pages.dev/posts/2023-02-04不尊重我)<br>
 [2023-01-22（就看看今天多霸道）](https://mxz-back.pages.dev/posts/2023-01-22就看看今天多霸道)<br>
 
-        
-        
 # 2022
-        
+
 [2022-12-01(命中注定)](https://mxz-back.pages.dev/posts/2022-12-01命中注定)<br>
 [2022-11-30(新手机到了)](https://mxz-back.pages.dev/posts/2022-11-30新手机到了)<br>
 [2022-11-21（都结束了，你还有心情-）](https://mxz-back.pages.dev/posts/2022-11-21都结束了你还有心情-)<br>
@@ -139,10 +137,8 @@ title: ""
 [2022-01-02(摘草莓)](https://mxz-back.pages.dev/posts/2022-01-02摘草莓)<br>
 [2022-01-01(结婚)](https://mxz-back.pages.dev/posts/2022-01-01结婚)<br>
 
-        
-        
 # 2021
-        
+
 [2021-12-27_28_30（看雪中悍刀行，去看电动车）](https://mxz-back.pages.dev/posts/2021-12-27_28_30看雪中悍刀行去看电动车)<br>
 [2021-12-25（试妆同学聚会）](https://mxz-back.pages.dev/posts/2021-12-25试妆同学聚会)<br>
 [2021-12-24_25_26（试妆同学聚会）](https://mxz-back.pages.dev/posts/2021-12-24_25_26试妆同学聚会)<br>
@@ -321,10 +317,8 @@ title: ""
 [2021-01-02-01-03（玩了两天）](https://mxz-back.pages.dev/posts/2021-01-02-01-03玩了两天)<br>
 [2021-01-01（逛了一天）](https://mxz-back.pages.dev/posts/2021-01-01逛了一天)<br>
 
-        
-        
 # 2020
-        
+
 [2020-12-30（划水）](https://mxz-back.pages.dev/posts/2020-12-30划水)<br>
 [2020-12-29（老是生气）](https://mxz-back.pages.dev/posts/2020-12-29老是生气)<br>
 [2020-12-23-25（回家吃饭）](https://mxz-back.pages.dev/posts/2020-12-23-25回家吃饭)<br>
@@ -381,14 +375,9 @@ title: ""
 [2020-10-11（节后带饭）](https://mxz-back.pages.dev/posts/2020-10-11节后带饭)<br>
 [2020-10-10(记录第一天)](https://mxz-back.pages.dev/posts/2020-10-10记录第一天)<br>
 
-        
-        
 # 2010
-        
+
 [2010-10-01(狗)](https://mxz-back.pages.dev/posts/2010-10-01狗)<br>
 [2010-10-01(房东们)](https://mxz-back.pages.dev/posts/2010-10-01房东们)<br>
 [2010-10-01(小计)](https://mxz-back.pages.dev/posts/2010-10-01小计)<br>
 [2010-10-01(6年前写的)](https://mxz-back.pages.dev/posts/2010-10-016年前写的)<br>
-
-        
-        
