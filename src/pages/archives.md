@@ -5,11 +5,11 @@ title: ""
 
 # note
 
-[教资面试(信息的一般特征)](https://mxz-back.pages.dev/posts/教资面试信息的一般特征)<br>
 [教资科目二](https://mxz-back.pages.dev/posts/教资科目二)<br>
 [教资科目三](https://mxz-back.pages.dev/posts/教资科目三)<br>
 [教资科目一](https://mxz-back.pages.dev/posts/教资科目一)<br>
 [java](https://mxz-back.pages.dev/posts/java)<br>
+[教资面试(信息的一般特征)](https://mxz-back.pages.dev/posts/教资面试信息的一般特征)<br>
 
 # 2023
 
@@ -58,6 +58,7 @@ title: ""
 [2023-02-28-（昨天跑了5公里）](https://mxz-back.pages.dev/posts/2023-02-28-昨天跑了5公里)<br>
 [2023-02-04（不尊重我）](https://mxz-back.pages.dev/posts/2023-02-04不尊重我)<br>
 [2023-01-22（就看看今天多霸道）](https://mxz-back.pages.dev/posts/2023-01-22就看看今天多霸道)<br>
+[2023的展望](https://mxz-back.pages.dev/posts/2023的展望)<br>
 
 # 2022
 
@@ -136,6 +137,7 @@ title: ""
 [2022-01-03(去学校拿卷子改)](https://mxz-back.pages.dev/posts/2022-01-03去学校拿卷子改)<br>
 [2022-01-02(摘草莓)](https://mxz-back.pages.dev/posts/2022-01-02摘草莓)<br>
 [2022-01-01(结婚)](https://mxz-back.pages.dev/posts/2022-01-01结婚)<br>
+[2022的展望](https://mxz-back.pages.dev/posts/2022的展望)<br>
 
 # 2021
 
@@ -316,6 +318,7 @@ title: ""
 [2021-01-07（早起喝粥）](https://mxz-back.pages.dev/posts/2021-01-07早起喝粥)<br>
 [2021-01-02-01-03（玩了两天）](https://mxz-back.pages.dev/posts/2021-01-02-01-03玩了两天)<br>
 [2021-01-01（逛了一天）](https://mxz-back.pages.dev/posts/2021-01-01逛了一天)<br>
+[2021的展望](https://mxz-back.pages.dev/posts/2021的展望)<br>
 
 # 2020
 
@@ -374,10 +377,15 @@ title: ""
 [2020-10-12(划水第二天)](https://mxz-back.pages.dev/posts/2020-10-12划水第二天)<br>
 [2020-10-11（节后带饭）](https://mxz-back.pages.dev/posts/2020-10-11节后带饭)<br>
 [2020-10-10(记录第一天)](https://mxz-back.pages.dev/posts/2020-10-10记录第一天)<br>
+[2020的展望](https://mxz-back.pages.dev/posts/2020的展望)<br>
+
+# 2019
+
+[2019的展望](https://mxz-back.pages.dev/posts/2019的展望)<br>
 
 # 2010
 
-[2010-10-01(狗)](https://mxz-back.pages.dev/posts/2010-10-01狗)<br>
 [2010-10-01(房东们)](https://mxz-back.pages.dev/posts/2010-10-01房东们)<br>
 [2010-10-01(小计)](https://mxz-back.pages.dev/posts/2010-10-01小计)<br>
 [2010-10-01(6年前写的)](https://mxz-back.pages.dev/posts/2010-10-016年前写的)<br>
+[2010-10-01(狗)](https://mxz-back.pages.dev/posts/2010-10-01狗)<br>

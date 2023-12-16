@@ -20,6 +20,9 @@
     --color-card-muted: 138, 51, 2;
     --color-border: 171, 75, 8;
   }
+    html {
+        scroll-behavior: smooth;
+    }
   #sun-svg,
   html[data-theme="dark"] #moon-svg {
     display: none;
@@ -59,9 +62,9 @@
 
     
     prose-code:rounded prose-code:bg-skin-card 
-    prose-code:bg-opacity-75 prose-code:p-1 prose-code:!text-skin-base 
+    prose-code:bg-opacity-75 prose-code:p-1
     prose-code:before:!content-[''] prose-code:after:!content-['']
-    prose-pre:!text-skin-base prose-ol:!text-skin-base 
+    prose-ol:!text-skin-base
     prose-ul:overflow-x-clip prose-ul:!text-skin-base prose-li:marker:!text-skin-accent
     prose-table:text-skin-base prose-th:border
     prose-th:border-skin-line prose-td:border 

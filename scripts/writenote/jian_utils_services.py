@@ -55,7 +55,7 @@ class GithubUtils:
 
         with open(file, "r", encoding="utf8") as f:
                 content = f.read() + "\n" +  "[{}](https://github.com/{}/blob/master/src/content/blog/{}/{})".format(title, repo.full_name, label, name)
-                repo.create_issue(title, content,labels = [label])
+                repo.create_issue(title, content,labels = [label, "展望"])
 
 class ConfigUtils:
     @staticmethod
@@ -98,6 +98,12 @@ dd = '''
 </details>
 '''
 class FileUtil:
+
+    @staticmethod
+    def move_first_to_last(my_list):
+        if len(my_list) >= 2:
+            first_element = my_list.pop(0)
+            my_list.append(first_element)
     @staticmethod
     def check_dir(dir:str):
         if not os.path.exists(dir):
@@ -238,6 +244,7 @@ class FileUtil:
         re_s = reversed(s.items())
         for key, value in re_s:
             value.reverse()
+            FileUtil.move_first_to_last(value)
 
         re_s = reversed(s.items())
 
@@ -620,3 +627,7 @@ if __name__ == '__main__':
     # imgurl = upload_image(r"D:\mxz\mxz_back\src\content\img\2023\2023-12-07.jpeg")
     # print(imgurl)
     # FileUtil.download_image_file(imgurl, ConfigUtils.get_now_day())
+
+    # repo = GithubUtils.get_repo(ConfigUtils.get_local("git_token"), "mxz94/mxz_back")
+    # year = "2023"
+    # GithubUtils.create_issue(repo, src + r"/scripts/writenote/content/note/{}/{}".format(year,year+"的展望.md"))
