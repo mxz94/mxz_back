@@ -117,6 +117,8 @@ class FileUtil:
         # 排序文件列表，按修改时间降序排列
         # files.sort(key=lambda x: os.path.getmtime(os.path.join(folder_path, x)), reverse=True)
         files.sort(reverse=True)
+        if files[0].endswith("展望.md"):
+            FileUtil.move_first_to_last(files)
         # 获取最新的文件（第一个文件）
         if files:
             latest_file = files[0]
@@ -184,7 +186,8 @@ class FileUtil:
     def download_image_file(url, day=None):
         r = requests.get(url)
         end = os.path.basename(url).split(".")[1]
-        file = os.path.join(IMG_DIR_2, "{}/{}.{}".format(day[:4], day, end) )
+        target_folder_2 = img_path + "/{}/".format(day[:4])
+        file = os.path.join(os.path.join(target_folder_2, day + '.' + end) )
         with open(file, 'wb') as f:
             f.write(r.content)
             print(" # 写入DONE")
@@ -401,7 +404,7 @@ def replace_img_url(content):
     pattern = r'\((.*?)\)'
     matchs = re.findall(pattern, content)
     for img_path in matchs:
-        if file.endswith(".jpeg") or file.endswith(".jpg") or file.endswith(".png"):
+        if img_path.endswith(".jpeg") or img_path.endswith(".jpg") or img_path.endswith(".png"):
             imgurl = upload_image(img_path)
             print(imgurl)
             FileUtil.download_image_file(imgurl, ConfigUtils.get_now_day())
