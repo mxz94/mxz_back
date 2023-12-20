@@ -52,10 +52,12 @@ class GithubUtils:
         (filePath,name) = os.path.split(file)
         title = name.split(".")[0]
         label = title[:4] if title.startswith("20") else "1994"
-
+        labels2 = [label]
+        if name.__contains__("name"):
+            labels2.append("展望")
         with open(file, "r", encoding="utf8") as f:
                 content = f.read() + "\n" +  "[{}](https://github.com/{}/blob/master/src/content/blog/{}/{})".format(title, repo.full_name, label, name)
-                repo.create_issue(title, content,labels = [label, "展望"])
+                repo.create_issue(title, content,labels =labels2)
 
 class ConfigUtils:
     @staticmethod
@@ -86,7 +88,6 @@ class ConfigUtils:
         return items.get(key)
 
 IMG_DIR = "../img"
-IMG_DIR_2 = r"/content/img"
 directory_path = r"/content/note_o"
 dd = '''
 <details {}><summary>{}</summary>

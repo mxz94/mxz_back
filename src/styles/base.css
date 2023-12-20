@@ -96,6 +96,7 @@
   /* ===== scrollbar ===== */
   html {
     overflow-y: scroll;
+    font-family: 华文楷体
   }
 
   /* width */
