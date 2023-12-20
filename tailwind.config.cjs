@@ -54,9 +54,8 @@ module.exports = {
                 transparent: "transparent",
             },
             fontFamily: {
-                mono: ["华文楷体"],
+                mono: ["Microsoft Yahei","微软雅黑","黑体","宋体","Arial","sans-serif"],
             },
-
             typography: {
                 DEFAULT: {
                     css: {
