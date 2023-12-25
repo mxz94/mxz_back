@@ -4,7 +4,6 @@ import Header from "../../components/Header.astro";
 import Comment from "../../components/Comment.astro";
 
 
-const response = await fetch('http://localhost:4321/api/chat');
 const { message = '你好，世界！' } = Astro.props;
 // const data = response.json()
 ---
@@ -75,14 +74,14 @@ const { message = '你好，世界！' } = Astro.props;
 <script>
     window.todos =  [];
     var updateTodos = function () {
-        fetch('http://localhost:4321/api/chat', {
+        fetch('https://mxz-back.pages.dev/api/chat', {
             method: 'PUT',
             body: JSON.stringify({ chatList: window.todos })
         });
         populateTodos();
     };
 
-    const data = await fetch('http://localhost:4321/api/chat', {
+    const data = await fetch('https://mxz-back.pages.dev/api/chat', {
         method: 'get'
     }).then(res => res.json());
     window.todos = data;
