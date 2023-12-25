@@ -31,7 +31,7 @@ export const GET: APIRoute = async ({ request, redirect }) => {
     });
   } catch (error) {
     console.log(error);
-    return new Response("Something went wrong", {
+    return new Response(error.message, {
       status: 500,
     });
   }
@@ -45,7 +45,7 @@ export const PUT: APIRoute = async ({ request, redirect }) => {
     return new Response(body, { status: 200 });
   } catch (error) {
     console.log(error);
-    return new Response("Something went wrong", {
+    return new Response(error.message, {
       status: 500,
     });
   }
