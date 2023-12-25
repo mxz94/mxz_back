@@ -30,6 +30,7 @@ export const GET: APIRoute = async ({ request, redirect }) => {
       headers: { "Content-Type": "application/json; charset=UTF-8" },
     });
   } catch (error) {
+    console.log(error);
     return new Response("Something went wrong", {
       status: 500,
     });
@@ -43,6 +44,7 @@ export const PUT: APIRoute = async ({ request, redirect }) => {
     var data = await setCache(cacheKey, body);
     return new Response(body, { status: 200 });
   } catch (error) {
+    console.log(error);
     return new Response("Something went wrong", {
       status: 500,
     });
