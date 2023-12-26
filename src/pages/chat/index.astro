@@ -41,3 +41,16 @@ const { message = '你好，世界！' } = Astro.props;
     </main>
 
 </Layout>
+<script>
+    // 在窗口大小变化时调整iframe高度
+    window.addEventListener('resize', adjustIframeHeight);
+
+    function adjustIframeHeight() {
+        var iframe = document.getElementById('frame_full');
+        var mainContent = document.getElementById('main-content');
+        iframe.height = mainContent.clientHeight;
+    }
+
+    // 初始调整一次
+    adjustIframeHeight();
+</script>
