@@ -7,143 +7,37 @@ import Comment from "../../components/Comment.astro";
 const { message = '你好，世界！' } = Astro.props;
 // const data = response.json()
 ---
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+    }
 
+    #main-content {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #about2 {
+        flex: 1;
+        width: 100%;
+        overflow: hidden; /* 避免iframe底部出现滚动条 */
+    }
+
+    iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+</style>
 <Layout>
     <Header />
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            padding: 20px;
-        }
-
-        form {
-            margin-bottom: 20px;
-        }
-
-        input, textarea,button {
-            margin-bottom: 10px;
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd; /* 添加边框样式 */
-            border-radius: 4px; /* 添加边框圆角 */
-            box-sizing: border-box; /* 防止边框增加元素的宽度 */
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: black;
-            border: none;
-            cursor: pointer;
-        }
-
-        .messages {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .message {
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            padding: 10px;
-        }
-
-        .message-date {
-            font-size: 0.8em;
-            color: #888;
-        }
-    </style>
     <main id="main-content">
-        <section id="about">
-            <astro-greet data-message={message}>
-                <form id="messageForm">
-                    <label for="name">姓名:</label>
-                    <input type="text" id="name" name="name" required>
-                    <label for="message">留言:</label>
-                    <textarea id="message" name="message" rows="4" required></textarea>
-                    <button type="button" id="submitButton">提交留言</button>
-                </form>
-            </astro-greet>
-            <ul id="messageList" class="messages">
-                <!-- 留言列表将在此处生成 -->
-            </ul>
+        <section id="about2">
+            <iframe src="https://my.836323493.workers.dev"  id="frame_full" frameborder="0" scrolling="auto"  ></iframe>
         </section>
     </main>
 
 </Layout>
-<script>
-    window.todos =  [];
-    var updateTodos = function () {
-        fetch('https://mxz-back.pages.dev/api/chat', {
-            method: 'PUT',
-            body: JSON.stringify({ chatList: window.todos })
-        });
-        populateTodos();
-    };
-
-    const data = await fetch('https://mxz-back.pages.dev/api/chat', {
-        method: 'get'
-    }).then(res => res.json());
-    window.todos = data;
-    var populateTodos = function () {
-        var messageList = document.getElementById("messageList");
-        messageList.innerHTML = null;
-        console.log(window.todos)
-        window.todos.forEach(todo => {
-            var listItem = document.createElement("li");
-            listItem.className = "message";
-
-            // 添加日期
-            var dateElement = document.createElement("div");
-            dateElement.className = "message-date";
-            dateElement.textContent = todo.date;
-
-            // 添加姓名和留言内容
-            var contentElement = document.createElement("div");
-            contentElement.innerHTML = "<strong>" + todo.name + ":</strong> " + todo.message;
-
-            // 合并日期和内容到列表项
-            listItem.appendChild(dateElement);
-            listItem.appendChild(contentElement);
-
-            messageList.appendChild(listItem);
-        });
-        // 清空表单
-        document.getElementById("messageForm").reset();
-    };
-
-    populateTodos();
-
-    var createTodo = function (name, message, date) {
-        window.todos.unshift({
-            id: `${window.todos.length + 1}`,
-            name: name,
-            message: message,
-            date: date
-        })
-        updateTodos();
-    };
-
-    class AstroGreet extends HTMLElement {
-        constructor() {
-            super();
-
-            // 从 data（数据）属性中读取消息。
-            const message = this.dataset.message;
-            const button = this.querySelector('button');
-            button.addEventListener('click', () => {
-                var name = document.getElementById("name").value;
-                var message = document.getElementById("message").value;
-                if (name && message) {
-                    var currentDate = new Date();
-                    var dateString = currentDate.toLocaleString();
-                    createTodo(name, message, dateString)
-                } else {
-                    alert("请填写姓名和留言内容。");
-                }
-            });
-        }
-    }
-
-    customElements.define('astro-greet', AstroGreet);
-</script>
