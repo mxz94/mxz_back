@@ -2,11 +2,11 @@ import type { APIRoute } from "astro";
 import { escapeHtml } from "@pages/chat/escape.js";
 
 const defaultData = { chatList: [] };
-const setCache = (key, data) => import.meta.env.MXZ_BACK.put(key, data);
-const getCache = key => import.meta.env.MXZ_BACK.get(key);
 
-export const GET: APIRoute = async ({ request, redirect }) => {
+export const GET: APIRoute = async ({ request, redirect, env }) => {
   try {
+    const setCache = (key, data) => env.MXZ_BACK.put(key, data);
+    const getCache = key => env.MXZ_BACK.get(key);
     const cacheKey = `data`;
     let data;
     const cache = await getCache(cacheKey);
