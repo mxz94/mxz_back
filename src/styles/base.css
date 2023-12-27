@@ -137,3 +137,15 @@
     @apply outline-2 outline-offset-1 outline-skin-fill focus-visible:no-underline focus-visible:outline-dashed;
   }
 }
+
+.th1 {
+     font-size: 24px; /* 调整标题的字体大小 */
+     color: #333; /* 设置标题的颜色 */
+     margin-bottom: 10px; /* 设置标题下方的边距 */
+ }
+
+.cp {
+    font-size: 16px; /* 调整段落的字体大小 */
+    color: #666; /* 设置段落的颜色 */
+    margin-bottom: 20px; /* 设置段落下方的边距 */
+}

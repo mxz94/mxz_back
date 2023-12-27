@@ -244,7 +244,7 @@ class FileUtil:
                     file_names2 += files
                 for file_name2 in file_names2:
                     title = file_name2.split(".")[0]
-                    u = title.replace("(", "").replace(")", "").replace("，","").replace(",","").replace("（", "").replace("）", "")
+                    u = title.replace("(", "").replace(")", "").replace("，","").replace(",","").replace("（", "").replace("）", "").lower()
                     s[file_name].append("[{}]({})".format(title, url + u))
 
         re_s = reversed(s.items())

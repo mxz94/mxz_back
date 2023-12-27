@@ -5,7 +5,7 @@ title: ""
 
 # note
 
-[Java集合框架](https://mxz-back.pages.dev/posts/Java集合框架)<br>
+[Java集合框架](https://mxz-back.pages.dev/posts/java集合框架)<br>
 [教资面试(信息的一般特征)](https://mxz-back.pages.dev/posts/教资面试信息的一般特征)<br>
 [教资科目二](https://mxz-back.pages.dev/posts/教资科目二)<br>
 [教资科目三](https://mxz-back.pages.dev/posts/教资科目三)<br>

@@ -14,11 +14,20 @@ export interface Props {
 
 const { post } = Astro.props;
 
-const { title, author, description, ogImage, canonicalURL, pubDatetime, tags } =
+const { title, author, description, ogImage, canonicalURL, pubDatetime, tags, auth} =
   post.data;
-
+var dStr = "";
+if (auth) {
+    for (const char of post.body) {
+        if (char === '\n') {
+            dStr += '\n';
+        } else {
+            dStr += '*';
+        }
+    }
+    post.body = dStr
+}
 const { Content } = await post.render();
-
 const ogImageUrl = typeof ogImage === "string" ? ogImage : ogImage?.src;
 const ogUrl = new URL(
   ogImageUrl ?? `/posts/${slugifyStr(title)}.png`,
@@ -34,28 +43,30 @@ const ogUrl = new URL(
   ogImage={ogUrl}
   canonicalURL={canonicalURL}
 >
+    <style>
+        .bur {
+            align-items: center;
+            justify-content: center;
+            filter: blur(5px);
+        }
+    </style>
   <Header />
   <div class="mx-auto flex w-full max-w-3xl justify-start px-2">
     <button
       class="focus-outline mb-2 mt-8 flex hover:opacity-75"
       onclick="history.back()"
     >
-      <svg xmlns="http://www.w3.org/2000/svg"
-        ><path
-          d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
-        ></path>
-      </svg><span>返回</span>
+        <svg t="1703646092277" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5173" width="200" height="200"><path d="M496.042667 742.272l-60.330667 60.330667-230.272-230.272-0.042667 0.085333L145.024 512l165.973333-165.930667 82.944-82.944 41.472-41.514666L495.786667 282.026667 265.813333 512l105.770667 105.813333 82.986667 82.986667 41.472 41.472z" fill="#333333" p-id="5174"></path><path d="M213.333333 469.333333h640v85.333334H213.333333z" fill="#333333" p-id="5175"></path></svg>
     </button>
   </div>
   <main id="main-content">
     <h1 transition:name={slugifyStr(title)} class="post-title">{title}</h1>
-    <Datetime datetime={pubDatetime} size="lg" className="my-2" />
-    <article id="article" role="article" class="prose mx-auto mt-8 max-w-3xl">
-      <Content />
+    <article id="article" role="article" class="prose mx-auto mt-8 max-w-3xl " class:list={['prose', { bur: auth }]}>
+        {auth ? dStr : <Content />}
     </article>
 
     <ul class="my-8">
-      {tags.map(tag => <Tag name={slugifyStr(tag)} />)}
+      {tags.map(tag => <Tag name={slugifyStr(tag)} />)}<Datetime datetime={pubDatetime} size="lg" className="my-2" />
     </ul>
     <div class="flex justify-end">
       <button
@@ -83,6 +94,37 @@ const ogUrl = new URL(
   }
 </style>
 <script is:inline>
+    let isBlurred = true; // 初始状态为模糊
+
+    function toggleBlurred() {
+        const article = document.getElementById('article');
+        isBlurred = !isBlurred;
+        article.classList.toggle('blurred', isBlurred);
+    }
+    document.onkeydown = function (e) {
+        if (e.key === "F12" || e.keyCode === 123) {
+            return false; // 阻止默认行为
+        }
+    };
+    document.addEventListener('contextmenu', function (e) {
+        e.preventDefault();
+    });
+
+    // 为了防止使用键盘等方式打开上下文菜单，你还可以禁用键盘事件
+    document.onkeydown = function (e) {
+        if (e.key === "ContextMenu" || e.keyCode === 93) {
+            e.preventDefault();
+        }
+    };
+    function checkPasswordAndToggle() {
+        const password = prompt('请输入密码'); // 弹出密码输入框
+        // 替换 'yourpassword' 为你的实际密码
+        if (password && password === '123456') {
+            toggleBlurred();
+        } else {
+            alert('密码不正确');
+        }
+    }
     /* When the user clicks on the "Back to Top" button,
      * scroll to the top of the document */
     document.querySelector("#back-to-top")?.addEventListener("click", () => {

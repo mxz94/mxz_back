@@ -15,15 +15,21 @@
     "prepare": "husky install",
     "lint": "eslint ."
   },
+  "type": "module",
   "dependencies": {
     "@astrojs/check": "^0.3.4",
     "@astrojs/rss": "^4.0.1",
     "@resvg/resvg-js": "^2.4.1",
+    "algoliasearch": "^4.22.0",
     "astro": "^4.0.7",
+    "dotenv": "^16.3.1",
     "fuse.js": "^6.6.2",
     "github-slugger": "^2.0.0",
+    "instantsearch.css": "^8.1.0",
+    "react-instantsearch": "^7.5.0",
     "remark-collapse": "^0.1.2",
     "remark-toc": "^9.0.0",
+    "remove-markdown": "^0.5.0",
     "satori": "^0.10.8",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2"
