@@ -317,7 +317,7 @@ title: ""
         
         '''
         dd3 = '''|{}| |{}|
-        '''
+'''
         file_path = src + r"\src\pages\archives.md"  # 替换为你想要创建的文件路径
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(start)
