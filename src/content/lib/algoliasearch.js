@@ -24,7 +24,6 @@ import removeMd from "remove-markdown";
 //         // console.log(e.message)
 //     }
 // })
-
 function readFilesRecursively(directory) {
   const filenames = fs.readdirSync(directory);
   const data = [];
@@ -41,7 +40,9 @@ function readFilesRecursively(directory) {
       try {
         const markdownWithMeta = fs.readFileSync(filePath, "utf-8");
         const { data: frontmatter, content } = matter(markdownWithMeta);
-
+        if (frontmatter.auth) {
+          return;
+        }
         data.push({
           objectID: frontmatter.title,
           title: frontmatter.title,
