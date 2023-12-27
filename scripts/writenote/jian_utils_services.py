@@ -276,6 +276,65 @@ title: ""
                 file.write(dd.format(key, content))
 
     @staticmethod
+    def init_archives_table_readme():
+        url = "https://mxz-back.pages.dev/posts/"
+        # 指定目录路径
+        directory_path = src + r"\src\content\blog"
+        # 使用os.listdir()获取目录下所有文件和文件夹的列表
+        file_names = os.listdir(directory_path)
+        s = {}
+        # 遍历文件名列表并打印
+        for file_name in file_names:
+            if not os.path.isfile(os.path.join(directory_path, file_name)):
+                s[file_name] = []
+                file_names2 = []
+                for  root, dirs, files in os.walk(os.path.join(directory_path, file_name)):
+                    file_names2 += files
+                for file_name2 in file_names2:
+                    title = file_name2.split(".")[0]
+                    u = title.replace("(", "").replace(")", "").replace("，","").replace(",","").replace("（", "").replace("）", "").lower()
+                    s[file_name].append("[{}]({})".format(title, url + u))
+
+        re_s = reversed(s.items())
+        for key, value in re_s:
+            value.reverse()
+            if key.startswith("20") and value[0].endswith("展望)"):
+                FileUtil.move_first_to_last(value)
+
+        re_s = reversed(s.items())
+
+        start = '''---
+layout: ../layouts/ArchivesLayout.astro
+title: ""
+---
+'''
+        dd = '''
+# {}
+
+|        |         |        |
+| ------------ |---------|---------|       
+{}
+        
+        '''
+        dd3 = '''|{}| |{}|
+        '''
+        file_path = src + r"\src\pages\archives.md"  # 替换为你想要创建的文件路径
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(start)
+            for key, value in re_s:
+                content = ""
+                index = (value.__len__()+1)//2
+                print(index)
+                for i in range(0, index):
+                    v1 = value[i]
+                    if (i+index < value.__len__()):
+                        v2 = value[i+index]
+                    else:
+                        v2 = ""
+                    content += (dd3.format(v1, v2))
+                file.write(dd.format(key, content))
+
+    @staticmethod
     def init_oline_readme(fileName = "README_ONLINE.md"):
         try:
             data = note_list()
@@ -631,8 +690,8 @@ def run_loop():
 if __name__ == '__main__':
     # t1 = Thread(target=run_loop)
     # t1.start()
-    run()
-    # FileUtil.init_archives_readme()
+    # run()
+    FileUtil.init_archives_table_readme()
     # imgurl = upload_image(r"D:\mxz\mxz_back\src\content\img\2023\2023-12-07.jpeg")
     # print(imgurl)
     # FileUtil.download_image_file(imgurl, ConfigUtils.get_now_day())
