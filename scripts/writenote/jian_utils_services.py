@@ -404,6 +404,7 @@ td, th {
         print(response.json())
     @staticmethod
     def notice_ding_error(e: str):
+        print(e)
         json_data = {
             "at": {
                 "atMobiles":[
@@ -643,9 +644,9 @@ def day_local_jian():
             raise e
         time.sleep(3)
         locl_to_github()
-        FileUtil.init_archives_table_readme()
-        run_cmd("node D:/mxz/mxz_back/src/components/lib/algoliasearch.js")
         if fileName is not None:
+            FileUtil.init_archives_table_readme()
+            FileUtil.run_cmd("node D:/mxz/mxz_back/src/components/lib/algoliasearch.js")
             # FileUtil.init_readme()
             FileUtil.run_cmd("git add -A")
             FileUtil.run_cmd("git commit -m '{}'".format(fileName))
@@ -681,9 +682,10 @@ password = 'emqx'
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
-            print("Connected to MQTT Broker!")
+            subscribe(client)
+            FileUtil.notice_ding_error(f"Connected to MQTT Broker!")
         else:
-            print("Failed to connect, return code %d\n", rc)
+            FileUtil.notice_ding_error(f"connect failed mqtt")
     # Set Connecting Client ID
     client = mqtt_client.Client(client_id)
     # Set CA certificate
@@ -705,7 +707,17 @@ def subscribe(client: mqtt_client):
 
 
 def run():
-    client = connect_mqtt()
+    i = 1
+    while(True):
+        if (i > 600):
+            i = 600
+        time.sleep(i*5)
+        try:
+            client = connect_mqtt()
+            i = 1
+            break
+        except Exception as e:
+            i = i + 1
     subscribe(client)
     client.loop_forever()
 
@@ -714,21 +726,13 @@ def run_loop():
     while True:
         # 在此处执行您的任务
         print("执行定时任务...")
-        day_local_jian()
+        try:
+            # FileUtil.notice_ding_error(f"Received  topic")
+            day_local_jian()
+        except Exception as e:
+            print(e)
         # 等待一段时间后再次执行任务
         time.sleep(interval)
-
-def run_cmd( cmd_str='', echo_print=1):
-    """
-    执行cmd命令，不显示执行过程中弹出的黑框
-    备注：subprocess.run()函数会将本来打印到cmd上的内容打印到python执行界面上，所以避免了出现cmd弹出框的问题
-    :param cmd_str: 执行的cmd命令
-    :return:
-    """
-    from subprocess import run
-    if echo_print == 1:
-        print('\n执行cmd指令="{}"'.format(cmd_str))
-    run(cmd_str, shell=True)
 
 if __name__ == '__main__':
     t1 = Thread(target=run_loop)
