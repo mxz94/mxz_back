@@ -292,7 +292,7 @@ title: ""
                     file_names2 += files
                 for file_name2 in file_names2:
                     title = file_name2.split(".")[0]
-                    u = title.replace("(", "").replace(")", "").replace("，","").replace(",","").replace("（", "").replace("）", "").lower()
+                    u = title.replace("(", "").replace(")", "").replace("，","").replace(",","").replace("（", "").replace("）", "").replace(" ","").lower()
                     s[file_name].append("[{}]({})".format(title, url + u))
 
         re_s = reversed(s.items())
@@ -307,23 +307,49 @@ title: ""
 layout: ../layouts/ArchivesLayout.astro
 title: ""
 ---
+<style>
+td, th {
+   border: none!important;
+   font-size: .775em;
+}
+</style>
 '''
         dd = '''
-# {}
+# [{}](https://mxz-back.pages.dev/tags/{})
 
 |        |         |        |
 | ------------ |---------|---------|       
 {}
         
         '''
-        dd3 = '''|{}| |{}|
+#         dd3 = '''|{}| |{}|
+# '''
+#         file_path = src + r"\src\pages\archives.md"  # 替换为你想要创建的文件路径
+#         with open(file_path, 'w', encoding='utf-8') as file:
+#             file.write(start)
+#             for key, value in re_s:
+#                 content = ""
+#                 index = (value.__len__()+1)//2
+#                 print(index)
+#                 for i in range(0, index):
+#                     v1 = value[i]
+#                     if (i+index < value.__len__()):
+#                         v2 = value[i+index]
+#                     else:
+#                         v2 = ""
+#                     content += (dd3.format(v1, v2))
+#                 file.write(dd.format(key, content))
+        dd3 = '''|{}|{}|{}|
 '''
         file_path = src + r"\src\pages\archives.md"  # 替换为你想要创建的文件路径
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(start)
             for key, value in re_s:
                 content = ""
-                index = (value.__len__()+1)//2
+                yu = value.__len__()%3
+                index = (value.__len__())//3
+                if (yu != 0):
+                    index = index + 1
                 print(index)
                 for i in range(0, index):
                     v1 = value[i]
@@ -331,8 +357,12 @@ title: ""
                         v2 = value[i+index]
                     else:
                         v2 = ""
-                    content += (dd3.format(v1, v2))
-                file.write(dd.format(key, content))
+                    if (i+index*2 < value.__len__()):
+                        v3 = value[i+index*2]
+                    else:
+                        v3 = ""
+                    content += (dd3.format(v1, v2,v3))
+                file.write(dd.format(key, key, content))
 
     @staticmethod
     def init_oline_readme(fileName = "README_ONLINE.md"):

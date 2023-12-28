@@ -53,6 +53,7 @@ function readFilesRecursively(directory) {
             .replace(",", "")
             .replace("（", "")
             .replace("）", "")
+            .replace(" ", "")
             .toLowerCase(),
           content: removeMd(content).replace(/\n/g, ""),
         });
