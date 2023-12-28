@@ -635,7 +635,7 @@ def dayone_to_local():
 def day_local_jian():
     try:
         dayone_to_local()
-        # time.sleep(10)
+        time.sleep(10)
         try:
             fileName = local_to_jianshu()
         except Exception as e:
@@ -643,7 +643,8 @@ def day_local_jian():
             raise e
         time.sleep(3)
         locl_to_github()
-        FileUtil.init_archives_readme()
+        FileUtil.init_archives_table_readme()
+        run_cmd("node D:/mxz/mxz_back/src/components/lib/algoliasearch.js")
         if fileName is not None:
             # FileUtil.init_readme()
             FileUtil.run_cmd("git add -A")
@@ -717,11 +718,22 @@ def run_loop():
         # 等待一段时间后再次执行任务
         time.sleep(interval)
 
+def run_cmd( cmd_str='', echo_print=1):
+    """
+    执行cmd命令，不显示执行过程中弹出的黑框
+    备注：subprocess.run()函数会将本来打印到cmd上的内容打印到python执行界面上，所以避免了出现cmd弹出框的问题
+    :param cmd_str: 执行的cmd命令
+    :return:
+    """
+    from subprocess import run
+    if echo_print == 1:
+        print('\n执行cmd指令="{}"'.format(cmd_str))
+    run(cmd_str, shell=True)
+
 if __name__ == '__main__':
-    # t1 = Thread(target=run_loop)
-    # t1.start()
-    # run()
-    FileUtil.init_archives_table_readme()
+    t1 = Thread(target=run_loop)
+    t1.start()
+    run()
     # imgurl = upload_image(r"D:\mxz\mxz_back\src\content\img\2023\2023-12-07.jpeg")
     # print(imgurl)
     # FileUtil.download_image_file(imgurl, ConfigUtils.get_now_day())
