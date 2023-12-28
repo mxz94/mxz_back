@@ -1,4 +1,1 @@
-git pull
-git add -A
-git commit -m "commit"
-git push
+cd D:\mxz\mxz_back && D: && git pull
