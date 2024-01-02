@@ -1,24 +1,24 @@
 ---
 import { getCollection } from "astro:content";
-import Header from "@components/Header.astro";
-import Footer from "@components/Footer.astro";
-import Layout from "@layouts/Layout.astro";
-import Main from "@layouts/Main.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import getUniqueTags from "../../utils/getUniqueTags";
 import Tag from "@components/Tag.astro";
-import getUniqueTags from "@utils/getUniqueTags";
-import { SITE } from "@config";
+import SearchBar2 from "../../components/Search2";
 
-const posts = await getCollection("blog");
-
+var posts = await getCollection("blog");
+var n = await getCollection("note");
+posts = posts.concat(n)
 const {tags, tagCounts} = getUniqueTags(posts);
+
 ---
 
-<Layout title={`Tags | ${SITE.title}`}>
-  <Header activeNav="tags" />
-  <Main pageTitle="" pageDesc="">
+<BaseLayout title = "Tags" sideBarActiveItemID="tags">
+    <div>
+        <div class="text-3xl w-full font-bold mb-5">标签</div>
+    </div>
     <ul>
-      {tags.map(tag => <Tag name={tag} size="lg" count={tagCounts[tag]} />)}
+        {tags.map(tag => <Tag name={tag} size="lg" count={tagCounts[tag]}/>)}
     </ul>
-  </Main>
-  <Footer />
-</Layout>
+    <br />
+    <SearchBar2 client:load  />
+</BaseLayout>

@@ -378,7 +378,7 @@ def dayone_to_local():
     with open(md_file, 'r', encoding="utf-8") as file:
         now_day = ConfigUtils.get_now_day()
         year = now_day[:4]
-        fileName = file.readline().replace("\n", "")
+        fileName = file.readline().replace("\n", "").replace(" ", "").replace(" ", "")
         if not fileName.startswith(year):
             fileName = '{}({})'.format(now_day, fileName)
         fileName = fileName + ".md"

@@ -1,26 +1,38 @@
-import { SITE } from "@config";
-import { defineCollection, z } from "astro:content";
-
-const blog = defineCollection({
-  type: "content",
-  schema: ({ image }) =>
-    z.object({
-      // author: z.string().default(SITE.author),
-      pubDatetime: z.date(),
-      title: z.string(),
-      postSlug: z.string().optional(),
-      // featured: z.boolean().optional(),
-      // draft: z.boolean().optional(),
-      tags: z.array(z.string()).default(["others"]),
-      ogImage: image()
-        .refine(img => img.width >= 1200 && img.height >= 630, {
-          message: "OpenGraph image must be at least 1200 X 630 pixels!",
-        })
-        .or(z.string())
-        .optional(),
-      // description: z.string(),
-      canonicalURL: z.string().optional(),
-    }),
+import { z, defineCollection } from "astro:content";
+const blogSchema = z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    pubDatetime: z.coerce.date(),
+    auth: z.boolean().optional(),
+    updatedDate: z.string().optional(),
+    heroImage: z.string().optional(),
+    badge: z.string().optional(),
+    tags: z.array(z.string()).refine(items => new Set(items).size === items.length, {
+        message: 'tags must be unique',
+    }).optional(),
 });
 
-export const collections = { blog };
+const storeSchema = z.object({
+    title: z.string(),
+    description: z.string(),
+    custom_link_label: z.string(),
+    custom_link: z.string().optional(),
+    updatedDate: z.coerce.date(),
+    pricing: z.string().optional(),
+    oldPricing: z.string().optional(),
+    badge: z.string().optional(),
+    checkoutUrl: z.string().optional(),
+    heroImage: z.string().optional(),
+});
+
+export type BlogSchema = z.infer<typeof blogSchema>;
+export type StoreSchema = z.infer<typeof storeSchema>;
+
+const blogCollection = defineCollection({ schema: blogSchema });
+const storeCollection = defineCollection({ schema: storeSchema });
+
+export const collections = {
+    'blog': blogCollection,
+    'note': blogCollection,
+    'store': blogCollection
+}

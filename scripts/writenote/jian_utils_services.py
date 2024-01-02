@@ -11,11 +11,15 @@ import qiniu
 import requests
 from github import Github, Repository
 
+os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
+os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
+
+
 src = r"D:\mxz\mxz_back"
 
 file = src + r'\scripts\writenote\config.ini'
 
-img_path = src + r'\src\content\img'
+img_path = src + r'\public\img'
 file_path = src + r'\src\content\blog'
 
 file_path_online = src + r'\scripts\writenote\content\note/'
@@ -23,8 +27,10 @@ file_path_online = src + r'\scripts\writenote\content\note/'
 prefix = """---
 pubDatetime: {}
 title: {}
+slug: {}
 tags:
   - "{}"
+{}
 ---
 
 {}
@@ -48,10 +54,12 @@ class GithubUtils:
         (filePath,name) = os.path.split(file)
         title = name.split(".")[0]
         label = title[:4] if title.startswith("20") else "1994"
-
+        labels2 = [label]
+        if name.__contains__("name"):
+            labels2.append("展望")
         with open(file, "r", encoding="utf8") as f:
                 content = f.read() + "\n" +  "[{}](https://github.com/{}/blob/master/src/content/blog/{}/{})".format(title, repo.full_name, label, name)
-                repo.create_issue(title, content,labels = [label])
+                repo.create_issue(title, content,labels =labels2)
 
 class ConfigUtils:
     @staticmethod
@@ -82,7 +90,6 @@ class ConfigUtils:
         return items.get(key)
 
 IMG_DIR = "../img"
-IMG_DIR_2 = r"/content/img"
 directory_path = r"/content/note_o"
 dd = '''
 <details {}><summary>{}</summary>
@@ -94,6 +101,12 @@ dd = '''
 </details>
 '''
 class FileUtil:
+
+    @staticmethod
+    def move_first_to_last(my_list):
+        if len(my_list) >= 2:
+            first_element = my_list.pop(0)
+            my_list.append(first_element)
     @staticmethod
     def check_dir(dir:str):
         if not os.path.exists(dir):
@@ -107,6 +120,8 @@ class FileUtil:
         # 排序文件列表，按修改时间降序排列
         # files.sort(key=lambda x: os.path.getmtime(os.path.join(folder_path, x)), reverse=True)
         files.sort(reverse=True)
+        if files[0].endswith("展望.md"):
+            FileUtil.move_first_to_last(files)
         # 获取最新的文件（第一个文件）
         if files:
             latest_file = files[0]
@@ -174,7 +189,8 @@ class FileUtil:
     def download_image_file(url, day=None):
         r = requests.get(url)
         end = os.path.basename(url).split(".")[1]
-        file = os.path.join(IMG_DIR_2, "{}/{}.{}".format(day[:4], day, end) )
+        target_folder_2 = img_path + "/{}/".format(day[:4])
+        file = os.path.join(os.path.join(target_folder_2, day + '.' + end) )
         with open(file, 'wb') as f:
             f.write(r.content)
             print(" # 写入DONE")
@@ -213,6 +229,152 @@ class FileUtil:
                     # file.write(item + "<br>\n")
                 file.write(dd.format(open2,key, content))
                 open2 = ""
+    @staticmethod
+    def init_archives_readme():
+        url = "https://mxz-back.pages.dev/blog/"
+        # 指定目录路径
+        directory_path = src + r"\src\content\blog"
+        # 使用os.listdir()获取目录下所有文件和文件夹的列表
+        file_names = os.listdir(directory_path)
+        s = {}
+        # 遍历文件名列表并打印
+        for file_name in file_names:
+            if not os.path.isfile(os.path.join(directory_path, file_name)):
+                s[file_name] = []
+                file_names2 = []
+                for  root, dirs, files in os.walk(os.path.join(directory_path, file_name)):
+                    file_names2 += files
+                for file_name2 in file_names2:
+                    title = file_name2.split(".")[0]
+                    u = title.replace("(", "").replace(")", "").replace("，","").replace(",","").replace("（", "").replace("）", "").lower()
+                    s[file_name].append("[{}]({})".format(title, url + u))
+
+        re_s = reversed(s.items())
+        for key, value in re_s:
+            value.reverse()
+            if key.startswith("20") and value[0].endswith("展望)"):
+                FileUtil.move_first_to_last(value)
+
+        re_s = reversed(s.items())
+
+        start = '''---
+layout: ../layouts/BaseLayout.astro
+title: ""
+---
+'''
+        dd = '''
+# {}
+        
+{}
+        
+        '''
+        file_path = src + r"\src\pages\archives.md"  # 替换为你想要创建的文件路径
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(start)
+            for key, value in re_s:
+                content = ""
+                for item in value:
+                    content += item + "<br>\n"
+                file.write(dd.format(key, content))
+
+    @staticmethod
+    def init_archives_table_readme():
+        url = "https://mxz-back.pages.dev/blog/"
+        # 指定目录路径
+        directory_path_list = [src + r"\src\content\blog", src + r"\src\content\note"]
+        list = []
+        for directory_path in directory_path_list:
+
+            # 使用os.listdir()获取目录下所有文件和文件夹的列表
+            file_names = os.listdir(directory_path)
+            s = {}
+            # 遍历文件名列表并打印
+
+            for file_name in file_names:
+                if not os.path.isfile(os.path.join(directory_path, file_name)):
+                    s[file_name] = []
+                    file_names2 = []
+                    for  root, dirs, files in os.walk(os.path.join(directory_path, file_name)):
+                        file_names2 += files
+                    for file_name2 in file_names2:
+                        title = file_name2.split(".")[0]
+                        u = title.replace(" ","")
+                        s[file_name].append("[{}]({})".format(title, url + u))
+                else:
+                    if (not s.keys().__contains__("note")):
+                        s["note"] = []
+                    title = file_name.split(".")[0]
+                    u = title.replace(" ","")
+                    s["note"].append("[{}]({})".format(title, url + u))
+            re_s = reversed(s.items())
+            for key, value in re_s:
+                value.reverse()
+                if key.startswith("20") and value[0].endswith("展望)"):
+                    FileUtil.move_first_to_last(value)
+
+            list += reversed(s.items())
+
+        start = '''---
+layout: ../layouts/ArchivesLayout.astro
+title: ""
+---
+<style>
+td, th {
+   border: none!important;
+   font-size: .775em;
+}
+</style>
+'''
+        dd = '''
+
+# [{}](https://mxz-back.pages.dev/blog/tag/{})
+
+|        |         |        |
+| ------------ |---------|---------|       
+{}
+        
+        '''
+#         dd3 = '''|{}| |{}|
+# '''
+#         file_path = src + r"\src\pages\archives.md"  # 替换为你想要创建的文件路径
+#         with open(file_path, 'w', encoding='utf-8') as file:
+#             file.write(start)
+#             for key, value in re_s:
+#                 content = ""
+#                 index = (value.__len__()+1)//2
+#                 print(index)
+#                 for i in range(0, index):
+#                     v1 = value[i]
+#                     if (i+index < value.__len__()):
+#                         v2 = value[i+index]
+#                     else:
+#                         v2 = ""
+#                     content += (dd3.format(v1, v2))
+#                 file.write(dd.format(key, content))
+        dd3 = '''|{}|{}|{}|
+'''
+        file_path = src + r"\src\pages\archives.md"  # 替换为你想要创建的文件路径
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(start)
+            for key, value in list:
+                content = ""
+                yu = value.__len__()%3
+                index = (value.__len__())//3
+                if (yu != 0):
+                    index = index + 1
+                print(index)
+                for i in range(0, index):
+                    v1 = value[i]
+                    if (i+index < value.__len__()):
+                        v2 = value[i+index]
+                    else:
+                        v2 = ""
+                    if (i+index*2 < value.__len__()):
+                        v3 = value[i+index*2]
+                    else:
+                        v3 = ""
+                    content += (dd3.format(v1, v2,v3))
+                file.write(dd.format(key, key, content))
 
     @staticmethod
     def init_oline_readme(fileName = "README_ONLINE.md"):
@@ -254,6 +416,7 @@ class FileUtil:
         print(response.json())
     @staticmethod
     def notice_ding_error(e: str):
+        print(e)
         json_data = {
             "at": {
                 "atMobiles":[
@@ -284,7 +447,7 @@ def getCookies():
     import http.cookies
     import json
 
-    cookie_str = "_ga=GA1.2.737969924.1685589635; _ga_Y1EKTCT110=GS1.2.1696579475.16.1.1696579533.0.0.0; Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068=1695798359,1696579447,1697534452; gdt_fp=f3a8181abe74958c45d1fb42ee9b7fe0; remember_user_token=W1s2OTA4MjEyXSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNjk5NDM1Mzg2LjczNzE2OTUiXQ%3D%3D--abdb720c712210efdd9235cc5f0c49dc30f423f9; read_mode=day; default_font=font2; locale=zh-CN; _m7e_session_core=6d27f523614428d039e548dad38e4cc0; artFromType=null; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2218866f985e0100b-07b74986a20881-26031a51-3686400-18866f985e111c7%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218866f985e0100b-07b74986a20881-26031a51-3686400-18866f985e111c7%22%7D"
+    cookie_str = "_ga=GA1.2.316202546.1695480391; Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068=1699181179; _ga_Y1EKTCT110=GS1.2.1699183942.3.0.1699183942.0.0.0; read_mode=day; default_font=font2; locale=zh-CN; remember_user_token=W1s2OTA0MzE1XSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNzAzNjgzNjYzLjY4NDU5MSJd--6480768a59c698eb18fcb1917b1866e61a507a9c; web_login_version=MTcwMzY4MzY2Mw%3D%3D--f26ac4e6d80ee0411350625c3b2559e1ea257838; _m7e_session_core=d95f9823abfb793f9cbafa126b20a384; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%226904315%22%2C%22first_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%7D"
 
     cookies = http.cookies.SimpleCookie()
     cookies.load(cookie_str)
@@ -298,34 +461,34 @@ def getCookies():
 
 
 cookies = {
-    '_ga': 'GA1.2.737969924.1685589635',
-    '_ga_Y1EKTCT110': 'GS1.2.1696579475.16.1.1696579533.0.0.0',
-    'Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068': '1695798359,1696579447,1697534452',
-    'Hm_lpvt_0c0e9d9b1e7d617b3e6842e85b9fb068': '1697534452',
-    'locale': 'zh-CN',
-    'gdt_fp': 'f3a8181abe74958c45d1fb42ee9b7fe0',
-    'mobile-index-modal': '1',
+    '_ga': 'GA1.2.316202546.1695480391',
+    'Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068': '1699181179',
+    '_ga_Y1EKTCT110': 'GS1.2.1699183942.3.0.1699183942.0.0.0',
     'read_mode': 'day',
     'default_font': 'font2',
-    'remember_user_token': 'W1s2OTA0MzE1XSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNjk3NjEzNTc0LjI3NTE4MjUiXQ%3D%3D--32887858f7a41cc65b26bd9c99984e6444b3b376',
-    '_m7e_session_core': 'ccfcfc3e76cad18f647db7009fcaf380',
-    'sensorsdata2015jssdkcross': '%7B%22distinct_id%22%3A%2218866f985e0100b-07b74986a20881-26031a51-3686400-18866f985e111c7%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218866f985e0100b-07b74986a20881-26031a51-3686400-18866f985e111c7%22%7D',
+    'locale': 'zh-CN',
+    'remember_user_token': 'W1s2OTA0MzE1XSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNzAzNjgzNjYzLjY4NDU5MSJd--6480768a59c698eb18fcb1917b1866e61a507a9c',
+    'web_login_version': 'MTcwMzY4MzY2Mw%3D%3D--f26ac4e6d80ee0411350625c3b2559e1ea257838',
+    '_m7e_session_core': 'd95f9823abfb793f9cbafa126b20a384',
+    'sensorsdata2015jssdkcross': '%7B%22distinct_id%22%3A%226904315%22%2C%22first_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%7D',
 }
+
 headers = {
-    'Host': 'www.jianshu.com',
-    'sec-ch-ua': '"Chromium";v="118", "Microsoft Edge";v="118", "Not=A?Brand";v="99"',
+    'authority': 'www.jianshu.com',
     'accept': 'application/json',
-    'content-type': 'application/json; charset=UTF-8',
-    'sec-ch-ua-mobile': '?0',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36',
-    'sec-ch-ua-platform': '"Windows"',
-    'origin': 'https://www.jianshu.com',
-    'sec-fetch-site': 'same-origin',
-    'sec-fetch-mode': 'cors',
-    'sec-fetch-dest': 'empty',
-    'referer': 'https://www.jianshu.com/writer',
     'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+    # 'cookie': '_ga=GA1.2.316202546.1695480391; Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068=1699181179; _ga_Y1EKTCT110=GS1.2.1699183942.3.0.1699183942.0.0.0; read_mode=day; default_font=font2; locale=zh-CN; remember_user_token=W1s2OTA0MzE1XSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNzAwOTE0NDY2LjA4MjgxMiJd--8603698ab407f9a75724e1c5d4dcbca2bfd320ce; web_login_version=MTcwMDkxNDQ2Ng%3D%3D--74a54859ae71b706a9cbb6557bf6e889a828ee96; _m7e_session_core=0381aac27a41a47d706ce49ebf956bec; sensorsdata2015jssdkcross=%7B%22distinct_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%2C%22first_id%22%3A%22%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%7D',
+    'if-none-match': 'W/"4a70973d5c4e6e77e1b7944653a4b13d"',
+    'referer': 'https://www.jianshu.com/writer',
+    'sec-ch-ua': '"Microsoft Edge";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
+    'sec-ch-ua-mobile': '?0',
+    'sec-ch-ua-platform': '"Windows"',
+    'sec-fetch-dest': 'empty',
+    'sec-fetch-mode': 'cors',
+    'sec-fetch-site': 'same-origin',
+    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
 }
+
 
 def upload_image(file:str):
     (filepath, filename) = os.path.split(file)
@@ -344,7 +507,7 @@ def replace_img_url(content):
     pattern = r'\((.*?)\)'
     matchs = re.findall(pattern, content)
     for img_path in matchs:
-        if file.endswith(".jpeg") or file.endswith(".jpg") or file.endswith(".png"):
+        if img_path.endswith(".jpeg") or img_path.endswith(".jpg") or img_path.endswith(".png"):
             imgurl = upload_image(img_path)
             print(imgurl)
             FileUtil.download_image_file(imgurl, ConfigUtils.get_now_day())
@@ -382,6 +545,8 @@ def get_content(id:str):
 
 def note_list():
     response = requests.get('https://www.jianshu.com/author/notebooks/14385934/notes', cookies=cookies, headers=headers)
+    if (response.status_code == 401):
+        raise Exception(response.text)
     return response.json()
 def jianshu_to_local():
     (filepath, filename) = os.path.split(FileUtil.get_last_file())
@@ -405,7 +570,12 @@ def local_to_jianshu():
     (filepath, filename) = os.path.split(last_file)
     new_name = note_list()[0]['title']
     if not filename.startswith(new_name):
-        content = replace_img_url(FileUtil.read_file(last_file))
+        try:
+            content = replace_img_url(FileUtil.read_file(last_file))
+        except Exception as e:
+            #     抛出自定义异常
+            FileUtil.notice_ding_error(str(e))
+            raise Exception('图片简书上传失败！')
         article = create_article(filename.split(".")[0])
         write_content(content, str(article["id"]))
         link = "https://www.jianshu.com/p/" + article["slug"]
@@ -437,6 +607,7 @@ def dayone_to_local():
         ali = CustomAligo()  # 第一次使用，会弹出二维码，供扫描登录
         fileList = ali.get_file_list("6538c5556b80c1ccbb4a40629284e0909be6e6fe")
         FileUtil.check_dir(article_path)
+        shutil.rmtree(article_path)
         ali.download_files(fileList, article_path)
         for e in fileList:
             ali.delete_file(file_id=e.file_id, drive_id=e.drive_id)
@@ -455,21 +626,23 @@ def dayone_to_local():
     with open(md_file, 'r', encoding="utf-8") as file:
         now_day = ConfigUtils.get_now_day()
         year = now_day[:4]
-        title = file.readline().replace("\n", "")
-        if not title.startswith(year):
+        title = file.readline().replace("\n", "").replace(" ", "").replace(" ", "")
+        if not title.startswith("20"):
             title = '{}({})'.format(now_day, title)
         fileName = title + ".md"
         content = file.read()
+        heroImg = ""
         if jpg_file is not None:
             target_folder_2 = img_path + "/{}/".format(year)
             if not os.path.exists(target_folder_2):
                 os.makedirs(target_folder_2)
             shutil.copy(jpg_file, os.path.join(target_folder_2, now_day + '.' + jpg_file.split(".")[1]))
-            content = content  + "\n" + "![](../{}{})".format("../img/{}/".format(year), now_day + '.' + jpg_file.split(".")[1])
+            content = content  + "\n" + "![](../{}{})".format("../../../public/img/{}/".format(year), now_day + '.' + jpg_file.split(".")[1])
+            heroImg = 'heroImage: "/img/{}/{}"'.format(year, now_day + '.' + jpg_file.split(".")[1])
 
         if not os.path.exists(file_path + "/{}/".format(now_day[:4])):
             os.makedirs(file_path + "/{}/".format(now_day[:4]))
-        content = prefix.format(ConfigUtils.get_now_str(), title, year, content)
+        content = prefix.format(ConfigUtils.get_now_str(), title, title, year, heroImg, content)
         with open(file_path + '/{}/{}'.format(now_day[:4], fileName), 'w', encoding="utf-8") as file:
             file.write(content)
     shutil.rmtree(article_path)
@@ -477,12 +650,18 @@ def dayone_to_local():
 
 def day_local_jian():
     try:
-        dayone_to_local()
-        time.sleep(10)
-        fileName = local_to_jianshu()
+        # dayone_to_local()
+        # time.sleep(10)
+        try:
+            fileName = local_to_jianshu()
+        except Exception as e:
+            FileUtil.notice_ding_error("简书异常")
+            raise e
         time.sleep(3)
         locl_to_github()
         if fileName is not None:
+            FileUtil.init_archives_table_readme()
+            FileUtil.run_cmd("node D:/mxz/mxz_back/src/components/lib/algoliasearch.js")
             # FileUtil.init_readme()
             FileUtil.run_cmd("git add -A")
             FileUtil.run_cmd("git commit -m '{}'".format(fileName))
@@ -518,9 +697,10 @@ password = 'emqx'
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
-            print("Connected to MQTT Broker!")
+            subscribe(client)
+            FileUtil.notice_ding_error(f"Connected to MQTT Broker!")
         else:
-            print("Failed to connect, return code %d\n", rc)
+            FileUtil.notice_ding_error(f"connect failed mqtt")
     # Set Connecting Client ID
     client = mqtt_client.Client(client_id)
     # Set CA certificate
@@ -542,7 +722,17 @@ def subscribe(client: mqtt_client):
 
 
 def run():
-    client = connect_mqtt()
+    i = 1
+    while(True):
+        if (i > 600):
+            i = 600
+        time.sleep(i*5)
+        try:
+            client = connect_mqtt()
+            i = 1
+            break
+        except Exception as e:
+            i = i + 1
     subscribe(client)
     client.loop_forever()
 
@@ -551,11 +741,23 @@ def run_loop():
     while True:
         # 在此处执行您的任务
         print("执行定时任务...")
-        day_local_jian()
+        try:
+            # FileUtil.notice_ding_error(f"Received  topic")
+            day_local_jian()
+        except Exception as e:
+            print(e)
         # 等待一段时间后再次执行任务
         time.sleep(interval)
 
 if __name__ == '__main__':
-    # t1 = Thread(target=run_loop)
-    # t1.start()
+    t1 = Thread(target=run_loop)
+    t1.start()
     run()
+    # FileUtil.init_archives_table_readme()
+    # imgurl = upload_image(r"D:\mxz\mxz_back\src\content\img\2023\2023-12-07.jpeg")
+    # print(imgurl)
+    # FileUtil.download_image_file(imgurl, ConfigUtils.get_now_day())
+
+    # repo = GithubUtils.get_repo(ConfigUtils.get_local("git_token"), "mxz94/mxz_back")
+    # year = "2023"
+    # GithubUtils.create_issue(repo, src + r"/scripts/writenote/content/note/{}/{}".format(year,year+"的展望.md"))

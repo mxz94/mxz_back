@@ -38,7 +38,7 @@ const postName = pathname?.split("/").pop();
 
   function createGusicScript() {
     const container = document.querySelector("#main-content");
-    const theme = getCurrentTheme() == "light" ? "light" : "dark_dimmed";
+    const theme = getCurrentTheme() == "light" ? "light" : "light";
     let script = document.createElement("script");
     script.src = "https://giscus.app/client.js";
     script.setAttribute("data-repo", giscus_repo);
