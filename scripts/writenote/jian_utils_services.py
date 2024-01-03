@@ -9,20 +9,21 @@ from threading import Thread
 import html2text
 import qiniu
 import requests
-from github import Github, Repository
+# from github import Github, Repository
 
-os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
-os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
+# os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
+# os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
 
 
-src = r"D:\mxz\mxz_back"
+src = "/ql/data/mxz_back"
+# src = "D:/mxz/mxz_back"
 
-file = src + r'\scripts\writenote\config.ini'
+file = src + '/scripts/writenote/config.ini'
 
-img_path = src + r'\public\img'
-file_path = src + r'\src\content\blog'
+img_path = src + '/public/img'
+file_path = src + '/src/content/blog'
 
-file_path_online = src + r'\scripts\writenote\content\note/'
+file_path_online = src + '/scripts/writenote/content/note/'
 
 prefix = """---
 pubDatetime: {}
@@ -42,24 +43,26 @@ con = configparser.ConfigParser()
 # 读取文件
 con.read(file, encoding='utf-8')
 
-class GithubUtils:
-
-    @staticmethod
-    def get_repo(token: str, repo: str):
-        return Github(token).get_repo(repo)
-
-
-    @staticmethod
-    def create_issue(repo: Repository, file: str):
-        (filePath,name) = os.path.split(file)
-        title = name.split(".")[0]
-        label = title[:4] if title.startswith("20") else "1994"
-        labels2 = [label]
-        if name.__contains__("name"):
-            labels2.append("展望")
-        with open(file, "r", encoding="utf8") as f:
-                content = f.read() + "\n" +  "[{}](https://github.com/{}/blob/master/src/content/blog/{}/{})".format(title, repo.full_name, label, name)
-                repo.create_issue(title, content,labels =labels2)
+# class GithubUtils:
+#
+#     @staticmethod
+#     def get_repo(token: str, repo: str):
+#         return Github(token).get_repo(repo)
+#
+#
+#     @staticmethod
+#     def create_issue(repo: Repository, file: str):
+#         (filePath,name) = os.path.split(file)
+#         title = name.split(".")[0]
+#         label = title[:4] if title.startswith("20") else "1994"
+#         labels2 = [label]
+#         if name.__contains__("展望"):
+#             labels2.append("展望")
+#         print(file)
+#         with open(file, "r", encoding="utf8") as f:
+#             content = f.read() + "\n" +  "[{}](https://github.com/{}/blob/master/src/content/blog/{}/{})".format(title, repo.full_name, label, name)
+#             print(labels2)
+#             repo.create_issue(title, content,labels =labels2)
 
 class ConfigUtils:
     @staticmethod
@@ -90,7 +93,7 @@ class ConfigUtils:
         return items.get(key)
 
 IMG_DIR = "../img"
-directory_path = r"/content/note_o"
+directory_path = "/content/note_o"
 dd = '''
 <details {}><summary>{}</summary>
 <p>
@@ -196,92 +199,15 @@ class FileUtil:
             print(" # 写入DONE")
         return
 
-    @staticmethod
-    def init_readme(fileName = "README.md" , pg = "note_o"):
-        FileUtil.init_o_readme("README.md", r"/src/content/blog")
-        FileUtil.init_o_readme("README_JIAN.md", r"/scripts/writenote/content/note")
-        FileUtil.init_oline_readme()
 
-    @staticmethod
-    def init_readme(fileName = "README.md", pg=r"/src/content/blog"):
-        # 使用os.listdir()获取目录下所有文件和文件夹的列表
-        file_names = os.listdir(src + pg)
-        s = {}
-        # 遍历文件名列表并打印
-        for file_name in file_names:
-            if not os.path.isfile(os.path.join(directory_path, file_name)):
-                s[file_name] = []
-                file_names2 = os.listdir(os.path.join(directory_path, file_name))
-                for file_name2 in file_names2:
-                    s[file_name].append("[{}]({})".format(file_name2.split(".")[0],   "./"+pg+"/"+ file_name + "/" + file_name2))
 
-        re_s = reversed(s.items())
-        for key, value in re_s:
-            value.reverse()
 
-        re_s = reversed(s.items())
-        with open("D:\mxz\mxz_back\简书/"+ fileName, 'w', encoding='utf-8') as file:
-            open2 = "open"
-            for key, value in re_s:
-                content = ""
-                for item in value:
-                    content += item + "<br>\n"
-                    # file.write(item + "<br>\n")
-                file.write(dd.format(open2,key, content))
-                open2 = ""
-    @staticmethod
-    def init_archives_readme():
-        url = "https://mxz-back.pages.dev/blog/"
-        # 指定目录路径
-        directory_path = src + r"\src\content\blog"
-        # 使用os.listdir()获取目录下所有文件和文件夹的列表
-        file_names = os.listdir(directory_path)
-        s = {}
-        # 遍历文件名列表并打印
-        for file_name in file_names:
-            if not os.path.isfile(os.path.join(directory_path, file_name)):
-                s[file_name] = []
-                file_names2 = []
-                for  root, dirs, files in os.walk(os.path.join(directory_path, file_name)):
-                    file_names2 += files
-                for file_name2 in file_names2:
-                    title = file_name2.split(".")[0]
-                    u = title.replace("(", "").replace(")", "").replace("，","").replace(",","").replace("（", "").replace("）", "").lower()
-                    s[file_name].append("[{}]({})".format(title, url + u))
-
-        re_s = reversed(s.items())
-        for key, value in re_s:
-            value.reverse()
-            if key.startswith("20") and value[0].endswith("展望)"):
-                FileUtil.move_first_to_last(value)
-
-        re_s = reversed(s.items())
-
-        start = '''---
-layout: ../layouts/BaseLayout.astro
-title: ""
----
-'''
-        dd = '''
-# {}
-        
-{}
-        
-        '''
-        file_path = src + r"\src\pages\archives.md"  # 替换为你想要创建的文件路径
-        with open(file_path, 'w', encoding='utf-8') as file:
-            file.write(start)
-            for key, value in re_s:
-                content = ""
-                for item in value:
-                    content += item + "<br>\n"
-                file.write(dd.format(key, content))
 
     @staticmethod
     def init_archives_table_readme():
         url = "https://mxz-back.pages.dev/blog/"
         # 指定目录路径
-        directory_path_list = [src + r"\src\content\blog", src + r"\src\content\note"]
+        directory_path_list = [src + "/src/content/blog", src + "/src/content/note"]
         list = []
         for directory_path in directory_path_list:
 
@@ -334,26 +260,9 @@ td, th {
 {}
         
         '''
-#         dd3 = '''|{}| |{}|
-# '''
-#         file_path = src + r"\src\pages\archives.md"  # 替换为你想要创建的文件路径
-#         with open(file_path, 'w', encoding='utf-8') as file:
-#             file.write(start)
-#             for key, value in re_s:
-#                 content = ""
-#                 index = (value.__len__()+1)//2
-#                 print(index)
-#                 for i in range(0, index):
-#                     v1 = value[i]
-#                     if (i+index < value.__len__()):
-#                         v2 = value[i+index]
-#                     else:
-#                         v2 = ""
-#                     content += (dd3.format(v1, v2))
-#                 file.write(dd.format(key, content))
         dd3 = '''|{}|{}|{}|
 '''
-        file_path = src + r"\src\pages\archives.md"  # 替换为你想要创建的文件路径
+        file_path = src + "/src/pages/archives.md"  # 替换为你想要创建的文件路径
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(start)
             for key, value in list:
@@ -376,32 +285,6 @@ td, th {
                     content += (dd3.format(v1, v2,v3))
                 file.write(dd.format(key, key, content))
 
-    @staticmethod
-    def init_oline_readme(fileName = "README_ONLINE.md"):
-        try:
-            data = note_list()
-            s = {}
-            # 遍历文件名列表并打印
-
-            for item in data:
-                title = item["title"].split(".")[0] + ".md"
-                slug = item["slug"]
-                year = title[:4]
-                if s.get(year) is None:
-                    s[year] = []
-                s[year].append("[{}]({})".format(title.split(".")[0],   "https://www.jianshu.com/p/" + slug))
-            re_s = s.items()
-            with open("D:\mxz\mxz_back\简书/"+ fileName, 'w', encoding='utf-8') as file:
-                open2 = "open"
-                for key, value in re_s:
-                    content = ""
-                    for item in value:
-                        content += item + "<br>\n"
-                        # file.write(item + "<br>\n")
-                    file.write(dd.format(open2,key, content))
-                    open2 = ""
-        except Exception as e:
-         print(e)
 
     @staticmethod
     def notice_ding(title, content, link, time):
@@ -440,8 +323,8 @@ td, th {
     def notice_wechat(title: str):
         response = requests.get('https://sctapi.ftqq.com/SCT142512TIZeFu7Dj22drBfQgwT0KPIdI.send?title={}'.format(title))
 
-DIR= r'/content/note/'
-DIR_O= r'/content/note_o/'
+DIR= '/content/note/'
+DIR_O= '/content/note_o/'
 
 def getCookies():
     import http.cookies
@@ -589,6 +472,7 @@ def local_to_jianshu():
 
 def dayone_to_local():
     article_path = ConfigUtils.get("icloud_path")
+
     if article_path is None:
         article_path = ConfigUtils.get("ali_path")
         from aligo import Aligo
@@ -650,36 +534,32 @@ def dayone_to_local():
 
 def day_local_jian():
     try:
-        # dayone_to_local()
-        # time.sleep(10)
+        dayone_to_local()
         try:
             fileName = local_to_jianshu()
         except Exception as e:
             FileUtil.notice_ding_error("简书异常")
             raise e
-        time.sleep(3)
-        locl_to_github()
-        if fileName is not None:
-            FileUtil.init_archives_table_readme()
-            FileUtil.run_cmd("node D:/mxz/mxz_back/src/components/lib/algoliasearch.js")
-            # FileUtil.init_readme()
-            FileUtil.run_cmd("git add -A")
-            FileUtil.run_cmd("git commit -m '{}'".format(fileName))
-            FileUtil.run_cmd("git push -f")
+        # locl_to_github()
+        fileName = "ww"
+        FileUtil.init_archives_table_readme()
+        FileUtil.run_cmd("node {}/src/components/lib/algoliasearch.js".format(src))
+        FileUtil.run_cmd("cd {} && git pull && git add -A && git commit -m '{}' && git push -f ".format(src, fileName))
     except Exception as e:
         print(e)
         FileUtil.notice_wechat(str(e))
         FileUtil.notice_ding_error(str(e))
 
-def locl_to_github():
-    last_file = FileUtil.get_last_file()
-    (filepath, filename) = os.path.split(last_file)
-    new_name = ConfigUtils.get("issue_title")
-    if not filename.startswith(new_name):
-        repo = GithubUtils.get_repo(ConfigUtils.get_local("git_token"), "mxz94/mxz_back")
-        year = ConfigUtils.get_now_day()[:4]
-        GithubUtils.create_issue(repo, src + r"/scripts/writenote/content/note/{}/{}".format(year,filename))
-        ConfigUtils.set("issue_title", filename)
+# def locl_to_github():
+#     last_file = FileUtil.get_last_file()
+#     (filepath, filename) = os.path.split(last_file)
+#     new_name = ConfigUtils.get("issue_title")
+#     if not filename.startswith(new_name):
+#         repo = GithubUtils.get_repo(ConfigUtils.get("git_token"), "mxz94/mxz_back")
+#         year = ConfigUtils.get_now_day()[:4]
+#         print(year)
+#         GithubUtils.create_issue(repo, src + "/scripts/writenote/content/note/{}/{}".format(year,filename))
+#         ConfigUtils.set("issue_title", filename)
 
 import random
 import time
@@ -737,27 +617,12 @@ def run():
     client.loop_forever()
 
 def run_loop():
-    interval = 3600
-    while True:
         # 在此处执行您的任务
-        print("执行定时任务...")
-        try:
-            # FileUtil.notice_ding_error(f"Received  topic")
-            day_local_jian()
-        except Exception as e:
-            print(e)
-        # 等待一段时间后再次执行任务
-        time.sleep(interval)
+    print("执行定时任务...")
+    try:
+        day_local_jian()
+    except Exception as e:
+        print(e)
 
 if __name__ == '__main__':
-    t1 = Thread(target=run_loop)
-    t1.start()
-    run()
-    # FileUtil.init_archives_table_readme()
-    # imgurl = upload_image(r"D:\mxz\mxz_back\src\content\img\2023\2023-12-07.jpeg")
-    # print(imgurl)
-    # FileUtil.download_image_file(imgurl, ConfigUtils.get_now_day())
-
-    # repo = GithubUtils.get_repo(ConfigUtils.get_local("git_token"), "mxz94/mxz_back")
-    # year = "2023"
-    # GithubUtils.create_issue(repo, src + r"/scripts/writenote/content/note/{}/{}".format(year,year+"的展望.md"))
+    run_loop()
