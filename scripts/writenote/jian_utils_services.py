@@ -537,14 +537,15 @@ def day_local_jian():
         dayone_to_local()
         try:
             fileName = local_to_jianshu()
+            fileName = "asda"
         except Exception as e:
             FileUtil.notice_ding_error("简书异常")
             raise e
         # locl_to_github()
-        fileName = "ww"
-        FileUtil.init_archives_table_readme()
-        FileUtil.run_cmd("node {}/src/components/lib/algoliasearch.js".format(src))
-        FileUtil.run_cmd("cd {} && git pull && git add -A && git commit -m '{}' && git push -f ".format(src, fileName))
+        if fileName is not None:
+            FileUtil.init_archives_table_readme()
+            FileUtil.run_cmd("node {}/src/components/lib/algoliasearch.js".format(src))
+            FileUtil.run_cmd("cd {} && git pull && git add -A && git commit -m '{}' && git push -f ".format(src, fileName))
     except Exception as e:
         print(e)
         FileUtil.notice_wechat(str(e))
