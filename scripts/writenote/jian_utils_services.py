@@ -9,7 +9,7 @@ from threading import Thread
 import html2text
 import qiniu
 import requests
-# from github import Github, Repository
+from github import Github, Repository
 
 # os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
 # os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
@@ -43,26 +43,26 @@ con = configparser.ConfigParser()
 # 读取文件
 con.read(file, encoding='utf-8')
 
-# class GithubUtils:
-#
-#     @staticmethod
-#     def get_repo(token: str, repo: str):
-#         return Github(token).get_repo(repo)
-#
-#
-#     @staticmethod
-#     def create_issue(repo: Repository, file: str):
-#         (filePath,name) = os.path.split(file)
-#         title = name.split(".")[0]
-#         label = title[:4] if title.startswith("20") else "1994"
-#         labels2 = [label]
-#         if name.__contains__("展望"):
-#             labels2.append("展望")
-#         print(file)
-#         with open(file, "r", encoding="utf8") as f:
-#             content = f.read() + "\n" +  "[{}](https://github.com/{}/blob/master/src/content/blog/{}/{})".format(title, repo.full_name, label, name)
-#             print(labels2)
-#             repo.create_issue(title, content,labels =labels2)
+class GithubUtils:
+
+    @staticmethod
+    def get_repo(token: str, repo: str):
+        return Github(token).get_repo(repo)
+
+
+    @staticmethod
+    def create_issue(repo: Repository, file: str):
+        (filePath,name) = os.path.split(file)
+        title = name.split(".")[0]
+        label = title[:4] if title.startswith("20") else "1994"
+        labels2 = [label]
+        if name.__contains__("展望"):
+            labels2.append("展望")
+        print(file)
+        with open(file, "r", encoding="utf8") as f:
+            content = f.read() + "\n" +  "[{}](https://github.com/{}/blob/master/src/content/blog/{}/{})".format(title, repo.full_name, label, name)
+            print(labels2)
+            repo.create_issue(title, content,labels =labels2)
 
 class ConfigUtils:
     @staticmethod
@@ -541,7 +541,7 @@ def day_local_jian():
         except Exception as e:
             FileUtil.notice_ding_error("简书异常")
             raise e
-        # locl_to_github()
+        locl_to_github()
         if fileName is not None:
             FileUtil.init_archives_table_readme()
             FileUtil.run_cmd("node {}/src/components/lib/algoliasearch.js".format(src))
@@ -551,16 +551,16 @@ def day_local_jian():
         FileUtil.notice_wechat(str(e))
         FileUtil.notice_ding_error(str(e))
 
-# def locl_to_github():
-#     last_file = FileUtil.get_last_file()
-#     (filepath, filename) = os.path.split(last_file)
-#     new_name = ConfigUtils.get("issue_title")
-#     if not filename.startswith(new_name):
-#         repo = GithubUtils.get_repo(ConfigUtils.get("git_token"), "mxz94/mxz_back")
-#         year = ConfigUtils.get_now_day()[:4]
-#         print(year)
-#         GithubUtils.create_issue(repo, src + "/scripts/writenote/content/note/{}/{}".format(year,filename))
-#         ConfigUtils.set("issue_title", filename)
+def locl_to_github():
+    last_file = FileUtil.get_last_file()
+    (filepath, filename) = os.path.split(last_file)
+    new_name = ConfigUtils.get("issue_title")
+    if not filename.startswith(new_name):
+        repo = GithubUtils.get_repo(ConfigUtils.get("git_token"), "mxz94/mxz_back")
+        year = ConfigUtils.get_now_day()[:4]
+        print(year)
+        GithubUtils.create_issue(repo, src + "/scripts/writenote/content/note/{}/{}".format(year,filename))
+        ConfigUtils.set("issue_title", filename)
 
 import random
 import time
