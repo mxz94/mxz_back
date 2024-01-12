@@ -6,7 +6,7 @@ tags:
   - "工具"
 ---
 
-需求： 我们看B站视频发现视频很长又想看精彩点，或者想知道总结，这时我们就可以利用 [IndieKKY/bilibili-subtitle](https://github.com/IndieKKY/bilibili-subtitle) 来实现
+需求： 我们看B站视频发现视频很长又想看精彩点，或者想知道总结，这时我们就可以利用 [IndieKKY/bilibili-subtitle](https://github.com/IndieKKY/bilibili-subtitle) 来实现  或者直接用我封装免费的 [bilibili_subTitle免费插件](https://wwot.lanzn.com/ilPRo1kwtoif)
 
 # 一. 注册部署Gemmi
 
