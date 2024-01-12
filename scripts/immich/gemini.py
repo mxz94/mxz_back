@@ -17,40 +17,7 @@ json_data = {
         {
             'parts': [
                 {
-                    'text': '''
-                    import os
-
-headers = {
-    'Content-Type': 'application/json',
-}
-
-params = {
-    'key': 'AIzaSyA_D3B_6BAio2MGZc-asmjh3D_HGXPkLsU',
-}
-
-json_data = {
-    'contents': [
-        {
-            'parts': [
-                {
-                    'text': '输入的文本',
-                },
-            ],
-        },
-    ],
-}
-
-response = requests.post(
-    'https://gemini.mxz94.asia/v1beta/models/gemini-pro:generateContent',
-    params=params,
-    headers=headers,
-    json=json_data,
-)
-print(response.json())
-print(response.json()["candidates"][0]["content"]["parts"][0]["text"])
-
-将这段代码转换为网页html  通过输入 js请求得到结果展示 不引入其他js 好看一点
-                    ''',
+                    'text': '小明说今天他吃了一只公鸡蛋，请问小明诚实吗？',
                 },
             ],
         },
