@@ -6,20 +6,17 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import Comment from "@components/Comment.astro";
 
 export interface Props extends BlogSchema {}
-
 const { title, description, pubDatetime, updatedDate, heroImage, badge, tags = [] } = Astro.props;
-dayjs.extend(localizedFormat);
-const displayDate = dayjs(pubDatetime).format("ll")
+const displayDate = dayjs(pubDatetime).subtract(8, 'hour').format('YYYY-MM-DD HH:mm')
 import { Image } from "astro:assets";
 ---
 
-<BaseLayout title={title} description={description} image={heroImage}>
+<BaseLayout title={title} description={description} image={heroImage}, ogType="article">
   <main class="md:flex md:justify-center">
     <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
       <!--{heroImage && <Image width={750} height={422} format="webp" src={heroImage} alt={title} class="w-full mb-6" />}-->
       <h1 class="title my-2 text-4xl font-bold">{title}</h1>
-      {pubDatetime && <time>{displayDate}</time>}
-      <br />
+        <br/>
       {badge && <div class="badge badge-secondary my-1">{badge}</div>}
       {
         tags &&
@@ -29,14 +26,7 @@ import { Image } from "astro:assets";
             </a>
           ))
       }
-      {
-        updatedDate && (
-          <div>
-            {" "}
-            Last updated on <time>{updatedDate}</time>{" "}
-          </div>
-        )
-      }
+        {pubDatetime && <time class="float-right">{displayDate}</time>}
       <div class="divider my-2"></div>
       <slot />
     </article>
