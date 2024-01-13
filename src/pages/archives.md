@@ -14,8 +14,9 @@ td, th {
 
 |        |         |        |
 | ------------ |---------|---------|       
-|[2024-01-10(查教资面试)](https://mxz-back.pages.dev/blog/2024-01-10(查教资面试))|[2024-01-06(隋唐植物园逛)](https://mxz-back.pages.dev/blog/2024-01-06(隋唐植物园逛))|[2024-01-01(元旦逛)](https://mxz-back.pages.dev/blog/2024-01-01(元旦逛))|
-|[2024-01-08(宝贝刷鞋)](https://mxz-back.pages.dev/blog/2024-01-08(宝贝刷鞋))|[2024-01-03(今天尝试跑步5公里)](https://mxz-back.pages.dev/blog/2024-01-03(今天尝试跑步5公里))|[2024的展望](https://mxz-back.pages.dev/blog/2024的展望)|
+|[2024-01-12(梦到不好的事)](https://mxz-back.pages.dev/blog/2024-01-12(梦到不好的事))|[2024-01-06(隋唐植物园逛)](https://mxz-back.pages.dev/blog/2024-01-06(隋唐植物园逛))|[2024的展望](https://mxz-back.pages.dev/blog/2024的展望)|
+|[2024-01-10(查教资面试)](https://mxz-back.pages.dev/blog/2024-01-10(查教资面试))|[2024-01-03(今天尝试跑步5公里)](https://mxz-back.pages.dev/blog/2024-01-03(今天尝试跑步5公里))||
+|[2024-01-08(宝贝刷鞋)](https://mxz-back.pages.dev/blog/2024-01-08(宝贝刷鞋))|[2024-01-01(元旦逛)](https://mxz-back.pages.dev/blog/2024-01-01(元旦逛))||
 
         
         
@@ -193,21 +194,22 @@ td, th {
         
         
 
-# [note](https://mxz-back.pages.dev/blog/tag/note)
-
-|        |         |        |
-| ------------ |---------|---------|       
-|[教资面试(信息的一般特征)](https://mxz-back.pages.dev/blog/教资面试(信息的一般特征))|[教资科目三](https://mxz-back.pages.dev/blog/教资科目三)||
-|[教资科目二](https://mxz-back.pages.dev/blog/教资科目二)|[教资科目一](https://mxz-back.pages.dev/blog/教资科目一)||
-
-        
-        
-
 # [java](https://mxz-back.pages.dev/blog/tag/java)
 
 |        |         |        |
 | ------------ |---------|---------|       
 |[Java集合框架](https://mxz-back.pages.dev/blog/Java集合框架)|||
+
+        
+        
+
+# [note](https://mxz-back.pages.dev/blog/tag/note)
+
+|        |         |        |
+| ------------ |---------|---------|       
+|[数据结构](https://mxz-back.pages.dev/blog/数据结构)|[教资科目三](https://mxz-back.pages.dev/blog/教资科目三)|[Cloudflare用处](https://mxz-back.pages.dev/blog/Cloudflare用处)|
+|[教资面试(信息的一般特征)](https://mxz-back.pages.dev/blog/教资面试(信息的一般特征))|[教资科目一](https://mxz-back.pages.dev/blog/教资科目一)|[bili总结助手-Gemini](https://mxz-back.pages.dev/blog/bili总结助手-Gemini)|
+|[教资科目二](https://mxz-back.pages.dev/blog/教资科目二)|[immich相册备份工具](https://mxz-back.pages.dev/blog/immich相册备份工具)||
 
         
         
