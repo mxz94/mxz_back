@@ -19,18 +19,17 @@ def notice_ding(title, content):
 dir = r'D:\Administrator\Pictures\profile\{}'.format(year)
 filename = dir+ r'\{}.jpg'.format(name)
 
-cookies = {
-    '_ga': 'GA1.2.316202546.1695480391',
-    'Hm_lvt_0c0e9d9b1e7d617b3e6842e85b9fb068': '1699181179',
-    '_ga_Y1EKTCT110': 'GS1.2.1699183942.3.0.1699183942.0.0.0',
-    'read_mode': 'day',
-    'default_font': 'font2',
-    'locale': 'zh-CN',
-    'remember_user_token': 'W1s2OTA0MzE1XSwiJDJhJDEwJDRjbkxQOE9iSHZGeDRyT3hzMnpSek8iLCIxNzAzNjgzNjYzLjY4NDU5MSJd--6480768a59c698eb18fcb1917b1866e61a507a9c',
-    'web_login_version': 'MTcwMzY4MzY2Mw%3D%3D--f26ac4e6d80ee0411350625c3b2559e1ea257838',
-    '_m7e_session_core': 'd95f9823abfb793f9cbafa126b20a384',
-    'sensorsdata2015jssdkcross': '%7B%22distinct_id%22%3A%226904315%22%2C%22first_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%2C%22props%22%3A%7B%22%24latest_traffic_source_type%22%3A%22%E7%9B%B4%E6%8E%A5%E6%B5%81%E9%87%8F%22%2C%22%24latest_search_keyword%22%3A%22%E6%9C%AA%E5%8F%96%E5%88%B0%E5%80%BC_%E7%9B%B4%E6%8E%A5%E6%89%93%E5%BC%80%22%2C%22%24latest_referrer%22%3A%22%22%7D%2C%22%24device_id%22%3A%2218ac281a32a86c-0f28170cbca7b1-26031e51-1382400-18ac281a32ba28%22%7D',
-}
+def getCookies():
+    import http.cookies
+    with open(r"D:\mxz\mxz_back\scripts\writenote\cookies.txt", "r", encoding="utf8") as f:
+        raw_cookie_string = f.read()
+    cookies_dict = http.cookies.SimpleCookie()
+    cookies_dict.load(raw_cookie_string)
+
+    # 转换为 JSON 对象
+    return  {key: morsel.value for key, morsel in cookies_dict.items()}
+
+cookies = getCookies()
 
 headers = {
     'authority': 'www.jianshu.com',
