@@ -78,7 +78,8 @@ def take_photo_and_close():
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
         # 使用 Haarcascades 检测人脸
-        faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+        # faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+        faces = face_cascade.detectMultiScale(gray, 1.3, 5)
 
         # 如果检测到人脸，保存照片并退出循环
         if len(faces) > 0:
