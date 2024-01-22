@@ -10,6 +10,7 @@ tags:
 # pyhon 打包工具
 
 ## pyinstaller
-
+打包为一个文件 
+pyinstaller --onefile your_script.py -i 11.ico
 
 
