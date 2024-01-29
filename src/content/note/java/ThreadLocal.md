@@ -11,7 +11,7 @@ ThreadLocal  用一句话解释就是 Thread 的每个线程上都有一个Map, 
 
 
 # 二. 
-![81886bb70d8b4275a80f28e654205f77.png](../../../public/img/1705909107011.png)
+![81886bb70d8b4275a80f28e654205f77.png](../../../../public/img/1705909107011.png)
 
 ```java
     public T get() {
