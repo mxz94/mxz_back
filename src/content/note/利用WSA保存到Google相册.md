@@ -14,6 +14,9 @@ tags:
 5. 安装pixelify_gphotos_v4.1.apk,  lsposed 模块中开启, 指定针对应用
 6. pixelify_gphotos 内设定设备类型 选择 [ Device to spoof ] 将机型改为 [ PixelXL ] ，选择下方的 [ Force Stop Google Photo ]
 
+[附件地址](https://www.lanzv.com/ifwxc1mt4mdc)
+
+
 # 二. 利用WSA抓包安卓软件
 
 1. 安装WSA工具箱 将 charles 的 Help -> SSL Proxying -> Save Charles Root Certificat 证书
