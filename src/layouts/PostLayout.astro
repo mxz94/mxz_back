@@ -7,7 +7,7 @@ import Comment from "@components/Comment.astro";
 
 export interface Props extends BlogSchema {}
 const { title, description, pubDatetime, updatedDate, heroImage, badge, tags = [] } = Astro.props;
-const displayDate = dayjs(pubDatetime).subtract(8, 'hour').format('YYYY-MM-DD HH:mm')
+const displayDate = dayjs(pubDatetime).format('YYYY-MM-DD HH:mm')
 import { Image } from "astro:assets";
 ---
 
