@@ -59,8 +59,8 @@ drive_id = str(645810972)
 # 备份库
 d2_id = str(79808)
 
-file_id = "65b0acfdc028637ce82b4c0d8655329e0965893a"
-print(ali.get_file_list(drive_id=drive_id, parent_file_id=file_id))
-# print(ali.get_file_list(parent_file_id="65b0adf486280f1aaf074b2e96ae55846f6e8ca8"))
-# local = "/ql/data/mxz_back/"
+file_id = "65b871b4e59563d274ba4eaa8f4e0e05d2f2a5e3"
+print(ali.get_file_list(drive_id=drive_id))
+print(ali.get_file_list(parent_file_id="65794fc3e2809e4667914a61b266529ca2915432", drive_id=drive_id))
+local = "D:/mian"
 # ali.download_folder(folder_file_id=file_id, local_folder=local, drive_id=drive_id)

@@ -12,10 +12,10 @@ Registered Name: https://zhile.io
 License Key: 48891cf209c6d32bf4
 
 1. 下载安装证书到受信任机构  
-![7d445d0df772442f81b3d1c0c71c57f6.png](../../../public/img/1705915421823.png)
+![7d445d0df772442f81b3d1c0c71c57f6.png](../../../public/img/note/1705915421823.png)
 
 2. 开启代理  
-![30cae17fdf254f0798ab061c5de065af.png](../../../public/img/1705915514039.png)
+![30cae17fdf254f0798ab061c5de065af.png](../../../public/img/note/1705915514039.png)
 
 3. 电脑开启， 关闭防火墙
 4. 手机代理也是统一局域网配置电脑ip及代理端口
@@ -29,7 +29,7 @@ License Key: 48891cf209c6d32bf4
 点击安装即可，安装过程中需要输入手机密码。
 
 过滤请求 (超级坑，忘了配置了这里结果所有请求都看不到了)  
-![c6234704fda742889de961f6eba42e59.png](../../../public/img/1705915637967.png)
+![c6234704fda742889de961f6eba42e59.png](../../../public/img/note/1705915637967.png)
 
 设置断点修改请求和响应
 

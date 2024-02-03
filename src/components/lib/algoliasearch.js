@@ -57,7 +57,7 @@ function readFilesRecursively(directory) {
 
   return data;
 }
-const directoryPath = "D:\\mxz\\mxz_back\\src\\content\\blog";
+const directoryPath = "D:\\mxz\\mxz_back\\src\\content\\note";
 const data = readFilesRecursively(directoryPath);
 // 2. Send the dataset in JSON format
 client

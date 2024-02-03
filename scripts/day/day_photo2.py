@@ -21,7 +21,7 @@ filename = dir+ r'\{}.jpg'.format(name)
 def upload_image(file:str):
     (filepath, filename) = os.path.split(file)
     headers = {
-        "Authorization" : "Bearer "+"149|TByGbpkb7ePEiIhEzyIm1f0hf6E3WRF2YkRChide",
+        "Authorization" : "Bearer "+"156|gXDBkk0ECiK6cakwgKZu21WpAOFg9Ivh3M0PW3oe",
         "Content-Type" : "multipart/form-data",
         "Accept" : "application/json"
     }
@@ -83,4 +83,5 @@ def take_photo_and_close():
 
 if __name__ == '__main__':
     # 运行拍照并关闭摄像头的函数
-    take_photo_and_close()
+    # take_photo_and_close()
+    print(upload_image("D:/gh_9deac005c0ab_258.jpg"))
