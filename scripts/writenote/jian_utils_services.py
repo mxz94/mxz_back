@@ -502,9 +502,9 @@ def dayone_to_local():
             target_folder_2 = img_path + "/{}/".format(year)
             if not os.path.exists(target_folder_2):
                 os.makedirs(target_folder_2)
-            shutil.copy(jpg_file, os.path.join(target_folder_2, now_day + '.' + jpg_file.split(".")[1]))
-            content = content  + "\n" + "![](../{}{})".format("../../../public/img/{}/".format(year), now_day + '.' + jpg_file.split(".")[1])
-            heroImg = 'heroImage: "/img/{}/{}"'.format(year, now_day + '.' + jpg_file.split(".")[1])
+            shutil.copy(jpg_file, os.path.join(target_folder_2, title.split("(")[0]  + '.' + jpg_file.split(".")[1]))
+            content = content  + "\n" + "![](../{}{})".format("../../../public/img/{}/".format(year), title.split("(")[0] + '.' + jpg_file.split(".")[1])
+            heroImg = 'heroImage: "/img/{}/{}"'.format(year, title.split("(")[0] + '.' + jpg_file.split(".")[1])
 
         if not os.path.exists(file_path + "/{}/".format(now_day[:4])):
             os.makedirs(file_path + "/{}/".format(now_day[:4]))
