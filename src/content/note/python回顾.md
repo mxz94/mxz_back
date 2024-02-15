@@ -15,3 +15,4 @@ cheeseshop("L", "A","B", shopkeeper="Michael Palin", client="John Cleese", sketc
 5. 异常处理 try  except Exception as e:  raise 抛出异常
 6. 类  @dataclass  类似c里面的struct
 7. python 打包 pyinstaller --onefile your_script.py -i 11.ico
+8. pip install --upgrade package_name 升级包

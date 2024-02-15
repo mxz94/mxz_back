@@ -15,8 +15,8 @@ import requests
 # os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
 
 
-src = "/ql/data/mxz_back"
-# src = "D:/mxz/mxz_back"
+# src = "/ql/data/mxz_back"
+src = "D:/mxz/mxz_back"
 
 file = src + '/scripts/writenote/config.ini'
 cookie_file = src + '/scripts/writenote/cookies.txt'
@@ -368,14 +368,14 @@ def upload_image(file:str):
     return ret['url']
 
 
-def replace_img_url(content):
+def replace_img_url(content, filename):
     pattern = r'\((.*?)\)'
     matchs = re.findall(pattern, content)
     for img_path in matchs:
         if img_path.endswith(".jpeg") or img_path.endswith(".jpg") or img_path.endswith(".png"):
             imgurl = upload_image(img_path)
             print(imgurl)
-            FileUtil.download_image_file(imgurl, ConfigUtils.get_now_day())
+            FileUtil.download_image_file(imgurl, filename.split("(")[0])
             content= content.replace('({})'.format(img_path), '({})'.format(imgurl))
     return content
 
@@ -436,7 +436,7 @@ def local_to_jianshu():
     new_name = note_list()[0]['title']
     if not filename.startswith(new_name):
         try:
-            content = replace_img_url(FileUtil.read_file(last_file))
+            content = replace_img_url(FileUtil.read_file(last_file), filename)
         except Exception as e:
             #     抛出自定义异常
             FileUtil.notice_ding_error(str(e))
