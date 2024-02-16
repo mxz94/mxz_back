@@ -51,18 +51,19 @@ if __name__ == '__main__':
     os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
     os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
     client = XhsCli.get_client()
-    for i in range(1, 10):
-        data = client.get_note_by_keyword(keyword="", sort=SearchSortType.LATEST, page=i)
+    for i in range(1, 30):
+        data = client.get_note_by_keyword(keyword="洛阳相亲", sort=SearchSortType.GENERAL, page=i)
         items = data["items"]
         # items = client.get_home_feed(xhs.FeedType.RECOMMEND)["items"]
         for item in items:
             try:
                 # title = item["note_card"]["display_title"]
                 id = item["id"]
-                for get_note_comment in client.get_note_comments(note_id=id):
-                    content = get_note_comment["content"]
-                    if "content" in content:
-                        cid = get_note_comment["id"]
+                cs = client.get_note_all_comments(note_id=id)
+                for comment in cs:
+                    content = comment["content"]
+                    if "男朋友" in content:
+                        cid = comment["id"]
                         client.like_comment(id, cid)
             except Exception as e:
                 print("error")
