@@ -9,7 +9,7 @@ headers = {
 }
 
 params = {
-    'key': 'AIzaSyA_D3B_6BAio2MGZc-asmjh3D_HGXPkLsU',
+    'key': 'AIzaSyBwJfDSPVDASV3MCn_wHb7tOkbRDUOqE1M',
 }
 
 json_data = {
@@ -17,7 +17,7 @@ json_data = {
         {
             'parts': [
                 {
-                    'text': '小明说今天他吃了一只公鸡蛋，请问小明诚实吗？',
+                    'text': '美国首都？',
                 },
             ],
         },
