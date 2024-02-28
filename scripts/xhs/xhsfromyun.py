@@ -123,20 +123,22 @@ def select(table, wsql):
 # xq
 xq = 1
 ly = 2
-# user_name = "maback"
 user_name = "xy1"
+user_name2 = "maback"
 type = xq
 
 if __name__ == '__main__':
     data = select("user", "name = '"+ user_name+"' and type = '" + str(type) + "'")
+    data2 = select("user", "name = '"+ user_name2+"' and type = '" + str(type) + "'")
     if data == None:
         print("未找到用户")
     token = data[0]
     keyword = data[1]
     comment = data[2]
-    os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
-    os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
+    # os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
+    # os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
     client = XhsCli.get_client(token)
+    client2 = XhsCli.get_client(data2[0])
     user_id = client.get_self_info2()["user_id"]
     for i in range(1, 6):
         data = client.get_note_by_keyword(keyword=keyword, sort=SearchSortType.GENERAL, page=i)
@@ -148,16 +150,25 @@ if __name__ == '__main__':
                     title = item["note_card"]["display_title"]
                 except Exception as e:
                     title = ""
+                model_type = item["model_type"]
+                if model_type != "note":
+                    continue
                 # if (count(user_id, note_id)):
                 #     continue
                 # client.comment_note(note_id, comment)
-                client.like_note(note_id)
-                coms = client.get_note_all_comments(note_id)
+                # client.like_note(note_id)
+                # add(user_id, note_id, title, user_name)
+
+                coms = client.get_note_all_comments(note_id, crawl_interval = 0)
                 for com in coms:
                     try:
-                        client.like_comment(note_id, com["id"])
+                        if ("女" in com["content"]):
+                            print(com["content"])
+                            print(client.like_comment(note_id, com["id"]))
+                            print(client2.like_comment(note_id, com["id"]))
                     except Exception as e:
                         print(e)
+
                 i = i + 1
             except Exception as e:
                 print(e)

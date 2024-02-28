@@ -6,7 +6,7 @@ import localizedFormat from "dayjs/plugin/localizedFormat";
 import Comment from "@components/Comment.astro";
 
 export interface Props extends BlogSchema {}
-const { title, description, pubDatetime, updatedDate, heroImage, badge, tags = [] } = Astro.props;
+const { title, description, pubDatetime, updatedDate, heroImage, badge, tags = [] , type} = Astro.props;
 const displayDate = dayjs(pubDatetime).format('YYYY-MM-DD HH:mm')
 import { Image } from "astro:assets";
 ---
@@ -21,7 +21,7 @@ import { Image } from "astro:assets";
       {
         tags &&
           tags.map((tag) => (
-            <a href={`/blog/tag/${tag}`} class="badge badge-outline ml-2 no-underline">
+            <a href={`/${type}/tag/${tag}`} class="badge badge-outline ml-2 no-underline">
               {tag}
             </a>
           ))
