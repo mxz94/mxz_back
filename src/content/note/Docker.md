@@ -33,7 +33,7 @@ Windows: `下载 Docker Desktop Installer.exe`
 previewpreviewpreview
 ## 4. Docker 的使用
 看看docker 指令~~~~  
-![](./../../../public/img/note/Docker/1710231495803.png)
+![](../../../public/img/note/Docker/1710231495803.png)
 
 ```shell
 docker run -d --name my_nginx -p 80:80 -v D:\docker\nginx\conf.d:/etc/nginx/conf.d -v D:\docker\nginx\nginx.conf:/etc/nginx/nginx.conf -v D:\docker\nginx\html:/usr/share/nginx/html -v D:\docker\nginx\log:/var/log/nginx  nginx:latest
