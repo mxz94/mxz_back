@@ -4,6 +4,7 @@ import os
 import cv2
 import qiniu
 import requests
+from qiniu import Auth, put_file
 
 now = datetime.datetime.now()
 year = now.strftime("%Y")
@@ -18,45 +19,23 @@ def notice_ding(title, content):
 
 dir = r'D:\Administrator\Pictures\profile\{}'.format(year)
 filename = dir+ r'\{}.jpg'.format(name)
-
-def getCookies():
-    import http.cookies
-    with open(r"D:\mxz\mxz_back\scripts\writenote\cookies.txt", "r", encoding="utf8") as f:
-        raw_cookie_string = f.read()
-    cookies_dict = http.cookies.SimpleCookie()
-    cookies_dict.load(raw_cookie_string)
-
-    # 转换为 JSON 对象
-    return  {key: morsel.value for key, morsel in cookies_dict.items()}
-
-cookies = getCookies()
-
-headers = {
-    'authority': 'www.jianshu.com',
-    'accept': 'application/json',
-    'accept-language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
-    'if-none-match': 'W/"4a70973d5c4e6e77e1b7944653a4b13d"',
-    'referer': 'https://www.jianshu.com/writer',
-    'sec-ch-ua': '"Microsoft Edge";v="119", "Chromium";v="119", "Not?A_Brand";v="24"',
-    'sec-ch-ua-mobile': '?0',
-    'sec-ch-ua-platform': '"Windows"',
-    'sec-fetch-dest': 'empty',
-    'sec-fetch-mode': 'cors',
-    'sec-fetch-site': 'same-origin',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-}
-
-def upload_image(file:str):
-    (filepath, filename) = os.path.split(file)
-    print(filename)
-    params = {
-        'filename': filename,
-    }
-    response = requests.get('https://www.jianshu.com/upload_images/token.json', params=params, cookies=cookies, headers=headers)
-    data = response.json()
-    ret, info = qiniu.put_file(data["token"], data["key"], file)
-
-    return ret['url']
+def upload_image_file(file):
+    try:
+        access_key = "Y07Awc_13lhWdx-VS3Z78uCYxvgHDf19FJ4ousBc"
+        secret_key = "3mD6dDLqur1M9yKoZG53qov-JS-7WVkOBD0SoeGj"
+        url = "http://s9yka7j04.sabkt.gdipper.com/"
+        q = Auth(access_key, secret_key)
+        bucket_name = 'mxz9'
+        #上传后保存的文件名
+        path, name = os.path.split(file)
+        #生成上传 Token，可以指定过期时间等
+        token = q.upload_token(bucket_name, name, 3600)
+        #要上传文件的本地路径
+        ret, info = put_file(token, name, file, version='v2')
+        return url + name
+    except Exception as e:
+        print(" # 上传失败")
+        return None
 
 def take_photo_and_close():
     # 打开默认摄像头
@@ -100,7 +79,7 @@ def take_photo_and_close():
                 from aligo import Aligo
                 aligo = Aligo()
                 file = aligo.upload_file(file_path=filename, parent_file_id="65a00c994b40f9930e854649bc593690b9ed155a")
-                url = upload_image(filename)
+                url = upload_image_file(filename)
                 # 输出信息
                 print("已成功拍照并保存到目录：{}".format(dir))
                 notice_ding("已成功拍照并保存到目录", "![]({})".format(url))
@@ -111,6 +90,8 @@ def take_photo_and_close():
     cap.release()
     cv2.destroyAllWindows()
 
+os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
+os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
 
 if __name__ == '__main__':
     # 运行拍照并关闭摄像头的函数

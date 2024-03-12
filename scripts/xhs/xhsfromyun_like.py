@@ -123,7 +123,7 @@ def select(table, wsql):
 # xq
 xq = 1
 ly = 2
-user_name = "ma177"
+user_name = "xy1"
 user_name2 = "maback"
 type = xq
 
@@ -135,8 +135,8 @@ if __name__ == '__main__':
     token = data[0]
     keyword = data[1]
     comment = data[2]
-    os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
-    os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
+    # os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
+    # os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
     client = XhsCli.get_client(token)
     client2 = XhsCli.get_client(data2[0])
     user_id = client.get_self_info2()["user_id"]
@@ -153,22 +153,16 @@ if __name__ == '__main__':
                 model_type = item["model_type"]
                 if model_type != "note":
                     continue
-                if (count(user_id, note_id)):
-                    continue
-                client.comment_note(note_id, comment)
-                client.like_note(note_id)
-                add(user_id, note_id, title, user_name)
-                sleep(1)
 
-                # coms = client.get_note_all_comments(note_id, crawl_interval = 0)
-                # for com in coms:
-                #     try:
-                #         if ("女" in com["content"]):
-                #             print(com["content"])
-                #             print(client.like_comment(note_id, com["id"]))
-                #             print(client2.like_comment(note_id, com["id"]))
-                #     except Exception as e:
-                #         print(e)
+                coms = client.get_note_all_comments(note_id, crawl_interval = 0)
+                for com in coms:
+                    try:
+                        if ("女" in com["content"]):
+                            print(com["content"])
+                            print(client.like_comment(note_id, com["id"]))
+                            print(client2.like_comment(note_id, com["id"]))
+                    except Exception as e:
+                        print(e)
 
                 i = i + 1
             except Exception as e:
