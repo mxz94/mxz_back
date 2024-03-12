@@ -198,11 +198,21 @@ td, th {
         
         
 
+# [教资](https://mxz-back.pages.dev/blog/tag/教资)
+
+|        |         |        |
+| ------------ |---------|---------|       
+|[教资面试(信息的一般特征)](https://mxz-back.pages.dev/note/教资面试(信息的一般特征))|[教资科目三](https://mxz-back.pages.dev/note/教资科目三)||
+|[教资科目二](https://mxz-back.pages.dev/note/教资科目二)|[教资科目一](https://mxz-back.pages.dev/note/教资科目一)||
+
+        
+        
+
 # [java](https://mxz-back.pages.dev/blog/tag/java)
 
 |        |         |        |
 | ------------ |---------|---------|       
-|[ThreadLocal](https://mxz-back.pages.dev/blog/ThreadLocal)|[JUC](https://mxz-back.pages.dev/blog/JUC)|[Java集合框架](https://mxz-back.pages.dev/blog/Java集合框架)|
+|[ThreadLocal](https://mxz-back.pages.dev/note/ThreadLocal)|[JUC](https://mxz-back.pages.dev/note/JUC)|[Java集合框架](https://mxz-back.pages.dev/note/Java集合框架)|
 
         
         
@@ -211,11 +221,10 @@ td, th {
 
 |        |         |        |
 | ------------ |---------|---------|       
-|[计划任务-每日拍照](https://mxz-back.pages.dev/blog/计划任务-每日拍照)|[教资科目一](https://mxz-back.pages.dev/blog/教资科目一)|[Cloudflare用处](https://mxz-back.pages.dev/blog/Cloudflare用处)|
-|[数据结构](https://mxz-back.pages.dev/blog/数据结构)|[利用WSA保存到Google相册](https://mxz-back.pages.dev/blog/利用WSA保存到Google相册)|[Charles使用](https://mxz-back.pages.dev/blog/Charles使用)|
-|[教资面试(信息的一般特征)](https://mxz-back.pages.dev/blog/教资面试(信息的一般特征))|[python打包exe](https://mxz-back.pages.dev/blog/python打包exe)|[bili总结助手-Gemini](https://mxz-back.pages.dev/blog/bili总结助手-Gemini)|
-|[教资科目二](https://mxz-back.pages.dev/blog/教资科目二)|[python回顾](https://mxz-back.pages.dev/blog/python回顾)||
-|[教资科目三](https://mxz-back.pages.dev/blog/教资科目三)|[immich相册备份工具](https://mxz-back.pages.dev/blog/immich相册备份工具)||
+|[计划任务-每日拍照](https://mxz-back.pages.dev/note/计划任务-每日拍照)|[python回顾](https://mxz-back.pages.dev/note/python回顾)|[Charles使用](https://mxz-back.pages.dev/note/Charles使用)|
+|[数据结构](https://mxz-back.pages.dev/note/数据结构)|[immich相册备份工具](https://mxz-back.pages.dev/note/immich相册备份工具)|[bili总结助手-Gemini](https://mxz-back.pages.dev/note/bili总结助手-Gemini)|
+|[利用WSA保存到Google相册](https://mxz-back.pages.dev/note/利用WSA保存到Google相册)|[Docker](https://mxz-back.pages.dev/note/Docker)||
+|[python打包exe](https://mxz-back.pages.dev/note/python打包exe)|[Cloudflare用处](https://mxz-back.pages.dev/note/Cloudflare用处)||
 
         
         

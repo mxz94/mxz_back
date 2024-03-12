@@ -207,6 +207,7 @@ class FileUtil:
     @staticmethod
     def init_archives_table_readme():
         url = "https://mxz-back.pages.dev/blog/"
+        url_note = "https://mxz-back.pages.dev/note/"
         # 指定目录路径
         directory_path_list = [src + "/src/content/blog", src + "/src/content/note"]
         list = []
@@ -226,13 +227,16 @@ class FileUtil:
                     for file_name2 in file_names2:
                         title = file_name2.split(".")[0]
                         u = title.replace(" ","")
-                        s[file_name].append("[{}]({})".format(title, url + u))
+                        if u.startswith("20"):
+                            s[file_name].append("[{}]({})".format(title, url + u))
+                        else:
+                            s[file_name].append("[{}]({})".format(title, url_note + u))
                 else:
                     if (not s.keys().__contains__("note")):
                         s["note"] = []
                     title = file_name.split(".")[0]
                     u = title.replace(" ","")
-                    s["note"].append("[{}]({})".format(title, url + u))
+                    s["note"].append("[{}]({})".format(title, url_note + u))
             re_s = reversed(s.items())
             for key, value in re_s:
                 value.reverse()
