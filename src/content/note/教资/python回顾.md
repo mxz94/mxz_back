@@ -16,3 +16,10 @@ cheeseshop("L", "A","B", shopkeeper="Michael Palin", client="John Cleese", sketc
 6. 类  @dataclass  类似c里面的struct
 7. python 打包 pyinstaller --onefile your_script.py -i 11.ico
 8. pip install --upgrade package_name 升级包
+9. pip 找不到时， 可以用 python -m pip  安装太慢  -i https://pypi.douban.com/simple 或修改 
+   `或者修改 Users/pip/pip.ini
+   [global]
+   index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+   [install]
+   trusted-host=mirrors.aliyun.com`
+10. 生成项目依赖包 pip freeze > requirements.txt 生成依赖资源文件 环境所有包全都导出了
