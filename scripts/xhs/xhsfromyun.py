@@ -123,7 +123,7 @@ def select(table, wsql):
 # xq
 xq = 1
 ly = 2
-user_name = "ma177"
+user_name = "maback"
 user_name2 = "maback"
 type = xq
 

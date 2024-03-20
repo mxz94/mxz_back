@@ -14,13 +14,13 @@ td, th {
 
 |        |         |        |
 | ------------ |---------|---------|       
+|[2024-03-19(孩子踢球)](https://mxz-back.pages.dev/blog/2024-03-19(孩子踢球))|[2024-01-29(去龙门石窟)](https://mxz-back.pages.dev/blog/2024-01-29(去龙门石窟))|[2024-01-12(梦到不好的事)](https://mxz-back.pages.dev/blog/2024-01-12(梦到不好的事))|
 |[2024-03-12(今天去四号小区玩)](https://mxz-back.pages.dev/blog/2024-03-12(今天去四号小区玩))|[2024-01-28(昨晚做了天马行空的梦)](https://mxz-back.pages.dev/blog/2024-01-28(昨晚做了天马行空的梦))|[2024-01-10(查教资面试)](https://mxz-back.pages.dev/blog/2024-01-10(查教资面试))|
 |[2024-02-14(大年初五去许昌)](https://mxz-back.pages.dev/blog/2024-02-14(大年初五去许昌))|[2024-01-26(请假面试代课老师)](https://mxz-back.pages.dev/blog/2024-01-26(请假面试代课老师))|[2024-01-08(宝贝刷鞋)](https://mxz-back.pages.dev/blog/2024-01-08(宝贝刷鞋))|
 |[2024-02-11(大年初二串门子)](https://mxz-back.pages.dev/blog/2024-02-11(大年初二串门子))|[2024-01-23(奶奶带兰汐去海洋馆)](https://mxz-back.pages.dev/blog/2024-01-23(奶奶带兰汐去海洋馆))|[2024-01-06(隋唐植物园逛)](https://mxz-back.pages.dev/blog/2024-01-06(隋唐植物园逛))|
 |[2024-02-10(大年初一游戏厅玩)](https://mxz-back.pages.dev/blog/2024-02-10(大年初一游戏厅玩))|[2024-01-21(去表哥家吃饭)](https://mxz-back.pages.dev/blog/2024-01-21(去表哥家吃饭))|[2024-01-03(今天尝试跑步5公里)](https://mxz-back.pages.dev/blog/2024-01-03(今天尝试跑步5公里))|
 |[2024-02-07(唱歌按摩)](https://mxz-back.pages.dev/blog/2024-02-07(唱歌按摩))|[2024-01-19(投递简历)](https://mxz-back.pages.dev/blog/2024-01-19(投递简历))|[2024-01-01(元旦逛)](https://mxz-back.pages.dev/blog/2024-01-01(元旦逛))|
 |[2024-02-02(做了个滑雪板)](https://mxz-back.pages.dev/blog/2024-02-02(做了个滑雪板))|[2024-01-13(吃婚宴)](https://mxz-back.pages.dev/blog/2024-01-13(吃婚宴))|[2024的展望](https://mxz-back.pages.dev/blog/2024的展望)|
-|[2024-01-29(去龙门石窟)](https://mxz-back.pages.dev/blog/2024-01-29(去龙门石窟))|[2024-01-12(梦到不好的事)](https://mxz-back.pages.dev/blog/2024-01-12(梦到不好的事))||
 
         
         
@@ -202,8 +202,17 @@ td, th {
 
 |        |         |        |
 | ------------ |---------|---------|       
-|[教资面试(信息的一般特征)](https://mxz-back.pages.dev/note/教资面试(信息的一般特征))|[教资科目三](https://mxz-back.pages.dev/note/教资科目三)||
-|[教资科目二](https://mxz-back.pages.dev/note/教资科目二)|[教资科目一](https://mxz-back.pages.dev/note/教资科目一)||
+|[教资面试(信息的一般特征)](https://mxz-back.pages.dev/note/教资面试(信息的一般特征))|[教资科目二(背诵)](https://mxz-back.pages.dev/note/教资科目二(背诵))|[教资科目一](https://mxz-back.pages.dev/note/教资科目一)|
+|[教资科目二](https://mxz-back.pages.dev/note/教资科目二)|[教资科目三](https://mxz-back.pages.dev/note/教资科目三)||
+
+        
+        
+
+# [python](https://mxz-back.pages.dev/blog/tag/python)
+
+|        |         |        |
+| ------------ |---------|---------|       
+|[python打包exe](https://mxz-back.pages.dev/note/python打包exe)|[python回顾](https://mxz-back.pages.dev/note/python回顾)||
 
         
         
@@ -221,10 +230,10 @@ td, th {
 
 |        |         |        |
 | ------------ |---------|---------|       
-|[计划任务-每日拍照](https://mxz-back.pages.dev/note/计划任务-每日拍照)|[python回顾](https://mxz-back.pages.dev/note/python回顾)|[Charles使用](https://mxz-back.pages.dev/note/Charles使用)|
+|[计划任务-每日拍照](https://mxz-back.pages.dev/note/计划任务-每日拍照)|[linux](https://mxz-back.pages.dev/note/linux)|[Charles使用](https://mxz-back.pages.dev/note/Charles使用)|
 |[数据结构](https://mxz-back.pages.dev/note/数据结构)|[immich相册备份工具](https://mxz-back.pages.dev/note/immich相册备份工具)|[bili总结助手-Gemini](https://mxz-back.pages.dev/note/bili总结助手-Gemini)|
 |[利用WSA保存到Google相册](https://mxz-back.pages.dev/note/利用WSA保存到Google相册)|[Docker](https://mxz-back.pages.dev/note/Docker)||
-|[python打包exe](https://mxz-back.pages.dev/note/python打包exe)|[Cloudflare用处](https://mxz-back.pages.dev/note/Cloudflare用处)||
+|[nginx](https://mxz-back.pages.dev/note/nginx)|[Cloudflare用处](https://mxz-back.pages.dev/note/Cloudflare用处)||
 
         
         

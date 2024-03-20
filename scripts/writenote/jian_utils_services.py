@@ -15,8 +15,8 @@ import requests
 # os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
 
 
-src = "/ql/data/mxz_back"
-# src = "D:/mxz/mxz_back"
+# src = "/ql/data/mxz_back"
+src = "D:/mxz/mxz_back"
 
 file = src + '/scripts/writenote/config.ini'
 cookie_file = src + '/scripts/writenote/cookies.txt'
