@@ -1,6 +1,7 @@
 import configparser
 import datetime
 import os
+import platform
 import re
 import shutil
 import time
@@ -15,8 +16,7 @@ import requests
 # os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
 
 
-# src = "/ql/data/mxz_back"
-src = "D:/mxz/mxz_back"
+src = "D:/mxz/mxz_back" if platform.system() == 'Windows' else "/ql/data/mxz_back"
 
 file = src + '/scripts/writenote/config.ini'
 cookie_file = src + '/scripts/writenote/cookies.txt'
