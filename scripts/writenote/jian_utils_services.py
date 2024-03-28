@@ -200,10 +200,6 @@ class FileUtil:
             print(" # 写入DONE")
         return
 
-
-
-
-
     @staticmethod
     def init_archives_table_readme():
         url = "https://mxz-back.pages.dev/blog/"
@@ -393,9 +389,6 @@ def create_article(title:str):
     print("create_article" +  response.text)
     return response.json()
 
-def publize(id):
-    response = requests.post('https://www.jianshu.com/author/notes/{}/publicize'.format(id), cookies=cookies, headers=headers, json={})
-    print("publize" +  response.text)
 def write_content(content:str, id:str):
     json_data = {
         'id': id,
@@ -404,35 +397,14 @@ def write_content(content:str, id:str):
     }
     response = requests.put('https://www.jianshu.com/author/notes/'+id, cookies=cookies, headers=headers, json=json_data)
     print("write_content" +  response.text)
-    publize(id)
-
-def get_content(id:str):
-    response = requests.get('https://www.jianshu.com/author/notes/{}/content'.format(id), cookies=cookies, headers=headers)
-    return response.json()["content"]
-
-
+    response = requests.post('https://www.jianshu.com/author/notes/{}/publicize'.format(id), cookies=cookies, headers=headers, json={})
+    print("publize" +  response.text)
 
 def note_list():
     response = requests.get('https://www.jianshu.com/author/notebooks/14385934/notes', cookies=cookies, headers=headers)
     if (response.status_code == 401):
         raise Exception(response.text)
     return response.json()
-def jianshu_to_local():
-    (filepath, filename) = os.path.split(FileUtil.get_last_file())
-    list = note_list()
-    name = "title:"
-    for new_article in list:
-        title = new_article["title"].split(".")[0] + ".md"
-        if title == filename:
-            break;
-        name = name +","+ title
-        content = get_content(new_article["id"])
-        on_content = FileUtil.process_content_new(content, True)
-        FileUtil.write_file(DIR+title[:4]+"/"+ title, on_content)
-        FileUtil.notice_ding(title, on_content, "https://www.jianshu.com/p/" + new_article["slug"], time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(new_article["content_updated_at"])))
-        FileUtil.write_file(DIR_O+title[:4]+"/"+title, FileUtil.process_content_new(content))
-    return name,
-
 
 def local_to_jianshu():
     last_file = FileUtil.get_last_file()

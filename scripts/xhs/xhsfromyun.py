@@ -141,7 +141,7 @@ if __name__ == '__main__':
     client2 = XhsCli.get_client(data2[0])
     user_id = client.get_self_info2()["user_id"]
     for i in range(1, 6):
-        data = client.get_note_by_keyword(keyword=keyword, sort=SearchSortType.GENERAL, page=i)
+        data = client.get_note_by_keyword(keyword=keyword, sort=SearchSortType.MOST_POPULAR, page=i)
         items = data["items"]
         for item in items:
             try:
@@ -156,7 +156,7 @@ if __name__ == '__main__':
                 if (count(user_id, note_id)):
                     continue
                 client.comment_note(note_id, comment)
-                client.like_note(note_id)
+                # client.like_note(note_id)
                 add(user_id, note_id, title, user_name)
                 sleep(1)
 
