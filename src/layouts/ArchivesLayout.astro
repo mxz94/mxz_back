@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import TimeLineElement from "../components/cv/TimeLine.astro";
+---
+
+<BaseLayout title="关于我" sideBarActiveItemID="cv">
+    <div class="mb-5">
+        <div class="text-3xl w-full font-bold">关于我</div>
+    </div>
+
+    <div class="mb-10 text-justify">
+        <main class="md:flex md:justify-center">
+            <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+                <slot />
+            </article>
+        </main>
+    </div>
+
+</BaseLayout>
