@@ -154,7 +154,7 @@ export const SOCIALS: SocialObjects = [
     },
     {
         name: "Run",
-        href: "https://m.malanxi.top",
+        href: "https://run.malanxi.top",
         linkTitle: `${SITE.title} on Run`,
         active: true,
     },

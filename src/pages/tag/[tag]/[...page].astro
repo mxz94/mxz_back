@@ -31,9 +31,9 @@ const { page } = Astro.props;
 const params = Astro.params;
 ---
 
-<BaseLayout title={"Blog - " + params.tag} sideBarActiveItemID="blog">
+<BaseLayout title={"标签 - " + params.tag} sideBarActiveItemID="tag">
   <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Blog - {params.tag}</div>
+    <div class="text-3xl w-full font-bold">标签 - {params.tag}</div>
   </div>
   {
     page.data.length === 0 ? (
