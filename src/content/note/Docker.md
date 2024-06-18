@@ -79,6 +79,7 @@ docker run -d --name my_nginx -p 80:80 -v D:\docker\nginx\conf.d:/etc/nginx/conf
 5. docker export <container id> <path> 导出容器运行时的文件系统内容为镜像
 6. docker import <path> <image name> 导入镜像
 7. docker save <image name> 保存镜像  保存完整的镜像
+docker save -o mysql-8.0.22.tar docker.io/mysql:8.0.22
 ```
 
 
@@ -157,6 +158,9 @@ services:
 volumes:
   mysqldata:
 
+```
+```
+docker-compose -f .\docker-compose-build.yml up -d
 ```
 
 上传镜像
