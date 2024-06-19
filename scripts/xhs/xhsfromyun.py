@@ -116,7 +116,7 @@ def select(table, wsql):
 # xq
 xq = 1
 ly = 2
-user_name = "ma177"
+user_name = "xy1"
 type = xq
 emoji_list = ["😀","😁","😂","🤣","😄","😅","😆","😎","🤑","🧏","👨"]
 if __name__ == '__main__':
@@ -150,7 +150,7 @@ if __name__ == '__main__':
                 add(user_id, note_id, title, user_name)
                 s = s  + 1
                 print(title + ": " +str(s))
-                sleep_time = random.uniform(60, 150)
+                sleep_time = random.uniform(20, 30)
                 time.sleep(sleep_time)
             except Exception as e:
                 print(e)

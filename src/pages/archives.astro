@@ -3,6 +3,9 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import TimeLineElement from "../components/cv/TimeLine.astro";
 import {Image} from "astro:assets";
 import {SITE} from "../config";
+import data from '/public/douban/movie.json'
+
+const m = data[0].subject.cover_url
 ---
 
 <BaseLayout title="归档" sideBarActiveItemID="archives">
@@ -26,6 +29,15 @@ import {SITE} from "../config";
                 <div class="card-body">
                     <h2 class="card-title">朝花夕拾</h2>
                     <p class="card-text">朝花夕拾</p>
+                </div>
+            </div>
+        </a>
+        <a href={SITE.website + "/move"}   class="card-link">
+            <div class="card">
+                <img src={m} alt="Image description" class="card-img">
+                <div class="card-body">
+                    <h2 class="card-title">看过的电影</h2>
+                    <p class="card-text">已看过电影数（{data.length}）</p>
                 </div>
             </div>
         </a>

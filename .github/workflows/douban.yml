@@ -20,11 +20,11 @@ jobs:
         id: mxz94
         type: movie
         format: json
-        dir: ./data/douban
-  
+        dir: ./public/douban
+
     - name: Commit
       uses: EndBug/add-and-commit@v8
       with:
         message: 'chore: update douban data'
-        add: './data/douban'
+        add: './public/douban'
         
