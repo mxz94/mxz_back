@@ -13,7 +13,12 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-
+      
+    - name: backup data files
+      run: |
+        # mv ./_data/movie.json ./_data/douban/movie_$(date +%Y-%m-%d).json.bak
+        rm -rf ./public/douban
+        
     - name: movie
       uses: lizheming/doumark-action@master
       with:
