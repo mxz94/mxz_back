@@ -6,6 +6,30 @@ tags:
 - "java"
 ---
 
+# JAVA
+1. 数据结构 byte short int long float double char(2) boolean
+2. 自动拆装箱  Integer i = 400; Integer t = 400; 自动装箱调用Integer.valueOf(400); 大于127没从缓存拿， 所以i != t
+3. 重载 名相同参数不同， 重写 覆盖
+4. 强软弱虚 引用 强不回收， 软不足回收 弱 发现就回收  虚   ThreadLocal
+5. final 修饰类(不能继承) 修饰方法(不能重写) 修饰变量(引用不可变) 修饰方法参数()
+6. 如何避免fail-fast, 遍历使用for 或者迭代器  避免遍历过程中修改
+7. HashMap的长度为什么是2的n次方, 1. 高效率索引位置  hash & (capacity - 1) 效率比 hash % capacity 高效, 2. 减少hash冲突 3. 内存对其优化 4. 简化扩容逻辑
+8. 红黑树， HashMap 某个节点达到8个会转换成红黑树, 根点黑, 每条路径黑节点数量相同，指向空的叶子节点为黑色，叶子节点为红， 子节点为黑
+9. interrupt 作用 能打断线程的sleep, 和对象锁的wait
+10. sleep 和 wait 都是让出cpu， 线程进入等待状态， 线程被唤醒后， 继续执行, 被中断的线程lock会中断, sleep 不会释放锁 只是当前, wait 会释放锁，wait 必须被锁包含
+
+| 特性             | `sleep`                                | `wait`                                       |
+|------------------|----------------------------------------|----------------------------------------------|
+| 所属类           | `Thread` 类的静态方法                  | `Object` 类的实例方法                        |
+| 锁的释放         | 不释放锁                               | 释放锁                                       |
+| 调用位置         | 可以在任何地方调用                     | 必须在同步块或同步方法中调用                 |
+| 唤醒方式         | 在指定时间后自动唤醒，或者被中断      | 需要调用 `notify` 或 `notifyAll` 方法来唤醒，或者在超时后自动唤醒 |
+| 用途             | 暂停线程指定时间                       | 线程间通信和协调                             |
+| 是否需要捕获异常 | 需要捕获 `InterruptedException`        | 需要捕获 `InterruptedException`              |
+
+11. volatile 保证了参数的可见性，内存屏障保证部分有序性
+12. 为什么wait和notify是在 Object 类而不是 Thread 中声明的？ 作用是多个线程通信，如果是thread 怎么通信呢， 只有用对象锁来实现 
+
 # MYSQL
 1. 脏读：读取到未提交的数据, 不可重复读：读取一次数据后，被修改，再读改变了  幻读：两次读的条数不一致，   丢失修改
 2. Read Uncommitted(没解决)  READ COMMITTED(无脏读， 读写分离锁) REPEATABLE READ(脏  幻， B事务 不会修改A事务读取到的未提交事务的快照数据   默认 )  Serializable(全解决，表锁) 
