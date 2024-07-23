@@ -5,6 +5,13 @@ import piexif
 from PIL import Image, ExifTags
 
 from datetime import datetime
+class ExifUtils:
+    def read_exif(image_path):
+        # 打开图片
+        image = Image.open(image_path)
+        # 获取 Exif 信息
+        exif_info = image._getexif()
+        return exif_info
 
 def format_datetime(input_str):
     # 解析输入字符串为日期时间对象
@@ -82,27 +89,7 @@ def create_exif_data(date):
 
 from PIL import Image, ExifTags
 s = []
-def read_exif(image_path):
-    try:
-        # 打开图片
-        image = Image.open(image_path)
-        # 获取 Exif 信息
-        exif_info = image._getexif()
-        if exif_info:
-            hasGPS = False
-            for tag, value in exif_info.items():
-                tag_name = ExifTags.TAGS.get(tag, tag)
-                if tag_name == "GPSInfo":
-                    hasGPS = True
-                    break
-            if not hasGPS:
-                s.append(image_path)
-                move_file(image_path, move_to_path)
-        else:
-            move_file(image_path, move_to_path)
-            print("No Exif information found in the image.")
-    except Exception as e:
-        print(f"Error: {e}")
+
 
 # 调用函数进行转换
 
@@ -118,8 +105,3 @@ def filter_files_with_prefix(directory):
         #     read_exif(directory + "\\"+filename)
     return files_with_prefix
 
-# 指定目录路径和文件名前缀
-directory_path = r"G:\mxz\DCIM\screen\2014-2016"  # 替换为实际的目录路径
-move_to_path = r"G:\mxz\DCIM\2021-2022\diushi\nogps"
-filter_files_with_prefix(directory_path)
-print(len(s))

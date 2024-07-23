@@ -27,6 +27,15 @@ class FileUtils:
                 file_list.append(os.path.join(root, file))
         return file_list
 
+    @staticmethod
+    def write_json(file_path:str, data) -> str:
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(json.dumps(data))
+
+    @staticmethod
+    def rename_prefix(file, prefix):
+        new_filename = file.replace(prefix,"")
+        os.rename(file, new_filename)
 class Options:
     def __init__(self, options_dict):
         for key, value in options_dict.items():

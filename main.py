@@ -105,7 +105,7 @@ def init_archives_table_readme():
             file_list = os.listdir(os.path.join(directory_path, dir_name))
             file_list = sorted(file_list, key=lambda x: get_article_attrs(os.path.join(os.path.join(directory_path, dir_name), x)).pubDatetime, reverse=True)
             for file_name2 in file_list:
-                title = file_name2.split(".")[0]
+                title = file_name2.rsplit('.', 1)[0]
                 article = get_article_attrs(os.path.join(os.path.join(directory_path, dir_name), file_name2))
                 if article.slug != None:
                     title = article.slug
@@ -123,7 +123,7 @@ def init_archives_table_readme():
             # file_list = sorted(file_list, key=lambda x: os.path.getctime(os.path.join(os.path.join(directory_path, dir_name), x)), reverse=True)
             file_list = sorted(file_list, key=lambda x: get_article_attrs(os.path.join(os.path.join(directory_path, dir_name), x)).pubDatetime, reverse=True)
             for file in file_list:
-                title = file.split(".")[0]
+                title = file.rsplit('.', 1)[0]
                 article = get_article_attrs(os.path.join(os.path.join(directory_path, dir_name), file))
                 if article.slug != None:
                     title = article.slug
@@ -141,7 +141,7 @@ def init_archives_table_readme():
         
         <BaseLayout title="{}">
           <div class="mb-5">
-            <div class="text-3xl w-full font-bold">Blog</div>
+            <div class="text-3xl w-full font-bold">日记</div>
           </div>
         
           <div class="time-line-container mb-10">
@@ -161,6 +161,56 @@ def init_archives_table_readme():
             for month, article in value.items():
                 tlist.append(TimeLineElement.format(month, "\n".join(article)))
             file.write(start.format(str(key), "\n".join(tlist)))
+
+def init_note_archives_table_readme():
+    url = "https://malanxi.top/note/"
+    # 指定目录路径
+    directory_path = "./src/content/note"
+    article_url = '<li class="mt-3 mb-3"><a href="{}">{}</a></li>'
+    # 使用os.listdir()获取目录下所有文件和文件夹的列表
+    file_list = []
+    for root, dirs, files in os.walk(directory_path):
+        for file in files:
+            file_list.append(os.path.join(root, file))
+    m_d = {}
+    file_list = sorted(file_list, key=lambda x: get_article_attrs(x).pubDatetime, reverse=True)
+    for file in file_list:
+        title = file.rsplit('.', 1)[0]
+        article = get_article_attrs(file)
+        if article.slug != None:
+            title = article.slug
+        month = article.pubDatetime[0:7]
+        if m_d.get(month) is None:
+            m_d[month] = []
+        m_d[month].append(article_url.format(url + title, title, ))
+#                 s[dir_name].append(article_url.format(url + u, title, ))
+    start = '''---
+    import BaseLayout from "../../../layouts/BaseLayout.astro";
+    import TimeLineElement from "../../../components/cv/TimeLine.astro";
+    ---
+
+    <BaseLayout title="{}">
+      <div class="mb-5">
+        <div class="text-3xl w-full font-bold">笔记</div>
+      </div>
+
+      <div class="time-line-container mb-10">
+        {}
+      </div>
+    </BaseLayout>
+    '''
+    TimeLineElement = '''<TimeLineElement
+          title="{}"
+        >
+               {}
+
+        </TimeLineElement>'''
+    file_path = "./src/pages/note/archives"
+    tlist = []
+    with open(file_path+"/notes.astro", 'w', encoding='utf-8') as file:
+        for month, article in m_d.items():
+            tlist.append(TimeLineElement.format(month, "\n".join(article)))
+        file.write(start.format("notes", "\n".join(tlist)))
 
 def get_json_data():
     with open("src/issue.json", "r") as file:
@@ -212,6 +262,7 @@ def main(token, repo_name, issue_number=None):
         save_issue(issue, me)
         add_issue_id(issue.number)
         init_archives_table_readme()
+        init_note_archives_table_readme()
 
 
 template = '''---
