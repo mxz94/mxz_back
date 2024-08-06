@@ -1,6 +1,7 @@
 ---
 title: how-to-use-playwright
 pubDatetime: 2024-04-13 10:23:00
+slug: how-to-use-playwright
 tags:
   - "工具"
 ---

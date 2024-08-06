@@ -1,6 +1,7 @@
 ---
 pubDatetime: 2024-01-31 10:00:14
 title: 利用WSA保存到Google相册
+slug: 利用WSA保存到Google相册
 tags:
   - "工具"
 ---
