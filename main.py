@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
+import mimetypes
+
+import datetime
+
 import argparse
 import json
 import os
-import random
 import re
-from datetime import timedelta, datetime
-
 import requests
+from datetime import timedelta
 from github import Github
 
 NOTE_DIR = "src/content/note"
@@ -270,6 +272,57 @@ pubDatetime: {}
 title: {}
 slug: {}'''
 
+def transfer_from_github_2_r2(url):
+    response = requests.get(url, stream=True)
+    response.raise_for_status()  # 检查请求是否成功
+    name = url.split('/')[-1]
+    # 自动获取文件内容类型
+    content_type = response.headers.get('content-type')
+    if content_type:
+        # 根据内容类型猜测文件扩展名
+        extension = mimetypes.guess_extension(content_type.split(';')[0].strip())
+    filename = name + extension
+    with open(filename, 'wb') as file:
+        for chunk in response.iter_content(chunk_size=8192):
+            if chunk:
+                file.write(chunk)
+    import boto3
+    import datetime
+    from botocore.config import Config
+
+    # 令牌值 【令牌名称root_token】
+    token = R2_TOKEN
+    # 你的 Cloudflare R2 访问密钥和秘密密钥
+    # 访问密钥 ID
+    access_key = 'ad692e01f74450943b4122a84164835e'
+    # 机密访问密钥
+    secret_key = R2_KEY
+    # 存储桶的 URL
+    url = 'https://52666f83ef7dec7e1f33bc0afc91c693.r2.cloudflarestorage.com'
+
+
+    # 创建一个 S3 客户端，这里指定了 R2 的端点
+    config = Config(signature_version='s3v4')
+    s3_client = boto3.client(
+        's3',
+        aws_access_key_id=access_key,
+        aws_secret_access_key=secret_key,
+        endpoint_url=url,
+        config=config
+    )
+    # 你要上传到存储桶的名字
+    bucket_name = 'mxz'
+    # 本地文件 文件名
+    file_path = filename
+    # 存储桶里的路径和文件名 此处可以重新命名上传后的文件名称，也可以添加文件夹
+    now = datetime.datetime.now()
+    year = now.strftime("%Y")
+    bucket_file_name = f'{year}/{filename}'
+    # 使用 S3 客户端上传文件
+    s3_client.upload_file(file_path, bucket_name, bucket_file_name)
+
+    return "https://r2.malanxi.top/" + bucket_file_name
+
 def download_image_file(url, file_name):
     r = requests.get(url)
     with open(file_name, 'wb') as f:
@@ -313,6 +366,14 @@ title: ""
         f.write("\n\n")
         content = issue.body.replace('\r\n', "  \n")
         f.write(content or "")
+
+def handle_video(content):
+    lines = content.split("\n")
+    for i in range(len(lines)):
+        if lines[i].startswith("https://github.com/user-attachments"):
+            url = transfer_from_github_2_r2(lines[i])
+            content = content.replace(lines[i], f'<video src="{url}" autoplay="true" controls="controls" width="800" height="600"/></video>')
+    return content
 def save_issue(issue, me):
     # 将datetime对象转为"北京时间"
     title = f"{issue.title.replace('/', '-').replace(' ', '.')}"
@@ -340,6 +401,7 @@ def save_issue(issue, me):
         # if not is_year:
         #     f.write(f"# [{issue.title}]({issue.html_url})\n\n")
         content = issue.body.replace('\r\n', "  \n")
+        content = handle_video(content)
         if IMG_SAVE_LOCAL and not (issue.milestone and issue.milestone.title == "no_save_image"):
             content = replace_img_url(content, dt[:10])
         f.write(content or "")
@@ -351,13 +413,19 @@ def save_issue(issue, me):
                     f.write(dt.strftime("%Y-%m-%d %H:%M:%S") + "\n")
                     f.write(c.body or "")
 
+R2_TOKEN = None
+R2_KEY = None
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("github_token", help="github_token")
     parser.add_argument("repo_name", help="repo_name")
+    parser.add_argument("r2_token", help="r2_token")
+    parser.add_argument("r2_key", help="r2_key")
     parser.add_argument(
         "--issue_number", help="issue_number", default=None, required=False
     )
     options = parser.parse_args()
+    R2_TOKEN = options.r2_token
+    R2_KEY = options.r2_key
     main(options.github_token, options.repo_name, options.issue_number)
