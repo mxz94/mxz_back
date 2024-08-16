@@ -184,3 +184,14 @@ docker push registry.cn-hangzhou.aliyuncs.com/mxz1/<imageName>:<version>
 解决：wsl --update
 2. docker login 异常:panic: assignment to entry in nil map  
 解决：docker logout ,然后再登录即可
+3. java 环境导出 FontConfiguration.getVersion(FontConfiguration.java:1264) null  
+解决： Dockerfile 文件添加
+```Dockerfile
+RUN echo -e "https://mirror.tuna.tsinghua.edu.cn/alpine/v3.4/main\n\
+https://mirror.tuna.tsinghua.edu.cn/alpine/v3.4/community" > /etc/apk/repositories
+ 
+RUN apk --update add curl bash ttf-dejavu && \
+      rm -rf /var/cache/apk/*
+```
+4. 时区问题
+解决：       TZ: Asia/Shanghai  环境变量 

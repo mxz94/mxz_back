@@ -28,3 +28,6 @@ tags:
    adb shell settings delete global global_http_proxy_host
    adb shell settings delete global global_http_proxy_port
 
+
+常见问题
+1. 相册没网   开发者调试授权失效 执行 `adb kill-server`  `adb start-server`  再重新 执行上面adb连接指令

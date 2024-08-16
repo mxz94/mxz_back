@@ -1,0 +1,18 @@
+---
+// LivePhoto.astro
+export interface Props {
+    l: string;
+    p: string;
+    v: string;
+}
+
+const { l, p, v } = Astro.props;
+---
+
+<figure>
+    <div class='live-photo-container'
+         data-live-photo
+         data-photo-src={p}
+         data-video-src={v}></div>
+    <figcaption>{l}</figcaption>
+</figure>
