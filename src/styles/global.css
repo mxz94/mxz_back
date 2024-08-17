@@ -89,8 +89,8 @@ body {
     transform: translateZ(0); /* Ensure the iframe maintains the 3D effect */
 }
 .min_width_1280 {
-    min-height: 720px; /* 设置一个最小高度 */
-    min-width: 1280px;
+    min-height: 478px; /* 设置一个最小高度 */
+    min-width: 850px;
 }
 .toc-wrapper {
     position: fixed;
