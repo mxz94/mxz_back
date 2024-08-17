@@ -62,6 +62,7 @@
                 const observeHeadings = () => {
                     intersectionObserver = new IntersectionObserver(function (entries) {
                         if (isClicking) return;
+
                         entries.forEach(function (entry) {
                             const tocLink = document.querySelector('.toc li a[href="#' + entry.target.getAttribute("id") + '"]');
                             if (tocLink && entry.isIntersecting) {
@@ -71,7 +72,9 @@
                                 tocLink.parentElement.classList.add("active");
                             }
                         });
-                    }, { threshold: 0.1 });
+                    },  {
+                        rootMargin: '-43% 0% -43% 0%'
+                    });
 
                     headings.forEach(function (heading) {
                         intersectionObserver.observe(heading);
@@ -93,6 +96,13 @@
                                 activeItem.classList.remove("active");
                             });
                             link.parentElement.classList.add("active");
+                            // 定位到中间
+                            const elementRect = targetElement.getBoundingClientRect();
+                            const offset = window.innerHeight / 3 - (elementRect.height / 2);
+                            window.scrollTo({
+                                top: window.scrollY + elementRect.top - offset,
+                                behavior: "smooth"
+                            });
 
                             setTimeout(function () {
                                 isClicking = false;
