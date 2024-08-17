@@ -19,6 +19,7 @@ if (isBlog) {
     }
 }
 import { Image } from "astro:assets";
+import TableOfContents from "../components/TableOfContents.astro";
 ---
 
 <BaseLayout title={title} description={description} image={heroImage}, ogType="article">
@@ -46,6 +47,7 @@ import { Image } from "astro:assets";
       <div class="divider my-2"></div>
       <slot />
     </article>
+      <TableOfContents />
   </main>
     <div id="main-content" class="mt-8"></div>
     <!--<Comment></Comment>-->
