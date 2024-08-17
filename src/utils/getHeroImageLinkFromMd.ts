@@ -40,7 +40,7 @@ export default function (post) {
         return null
     } else {
         var image = allImageLinks[0]
-        return  image.startsWith('http') ? "" : image.split('public')[1];
+        return  image.startsWith('http') ? image : image.split('public')[1];
     }
 }
 

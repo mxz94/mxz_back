@@ -107,5 +107,5 @@ body {
     aspect-ratio: 16 / 9;
     object-fit: cover;
     min-height: 200px; /* 设置一个最小高度 */
-    background-color: black; /* 可选，设置背景色防止内容未加载时看不到 */
+    min-width: 800px;
 }
