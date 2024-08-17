@@ -9,7 +9,7 @@ export function livePhotoPlugin() {
             if (d.length > 1) {
                 node.type = 'html';
                 node.value = `
-            <div class='live-photo-container'
+            <div class='live-photo-container min_width_1280'
                   data-live-photo
               data-effect-type='live'
               data-playback-style='full'

@@ -372,7 +372,7 @@ def handle_video(content):
     for i in range(len(lines)):
         if lines[i].startswith("https://github.com/user-attachments"):
             url = transfer_from_github_2_r2(lines[i])
-            content = content.replace(lines[i], f'<video src="{url}" autoplay="true" controls="controls" width="800" height="600"/></video>')
+            content = content.replace(lines[i], f'<video src="{url}" autoplay="false" controls="controls" width="800" height="600"/></video>')
     return content
 def save_issue(issue, me):
     # 将datetime对象转为"北京时间"

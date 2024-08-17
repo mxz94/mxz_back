@@ -1,3 +1,12 @@
 # mxz_back
 
-[简书](content/README.md) | [jian](content/README_JIAN.md) | [online](content/README_ONLINE.md)
+
+```
+引入 bilibili 视频  !bv{<iframe ></iframe>}  
+引入 livephoto   ![](jpg?v=mp4)
+
+```
+
+
+
+

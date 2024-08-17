@@ -106,6 +106,32 @@ body {
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
-    min-height: 200px; /* 设置一个最小高度 */
-    min-width: 800px;
+}
+
+.video-container {
+    position: relative;
+    padding-bottom: 56.25%; /* Aspect ratio 16:9 */
+    height: 0;
+    overflow: hidden;
+    max-width: 100%;
+    background: #000;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(255, 255, 255, 0.2); /* Add depth with shadow */
+    transform: translateZ(0); /* Ensure the 3D effect is applied */
+    perspective: 1000px;
+}
+
+.video-container iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 15px;
+    transform: translateZ(0); /* Ensure the iframe maintains the 3D effect */
+}
+.min_width_1280 {
+    min-height: 720px; /* 设置一个最小高度 */
+    min-width: 1280px;
 }
