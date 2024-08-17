@@ -10,7 +10,9 @@ export function bilibiliPlugin() {
             // text html html text
             if (children.length >=2 && current.type == 'text' && current.value == '!bv{') {
                 node.type = 'html';
-                node.value = `<div class='video-container min_width_1280'>${children[1].value + children[2].value}</div>`;
+                //  不跳转
+                var a = children[1].value.slice(0,children[1].value.length-1) + 'sandbox="allow-top-navigation allow-same-origin allow-forms allow-scripts">'
+                node.value = `<div class='video-container min_width_1280'>${a + children[2].value}</div>`;
             }
         });
     };
