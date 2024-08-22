@@ -69,4 +69,40 @@ import TableOfContents from "../components/TableOfContents.astro";
             requiredMeta: ['nick'],
         });
     </script>
+    <script is:inline>
+        function optimizeVerticalImages() {
+            const articles = document.querySelectorAll('article');
+
+            articles.forEach(article => {
+                // 获取所有图片元素
+                const images = article.querySelectorAll('img');
+                images.forEach((image, index) => {
+                    // 获取图片的宽度和高度
+                    const width = image.width;
+                    const height = image.height;
+
+                    // 如果图片的高度大于宽度，则认为是竖版图片
+                    if (height > width) {
+                        image.classList.add("landscape-img");
+                    }
+                });
+
+                const videos = article.querySelectorAll('video');
+
+                videos.forEach((video, index) => {
+                    // 获取视频的宽度和高度
+                    const width = video.videoWidth;
+                    const height = video.videoHeight;
+                    // 如果视频的高度大于宽度，则认为是竖版视频
+                    if (height > width) {
+                        // 设置竖版视频的宽度以适应父容器，保持高度自动调整
+                        video.classList.add("landscape-img");
+                    }
+                });
+            })
+        }
+        optimizeVerticalImages()
+        // 在文档加载完成后执行优化
+        // document.addEventListener('astro:page-load', optimizeVerticalImages);
+    </script>
 </BaseLayout>

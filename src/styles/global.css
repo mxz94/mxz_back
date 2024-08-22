@@ -92,6 +92,12 @@ body {
     min-height: 478px; /* 设置一个最小高度 */
     min-width: 850px;
 }
+.landscape-img {
+    width: 60%;
+    aspect-ratio: 3 / 4; /* 高度宽度比，即竖向 */
+    margin-left: auto;
+    margin-right: auto;
+}
 .toc-wrapper {
     position: fixed;
     top: 20px;
