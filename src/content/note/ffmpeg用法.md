@@ -38,4 +38,8 @@ ffmpeg -loop 1 -t 3 -framerate 60 -i image1.jpg -loop 1 -t 3 -framerate 60 -i im
 ffmpeg -i input.mp4 -vf "drawtext=text='日照香炉生紫烟':fontfile=font.ttf:fontcolor=white@0.9:fontsize=48:x=(W-tw)/2:y=(H-th)/2:enable='between(t,0,2)',drawtext=text='日照香炉生紫烟':fontfile=font.ttf:fontcolor=white@0.9:fontsize=48:x=30:y=30:enable='gt(t,2)'" output.mp4  
   
   
+  
+查看视频编码信息  
+  
+ffprobe -show_streams -select_streams v -print_format json  
 ```

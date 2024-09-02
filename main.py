@@ -341,6 +341,51 @@ def comp_url_down(url, path):
     with open(path, 'wb') as f:
         f.write(response.content)
 
+
+def calculate_new_size_from_url(image_url, target_width=None, target_height=None):
+    from io import BytesIO
+    from PIL import Image
+    import requests
+    # 通过网络请求获取图片
+    response = requests.get(image_url)
+    response.raise_for_status()  # 检查是否成功获取图片
+
+    # 将内容转换为图片对象
+    img = Image.open(BytesIO(response.content))
+
+    # 获取原始分辨率
+    original_width, original_height = img.size
+
+    # 根据目标宽度或高度计算新尺寸
+    if target_width is not None:
+        ratio = target_width / original_width
+        new_height = int(original_height * ratio)
+        return target_width, new_height
+
+    elif target_height is not None:
+        ratio = target_height / original_height
+        new_width = int(original_width * ratio)
+        return new_width, target_height
+
+    else:
+        return original_width, original_height
+
+def comp_url_down_new(url, path):
+    import tinify
+    tinify.key = "CvLpLgG3f9RffKkYdV3kqrTCxhzSHxQl"
+    new_width, new_height = calculate_new_size_from_url(url, target_width=1200)
+    source = tinify.from_url(url)
+    resized = source.resize(
+        method="fit",
+        width=new_width,
+        height=new_height
+    )
+    converted = resized.convert(type=["image/webp","image/png"])
+    extension = converted.result().extension
+    converted.to_file(path + "." + extension)
+    # resized.to_file(path)
+    return extension
+
 def replace_img_url(content, img_prefix):
     pattern = r'\((.*?)\)'
     matchs = re.findall(pattern, content)
@@ -350,9 +395,10 @@ def replace_img_url(content, img_prefix):
             i = i + 1
             if (not os.path.exists(DIR["img"])):
                 os.mkdir(DIR["img"])
-            file_name = img_prefix +"-" + img_url.split('/')[-1] + ".jpg"
-            comp_url_down(img_url, os.path.join(DIR["img"], file_name))
-            content= content.replace('({})'.format(img_url), (DIR["ref_dir"]).format(file_name))
+            file_name = img_prefix +"-" + img_url.split('/')[-1]
+            # + ".jpg"
+            extension = comp_url_down_new(img_url, os.path.join(DIR["img"], file_name))
+            content= content.replace('({})'.format(img_url), (DIR["ref_dir"]).format(file_name + "." + extension))
     return content
 
 def add_cv(issue):
