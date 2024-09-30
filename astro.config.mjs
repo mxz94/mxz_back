@@ -11,6 +11,10 @@ import {bilibiliPlugin} from "./src/utils/bilibiliPlugin.ts";
 
 // https://astro.build/config
 export default defineConfig({
+  image: {
+    // 禁用图片优化选项
+    service: false,
+  },
   site: SITE.website,
   integrations: [mdx(), sitemap(), tailwind(), react(), markdoc()],
     markdown: {
