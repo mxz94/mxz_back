@@ -76,7 +76,7 @@ tags:
 5. sed 替换指令
 6. nohup java -jar  aa.jar server.port  后台运行
 
-# [nginx](https://malanxi.top/note/nginx/)
+# [nginx](https://blog.malanxi.top/note/nginx/)
 
 
 # Redis

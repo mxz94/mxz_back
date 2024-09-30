@@ -93,7 +93,7 @@ def get_article_attrs(file_path:str):
     except Exception as e:
         print(file_path)
 def init_archives_table_readme():
-    url = "https://malanxi.top/blog/"
+    url = "https://blog.malanxi.top/blog/"
     # 指定目录路径
     directory_path = "./src/content/blog"
     article_url = '<li class="mt-3 mb-3"><a href="{}">{}</a></li>'
@@ -165,7 +165,7 @@ def init_archives_table_readme():
             file.write(start.format(str(key), "\n".join(tlist)))
 
 def init_note_archives_table_readme():
-    url = "https://malanxi.top/note/"
+    url = "https://blog.malanxi.top/note/"
     # 指定目录路径
     directory_path = "./src/content/note"
     article_url = '<li class="mt-3 mb-3"><a href="{}">{}</a></li>'
@@ -321,7 +321,7 @@ def transfer_from_github_2_r2(url):
     # 使用 S3 客户端上传文件
     s3_client.upload_file(file_path, bucket_name, bucket_file_name)
 
-    return "https://r2.malanxi.top/" + bucket_file_name
+    return "https://pub-4232cd0528364004a537285f400807bf.r2.dev/" + bucket_file_name
 
 def download_image_file(url, file_name):
     r = requests.get(url)

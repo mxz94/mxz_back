@@ -6,7 +6,7 @@ export const SITE_DESCRIPTION = 'Astrofy is a free and open-source template for 
 import type { Site, SocialObjects } from "./types";
 
 export const SITE: Site = {
-    website: "https://malanxi.top/", // replace this with your deployed domain
+    website: "https://blog.malanxi.top/", // replace this with your deployed domain
     author: "马兰汐的爸爸",
     desc: "马兰汐的爸爸",
     title: "首页",

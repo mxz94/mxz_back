@@ -28,8 +28,8 @@ import CustomSearchBox from "@components/CustomSearchBox.tsx";
 import {SITE} from "../config.ts";
 
 const searchClient = algoliasearch(
-  "QP4WN0IB1W",
-  "08b36ae83999b4ea83345429017ca3ba"
+  "MAQ5PM67UH",
+  "8516f786c1f6b34e3f32e1abe6792299"
 );
 
 const onStateChange = ({ uiState, setUiState }) => {
@@ -38,10 +38,9 @@ const onStateChange = ({ uiState, setUiState }) => {
 };
 
 function Hit({ hit }) {
-  var url = SITE.website + "blog/" + hit.url;
   return (
     <article>
-      <a href={url}>
+      <a href={hit.url}>
         <h1 className={"text-xl font-bold mt-5"}>
           <Highlight attribute="title" hit={hit} />
         </h1>
@@ -55,7 +54,7 @@ function Hit({ hit }) {
 
 export default function SearchBar2({ searchList }: Props) {
   return (
-    <InstantSearch searchClient={searchClient} indexName="dev_blog" onStateChange={onStateChange} >
+    <InstantSearch searchClient={searchClient} indexName="dev_blog" onStateChange={onStateChange}  >
         <RefinementList attribute="brand" limit={10}/>
       <CustomSearchBox></CustomSearchBox>
       <Hits hitComponent={Hit} />

@@ -2,7 +2,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 import algoliasearch from "algoliasearch";
-const client = algoliasearch("QP4WN0IB1W", "50ce7b95912efcf5e752b782b5858333");
+const client = algoliasearch("MAQ5PM67UH", "771264cbf861502927cc145614c2b2d1");
 
 // 1. Build a dataset
 import fs from "fs";
@@ -46,7 +46,7 @@ function readFilesRecursively(directory) {
         data.push({
           objectID: frontmatter.title,
           title: frontmatter.title,
-          url: frontmatter.slug,
+          url: "https://blog.malanxi.top/note/" + frontmatter.slug,
           content: removeMd(content).replace(/\n/g, ""),
         });
       } catch (e) {

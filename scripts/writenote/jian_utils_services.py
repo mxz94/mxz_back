@@ -162,7 +162,7 @@ class FileUtil:
             print(file_path)
     @staticmethod
     def init_archives_table_readme():
-        url = "https://malanxi.top/blog/"
+        url = "https://blog.malanxi.top/blog/"
         # 指定目录路径
         directory_path = src + "/src/content/blog"
         article_url = '<li class="mt-3 mb-3"><a href="{}">{}</a></li>'

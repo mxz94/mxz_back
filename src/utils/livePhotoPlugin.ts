@@ -1,6 +1,6 @@
 import { visit } from 'unist-util-visit';
 
-// ![图片说明](https://r2.malanxi.top/2024/A001_07251216_C317-FfGABM.jpg?v=https://r2.malanxi.top/2024/A001_07251216_C317-DQ6Nj6.mp4)
+// ![图片说明](https://pub-4232cd0528364004a537285f400807bf.r2.dev/2024/A001_07251216_C317-FfGABM.jpg?v=https://pub-4232cd0528364004a537285f400807bf.r2.dev/2024/A001_07251216_C317-DQ6Nj6.mp4)
 export function livePhotoPlugin() {
     return (tree) => {
         visit(tree, 'image', (node) => {
