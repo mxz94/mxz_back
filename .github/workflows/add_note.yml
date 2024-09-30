@@ -48,3 +48,14 @@ jobs:
           git add src/pages/*
           git commit -a -m 'update new blog' || echo "nothing to commit"
           git push || echo "nothing to push"
+      # Node.js 环境设置和编译前端项目
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'  # 使用 Node.js 版本，按需修改
+
+      - name: Install Node.js dependencies
+        run: npm install  # 安装 Node.js 依赖
+
+      - name: Build project with Node.js
+        run: npm run build  # 编译项目，通常会生成到 dist 文件夹
