@@ -39,26 +39,35 @@ jobs:
           source venv/bin/activate
           python main.py ${{ secrets.G_T }} ${{ github.repository }} ${{ secrets.R2_TOKEN }} ${{ secrets.R2_KEY }} --issue_number '${{ github.event.issue.number }}'
 
-      # - name: Push README
-      #   run: |
-      #     git config --local user.email "action@github.com"
-      #     git config --local user.name "GitHub Action"
-      #     git add src/content/*
-      #     git add public/*
-      #     git add src/pages/*
-      #     git commit -a -m 'update new blog' || echo "nothing to commit"
-      #     git push || echo "nothing to push"
-      # # Node.js 环境设置和编译前端项目
-      # - name: Set up Node.js
-      #   uses: actions/setup-node@v3
-      #   with:
-      #     node-version: '20'  # 使用 Node.js 版本，按需修改
+      - name: Push README
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add src/content/*
+          git add public/*
+          git add src/pages/*
+          git commit -a -m 'update new blog' || echo "nothing to commit"
+          git push || echo "nothing to push"
+          
+      # Node.js 环境设置和编译前端项目
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'  # 使用 Node.js 版本，按需修改
+      # 使用缓存机制缓存 node_modules
+      - name: Cache node modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules  # 缓存路径
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}  # 缓存键基于 package-lock.json
+          restore-keys: |
+            ${{ runner.os }}-node-
+            
+      - name: Install Node.js dependencies
+        run: npm install  # 安装 Node.js 依赖
 
-      # - name: Install Node.js dependencies
-      #   run: npm install  # 安装 Node.js 依赖
-
-      # - name: Build project with Node.js
-      #   run: npm run build  # 编译项目，通常会生成到 dist 文件夹
+      - name: Build project with Node.js
+        run: npm run build  # 编译项目，通常会生成到 dist 文件夹
       # 将编译结果部署到服务器
       - name: Deploy to Server
         uses: appleboy/scp-action@v0.1.6
@@ -66,5 +75,5 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "./src/*"  # 假设构建后的文件在 dist 文件夹
-          target: "/www/demo"  # 替换为服务器上的路径
+          source: "./dist/*"  # 假设构建后的文件在 dist 文件夹
+          target: "/www/wwwroot/malanxi/blog"  # 替换为服务器上的路径
