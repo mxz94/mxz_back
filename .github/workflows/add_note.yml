@@ -66,14 +66,18 @@ jobs:
       - name: Install Node.js dependencies
         run: npm install  # 安装 Node.js 依赖
       
-      # 缓存图片转换后的文件夹（假设生成的 .webp 文件在 dist/images 中）
+      - name: Set current year
+        id: set_year
+        run: echo "year=$(date +'%Y')" >> $GITHUB_ENV
+        
       - name: Cache transformed images
         uses: actions/cache@v3
         with:
           path: dist/_astro  # 缓存转换后的图片文件
-          key: ${{ runner.os }}-images-${{ hashFiles('public/img/**/*') }}  # 使用通配符处理所有子文件夹
+          key: ${{ runner.os }}-images-${{ github.event_name }}-${{ steps.set_year.outputs.year }}  # 包含年份
           restore-keys: |
-            ${{ runner.os }}-images-
+            ${{ runner.os }}-images-${{ github.event_name }}-  # 只用年份的部分
+
             
       - name: Build project with Node.js
         run: npm run build  # 编译项目，通常会生成到 dist 文件夹
