@@ -16,7 +16,7 @@ function getDay(){
     var C = Math.floor((b-B)*60);
     var D = Math.floor((c-C)*60);
     //信息写入到DIV中
-    return "本站已勉强运行: "+A+"天"+B+"小时"+C+"分"+D+"秒"
+    return "本站已运行: "+A+"天"+B+"小时"+C+"分"+D+"秒"
 }
 ---
 <script type="text/javascript">
@@ -34,7 +34,7 @@ function getDay(){
         C = Math.floor((b-B)*60);
         D = Math.floor((c-C)*60);
         //信息写入到DIV中
-        document.getElementById("span1").innerHTML = "本站已勉强运行: "+A+"天"+B+"小时"+C+"分"+D+"秒"
+        document.getElementById("span1").innerHTML = "本站已运行: "+A+"天"+B+"小时"+C+"分"+D+"秒"
     }
     setInterval(runtime, 1000);
 </script>

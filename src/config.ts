@@ -1,7 +1,7 @@
 // Place any global data in this file.
 // You can import this data from anywhere in your site by using the `import` keyword.
 
-export const SITE_DESCRIPTION = 'Astrofy is a free and open-source template for your Personal Portfolio Website built with Astro and TailwindCSS. Create in minutes a website with Blog, CV, Project Section, Store and RSS Feed.';
+export const SITE_DESCRIPTION = '兰汐爸爸记录的日志';
 
 import type { Site, SocialObjects } from "./types";
 
@@ -11,7 +11,7 @@ export const SITE: Site = {
     desc: "马兰汐的爸爸",
     title: "首页",
     ogImage: "astropaper-og.jpg",
-    lightAndDarkMode: true,
+    lightAndDarkMode: false,
     posts: ["blog", "note"],
     siteTime: "06/30/2022 00:06:00"
 };
