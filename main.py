@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import calendar
 import mimetypes
 
 import datetime
@@ -19,36 +20,61 @@ TABLE_DIR = {
         "img": "public/img/note",
         "dir": "src/content/note",
         "ref_dir": "(../../../public/img/note/{})"
+        ,"mid": 13
     },
     "朝花夕拾": {
         "img": "public/img/zhxs",
         "dir": "src/content/blog/朝花夕拾",
         "ref_dir": "(../../../../public/img/zhxs/{})"
+        ,"mid": 14
     },
     "成长日记": {
         "img": "public/img/czrj",
         "dir": "src/content/blog/成长日记",
         "ref_dir": "(../../../../public/img/czrj/{})"
+        ,"mid": 15
     },
     "2024": {
         "img": "public/img/2024",
         "dir": "src/content/blog/2024",
         "ref_dir": "(../../../../public/img/2024/{})"
+        ,"mid": 6
     },
     "2025": {
         "img": "public/img/2025",
         "dir": "src/content/blog/2025",
         "ref_dir": "(../../../../public/img/2025/{})"
+        ,"mid": 7
     },
     "2026": {
         "img": "public/img/2026",
         "dir": "src/content/blog/2026",
         "ref_dir": "(../../../../public/img/2026/{})"
+        ,"mid": 8
     },
     "2027": {
         "img": "public/img/2027",
         "dir": "src/content/blog/2027",
         "ref_dir": "(../../../../public/img/2027/{})"
+        ,"mid": 9
+    },
+    "2028": {
+        "img": "public/img/2028",
+        "dir": "src/content/blog/2028",
+        "ref_dir": "(../../../../public/img/2028/{})"
+        ,"mid": 10
+    },
+    "2029": {
+        "img": "public/img/2029",
+        "dir": "src/content/blog/2029",
+        "ref_dir": "(../../../../public/img/2029/{})"
+        ,"mid": 11
+    },
+    "2030": {
+        "img": "public/img/2030",
+        "dir": "src/content/blog/2030",
+        "ref_dir": "(../../../../public/img/2030/{})"
+        ,"mid": 12
     }
 }
 DIR = TABLE_DIR["note"]
@@ -56,15 +82,12 @@ DIR = TABLE_DIR["note"]
 IMG_SAVE_LOCAL = True
 
 class Article:
-    def __init__(self, var1, var2, var3, var4):
+    def __init__(self, var1, var2, var3, var4, var5):
         self.pubDatetime = var1
         self.title = var2
         self.slug = var3
         self.tags = var4
-def move_first_to_last(my_list):
-    if len(my_list) >= 2:
-        first_element = my_list.pop(0)
-        my_list.append(first_element)
+        self.content = var5
 def get_article_attrs(file_path:str):
     try:
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -73,7 +96,12 @@ def get_article_attrs(file_path:str):
         tags = []
         slug = None
         title = None
+        content = ""
+        startContent = False
         for line in lines:
+            if startContent:
+                content = content + line
+                continue
             line = line.replace("\n", "")
             if "pubDatetime" in line:
                 pubDatetime = line.split(": ", 1)[1]
@@ -88,8 +116,9 @@ def get_article_attrs(file_path:str):
                 tags.append(tagstr[1])
             if "tags" in line: hasTag = True
             if title and "---" in line:
-                break
-        return Article(pubDatetime, title, slug, tags)
+                startContent = True
+        content = content.replace('\n', '', 1)
+        return Article(pubDatetime, title, slug, tags, content)
     except Exception as e:
         print(file_path)
 def init_archives_table_readme():
@@ -420,6 +449,32 @@ def handle_video(content):
             url = transfer_from_github_2_r2(lines[i])
             content = content.replace(lines[i], f'<video src="{url}" autoplay="false" controls="controls" width="800" height="600"/></video>')
     return content
+
+
+def add_blog_to_typeco(md_name):
+    data = get_article_attrs(md_name)
+    data.content = data.content.replace("../../../public" if DIR["mid"] == 13 else "../../../../public", "https://blog.malanxi.top")
+    img = None
+    markdown_image_pattern = re.compile(r'!\[(.*?)\]\(([^)]+)\)')
+    for match in markdown_image_pattern.finditer(data.content):
+        img = match.group(2)  # 获取图片的 URL
+        break
+    try:
+        dt = datetime.datetime.strptime(data.pubDatetime, '%Y-%m-%d %H:%M:%S')
+    except Exception as e:
+        dt = datetime.datetime.strptime(data.pubDatetime, '%Y-%m-%dT%H:%M:%SZ')
+    timestamp = calendar.timegm(dt.timetuple())
+    data = {
+        "title": data.title,
+        "str_value": img,
+        "text": data.content,
+        "mid": DIR["mid"],
+        "created": timestamp
+    }
+    url = "https://pblog.malanxi.top/insert.php"
+    response = requests.post(url, headers={"Content-Type": "application/json; charset=utf-8"}, data=json.dumps(data).encode('utf-8'))
+
+
 def save_issue(issue, me):
     # 将datetime对象转为"北京时间"
     title = f"{issue.title.replace('/', '-').replace(' ', '.')}"
@@ -458,6 +513,8 @@ def save_issue(issue, me):
                     dt = c.created_at + timedelta(hours=8)
                     f.write(dt.strftime("%Y-%m-%d %H:%M:%S") + "\n")
                     f.write(c.body or "")
+
+    add_blog_to_typeco(md_name)
 
 R2_TOKEN = None
 R2_KEY = None
