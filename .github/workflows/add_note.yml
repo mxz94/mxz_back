@@ -40,7 +40,11 @@ jobs:
         run: |
           source venv/bin/activate
           python main.py ${{ secrets.G_T }} ${{ github.repository }} ${{ secrets.R2_TOKEN }} ${{ secrets.R2_KEY }} --issue_number '${{ github.event.issue.number }}'
-
+          
+      - name: Pull activities.json
+        run: |
+          curl -o public/activities.json https://raw.githubusercontent.com/mxz94/mxz_back/refs/heads/master/public/activities.json
+        
       - name: Push README
         run: |
           git config --local user.email "action@github.com"
