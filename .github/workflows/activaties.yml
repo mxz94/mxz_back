@@ -1,0 +1,26 @@
+name: Pull Activities JSON
+
+on:
+  workflow_dispatch:
+  # schedule:
+  # - cron: "30 * * * *"
+  watch:
+    types: [started]
+
+jobs:
+  pull_file:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Pull activities.json
+      run: |
+        curl -o public/activities.json https://raw.githubusercontent.com/mxz94/mxz_back/refs/heads/master/public/activities.json
+
+    - name: Commit changes
+      uses: EndBug/add-and-commit@v8
+      with:
+        message: 'chore: update activities.json'
+        add: 'public/activities.json'
