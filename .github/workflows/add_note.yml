@@ -40,7 +40,22 @@ jobs:
         run: |
           source venv/bin/activate
           python main.py ${{ secrets.G_T }} ${{ github.repository }} ${{ secrets.R2_TOKEN }} ${{ secrets.R2_KEY }} --issue_number '${{ github.event.issue.number }}'
+
+
+      - name: backup data files
+        run: |
+          # mv ./_data/movie.json ./_data/douban/movie_$(date +%Y-%m-%d).json.bak
+          rm -rf ./public/douban
           
+      - name: movie
+        uses: lizheming/doumark-action@master
+        with:
+          id: mxz94
+          type: movie
+          format: json
+          dir: ./public/douban
+
+        
       - name: Pull activities.json
         run: |
           curl -o public/activities.json https://raw.githubusercontent.com/mxz94/mxz_back/refs/heads/master/public/activities.json
