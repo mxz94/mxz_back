@@ -2,6 +2,8 @@ name: Generate GitBlog README
 
 on:
   workflow_dispatch:
+  watch:
+    types: [started]
   issues:
     types: [opened, edited]
   issue_comment:
