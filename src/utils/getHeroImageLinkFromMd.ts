@@ -14,13 +14,13 @@ export default function (post) {
         standardImages.push(match[2]); // 提取第二个捕获组，即图片 URL
     }
 
-    const referenceLinks = {};
-    let refMatch;
-    while ((refMatch = referencePattern.exec(mdText)) !== null) {
-        if (refMatch[2].startsWith('http')) { // 确保是 URL 类型的参考链接
-            referenceLinks[refMatch[1]] = refMatch[2]; // 存储参考名与对应的 URL
-        }
-    }
+    // const referenceLinks = {};
+    // let refMatch;
+    // while ((refMatch = referencePattern.exec(mdText)) !== null) {
+    //     if (refMatch[2].startsWith('http')) { // 确保是 URL 类型的参考链接
+    //         referenceLinks[refMatch[1]] = refMatch[2]; // 存储参考名与对应的 URL
+    //     }
+    // }
 
     const allImageLinks = [...standardImages]; // 合并两种类型的图片链接
 
