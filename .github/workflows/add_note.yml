@@ -58,7 +58,7 @@ jobs:
         
       - name: Pull activities.json
         run: |
-          curl -o public/activities.json https://raw.githubusercontent.com/mxz94/mxz_back/refs/heads/master/public/activities.json
+          curl -o public/activities.json https://raw.githubusercontent.com/mxz94/mxz_run/refs/heads/master/src/static/activities.json
         
       - name: Push README
         run: |
