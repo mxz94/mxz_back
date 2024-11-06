@@ -204,7 +204,7 @@ Application Path：D:\frpc\start.bat
 Startup directory：D:\frpc  
 Arguments：  
   
-或者   
+或者  直接nssm 启动  
   
 Application Path：D:\frpc\frpc.exe  
 Startup directory：D:\frpc  
