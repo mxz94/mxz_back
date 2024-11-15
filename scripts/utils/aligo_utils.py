@@ -144,3 +144,8 @@ class CustomAligo(Aligo):
 
 
 ali = CustomAligo()
+
+if __name__ == '__main__':
+    file_id = "67219ca387f42ee4d9bb4275af78d68bacefe10b"
+    file = "./dd.7z"
+    ali.uplo(file, file_id)

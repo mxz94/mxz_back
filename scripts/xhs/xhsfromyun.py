@@ -10,7 +10,8 @@ from playwright.sync_api import sync_playwright
 from xhs import XhsClient, SearchSortType
 
 con2 = configparser.ConfigParser()
-
+os.environ['HTTPS_PROXY'] = 'http://127.0.0.1:7890'
+os.environ['HTTP_PROXY'] = 'http://127.0.0.1:7890'
 def sign(uri, data=None, a1="", web_session=""):
     for _ in range(10):
         try:
@@ -116,7 +117,7 @@ def select(table, wsql):
 # xq
 xq = 1
 ly = 2
-user_name = "xy1"
+user_name = "maback"
 type = xq
 emoji_list = ["😀","😁","😂","🤣","😄","😅","😆","😎","🤑","🧏","👨"]
 if __name__ == '__main__':

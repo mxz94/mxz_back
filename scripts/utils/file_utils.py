@@ -2,7 +2,6 @@ import json
 import os
 
 import requests
-from qiniu import Auth, put_file
 
 
 # 读取文件夹下所有文件
@@ -36,6 +35,28 @@ class FileUtils:
     def rename_prefix(file, prefix):
         new_filename = file.replace(prefix,"")
         os.rename(file, new_filename)
+
+    @staticmethod
+    def compress_files_and_folders(zip_filename, files, folders):
+        """
+        压缩指定的文件和文件夹到ZIP文件中。
+
+        :param zip_filename: str, ZIP文件的输出路径及名称。
+        :param files: list, 单个文件的路径列表。
+        :param folders: list, 要压缩的文件夹路径列表。
+        """
+        from zipfile import ZipFile
+        with ZipFile(zip_filename, 'w') as zipf:
+            # 添加文件
+            for file in files:
+                if os.path.isfile(file):
+                    zipf.write(file, os.path.basename(file))
+
+            # 压缩文件夹及其内容
+            for root, dirs, filenames in os.walk(folders):
+                for filename in filenames:
+                    file_path = os.path.join(root, filename)
+                    zipf.write(file_path, file_path)
 class Options:
     def __init__(self, options_dict):
         for key, value in options_dict.items():
@@ -53,23 +74,6 @@ def download_image_file(url, file):
         print(" # 写入DONE")
     return
 
-def upload_image_file(file):
-    try:
-        access_key = "Y07Awc_13lhWdx-VS3Z78uCYxvgHDf19FJ4ousBc"
-        secret_key = "3mD6dDLqur1M9yKoZG53qov-JS-7WVkOBD0SoeGj"
-        url = "http://s9yka7j04.sabkt.gdipper.com/"
-        q = Auth(access_key, secret_key)
-        bucket_name = 'mxz9'
-        #上传后保存的文件名
-        path, name = os.path.split(file)
-        #生成上传 Token，可以指定过期时间等
-        token = q.upload_token(bucket_name, name, 3600)
-        #要上传文件的本地路径
-        ret, info = put_file(token, name, file, version='v2')
-        return url + name
-    except Exception as e:
-        print(" # 上传失败")
-        return None
 
 def notice_ding(title, content):
     json_data = {"title":title,"content":content,}
@@ -78,6 +82,4 @@ def notice_ding(title, content):
 
 
 if __name__ == '__main__':
-    file = r"D:\我的文档\Pictures\关羽长城骑摩托.jpg"
-    url = upload_image_file(file)
-    notice_ding("已成功拍照并保存到目录2", "![]({})".format(url))
+    FileUtils.compress_files_and_folders("./demo.zip", [], r"D:\mxz\mxz_back")
