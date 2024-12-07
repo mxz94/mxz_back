@@ -19,7 +19,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 690536,
+				"count": 690865,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.8
@@ -202,7 +202,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 538184,
+				"count": 538594,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -330,7 +330,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 913330,
+				"count": 913916,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
@@ -467,7 +467,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1402501,
+				"count": 1403295,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
@@ -637,7 +637,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1872009,
+				"count": 1873703,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -746,7 +746,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2200413,
+				"count": 2201704,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -917,7 +917,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2013921,
+				"count": 2015595,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -941,8 +941,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
-				"https://img1.doubanio.com/f/frodo/990703f165ee40fa7a023949252882058a2ba57d/pics/vendors/mgtv.png"
+				"https://img1.doubanio.com/f/frodo/990703f165ee40fa7a023949252882058a2ba57d/pics/vendors/mgtv.png",
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "2014",
 			"card_subtitle": "2014 / 美国 英国 加拿大 / 剧情 科幻 冒险 / 克里斯托弗·诺兰 / 马修·麦康纳 安妮·海瑟薇",
@@ -1095,7 +1095,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 431700,
+				"count": 432287,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -1215,7 +1215,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 906542,
+				"count": 907077,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -1424,7 +1424,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2300903,
+				"count": 2302458,
 				"max": 10,
 				"star_count": 5,
 				"value": 9.5
@@ -1448,8 +1448,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
-				"https://img3.doubanio.com/f/frodo/31f275ce1a4a35ed76a45ecc39a0a32896d99c52/pics/vendors/sohu.png"
+				"https://img3.doubanio.com/f/frodo/31f275ce1a4a35ed76a45ecc39a0a32896d99c52/pics/vendors/sohu.png",
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "1994",
 			"card_subtitle": "1994 / 美国 / 剧情 爱情 / 罗伯特·泽米吉斯 / 汤姆·汉克斯 罗宾·怀特",
@@ -1642,7 +1642,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 135265,
+				"count": 135678,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.9
@@ -1756,7 +1756,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 151226,
+				"count": 151266,
 				"max": 10,
 				"star_count": 3.5,
 				"value": 7.4
@@ -1883,7 +1883,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1049607,
+				"count": 1051003,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1899,9 +1899,9 @@
 			"honor_infos": [
 				{
 					"kind": "tv",
-					"uri": "douban://douban.com/subject_collection/ECQQC5NTQ?type=rank&category=movie&rank_type=tv_genre",
-					"rank": 13,
-					"title": "豆瓣高分电视剧榜"
+					"uri": "douban://douban.com/subject_collection/ECGYCP2VQ?type=rank&category=movie&rank_type=tv_genre",
+					"rank": 5,
+					"title": "豆瓣高分华语剧集榜"
 				}
 			],
 			"is_show": false,
@@ -2100,7 +2100,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 184000,
+				"count": 184064,
 				"max": 10,
 				"star_count": 4,
 				"value": 7.8
@@ -2230,7 +2230,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 151516,
+				"count": 151593,
 				"max": 10,
 				"star_count": 3,
 				"value": 6
@@ -2339,7 +2339,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 390779,
+				"count": 391110,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.6
@@ -2510,7 +2510,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 126268,
+				"count": 126366,
 				"max": 10,
 				"star_count": 4,
 				"value": 7.9
@@ -2660,7 +2660,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 239972,
+				"count": 240085,
 				"max": 10,
 				"star_count": 4,
 				"value": 7.7
@@ -2676,9 +2676,9 @@
 			"honor_infos": [
 				{
 					"kind": "movie",
-					"uri": "douban://douban.com/subject_collection/EC6YOLGQQ?type=rank&category=movie&rank_type=film_genre",
-					"rank": 5,
-					"title": "中国大陆武侠片榜"
+					"uri": "douban://douban.com/subject_collection/ECEAOOAHI?type=rank&category=movie&rank_type=film_genre",
+					"rank": 17,
+					"title": "华语武侠片榜"
 				}
 			],
 			"is_show": false,
@@ -2791,7 +2791,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 114507,
+				"count": 114588,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -2924,7 +2924,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 3091254,
+				"count": 3093604,
 				"max": 10,
 				"star_count": 5,
 				"value": 9.7
@@ -3088,7 +3088,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 224493,
+				"count": 225089,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.8
@@ -3098,8 +3098,8 @@
 				"2018-05-11(戛纳电影节)"
 			],
 			"pic": {
-				"large": "https://img1.doubanio.com/view/photo/m_ratio_poster/public/p2915363319.jpg",
-				"normal": "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2915363319.jpg"
+				"large": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2521300823.jpg",
+				"normal": "https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2521300823.jpg"
 			},
 			"honor_infos": [
 				{
@@ -3168,19 +3168,19 @@
 			],
 			"color_scheme": {
 				"is_dark": true,
-				"primary_color_light": "a5a39d",
+				"primary_color_light": "727272",
 				"_base_color": [
-					0.11111111111111129,
-					0.04918032786885244,
-					0.7176470588235294
+					0,
+					0,
+					0.09019607843137255
 				],
-				"secondary_color": "f9f8f4",
+				"secondary_color": "f9f4f4",
 				"_avg_color": [
-					0.11666666666666681,
-					0.06493506493506489,
-					0.6039215686274509
+					0.05555555555555569,
+					0.08108108108108117,
+					0.1450980392156863
 				],
-				"primary_color_dark": "7f7d79"
+				"primary_color_dark": "4c4c4c"
 			},
 			"type": "movie",
 			"has_linewatch": false,
@@ -3221,7 +3221,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 78460,
+				"count": 78547,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
