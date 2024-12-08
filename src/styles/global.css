@@ -55,8 +55,9 @@
 }
 body {
     /* 原版 */
-    font-family: "LXGW WenKai", sans-serif;
+     /*font-family: "LXGW WenKai", sans-serif;*/
     /* 屏幕优化版 */
+    font-family:'LXGW WenKai Light', sans-serif;
 }
 
 .live-photo-container {
