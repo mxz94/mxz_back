@@ -1,17 +1,17 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
     <url>
-        <loc>https://blog.malanxi.top/</loc>
+        <loc>https://posts.malanxi.top/</loc>
     </url>
     <url>
-        <loc>https://blog.malanxi.top/blog/</loc>
+        <loc>https://posts.malanxi.top/posts/</loc>
     </url>
     <url>
-        <loc>https://blog.malanxi.top/note/</loc>
+        <loc>https://posts.malanxi.top/note/</loc>
     </url>
     <url>
-        <loc>https://blog.malanxi.top/archives/</loc>
+        <loc>https://posts.malanxi.top/archives/</loc>
     </url>
     <url>
-        <loc>https://blog.malanxi.top/cv/</loc>
+        <loc>https://posts.malanxi.top/cv/</loc>
     </url>
 </urlset>

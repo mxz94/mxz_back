@@ -1,7 +1,6 @@
-import { slugifyAll } from "./slugify";
 import type { CollectionEntry } from "astro:content";
 
-export default function (post) {
+export default function getHeroImageLinkFromMd(post) {
     if (post.heroImage)
         return post.heroImage;
     const mdText = post.body;
@@ -43,4 +42,5 @@ export default function (post) {
         return  image.startsWith('http') ? image : image.split('public')[1];
     }
 }
+
 

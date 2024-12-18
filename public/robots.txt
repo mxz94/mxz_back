@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://blog.malanxi.top/sitemap-index.xml
+Sitemap: https://posts.malanxi.top/sitemap-index.xml

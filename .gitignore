@@ -1,14 +1,9 @@
-**/__pycache__
-mxz_back.iml
-!/.idea/
-!/.idea/
-/node_modules/
-/.astro/
-/.vscode/
-/dist/
 # build output
 dist/
-.cache
+
+# generated types
+.astro/
+
 # dependencies
 node_modules/
 
@@ -18,7 +13,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-
 # environment variables
 .env
 .env.production
@@ -26,5 +20,8 @@ pnpm-debug.log*
 # macOS-specific files
 .DS_Store
 
-# Astro
-.astro/
+.vercel
+
+package-lock.json
+bun.lockb
+yarn.lock

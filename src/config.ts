@@ -1,167 +1,82 @@
-// Place any global data in this file.
-// You can import this data from anywhere in your site by using the `import` keyword.
+import type {
+  LicenseConfig,
+  NavBarConfig,
+  ProfileConfig,
+  SiteConfig,
+} from './types/config'
+import { LinkPreset } from './types/config'
 
-export const SITE_DESCRIPTION = '兰汐爸爸记录的日志';
-
-import type { Site, SocialObjects } from "./types";
-
-export const SITE: Site = {
-    website: "https://blog.malanxi.top/", // replace this with your deployed domain
-    author: "马兰汐的爸爸",
-    desc: "马兰汐的爸爸",
-    title: "首页",
-    ogImage: "astropaper-og.jpg",
-    lightAndDarkMode: false,
-    posts: ["blog", "note"],
-    siteTime: "06/30/2022 00:06:00"
-};
-export const SITE_TITLE = SITE.desc;
-export const LOCALE = ["zh-cn"]; // set to [] to use the environment default
-export const TRANSITION_API = true
-export const LOGO_IMAGE = {
+export const siteConfig: SiteConfig = {
+  title: 'mxz',
+  subtitle: 'Demo Site',
+  lang: 'zh_CN',         // 'en', 'zh_CN', 'zh_TW', 'ja', 'ko'
+  themeColor: {
+    hue: 250,         // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
+    fixed: false,     // Hide the theme color picker for visitors
+  },
+  banner: {
     enable: false,
-    svg: true,
-    width: 216,
-    height: 46,
-};
+    src: 'assets/images/demo-banner.png',   // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+    position: 'center',      // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
+    credit: {
+      enable: false,         // Display the credit text of the banner image
+      text: '',              // Credit text to be displayed
+      url: ''                // (Optional) URL link to the original artwork or artist's page
+    }
+  },
+  toc: {
+    enable: true,           // Display the table of contents on the right side of the post
+    depth: 2                // Maximum heading depth to show in the table, from 1 to 3
+  },
+  favicon: [    // Leave this array empty to use the default favicon
+    // {
+    //   src: '/favicon/icon.png',    // Path of the favicon, relative to the /public directory
+    //   theme: 'light',              // (Optional) Either 'light' or 'dark', set only if you have different favicons for light and dark mode
+    //   sizes: '32x32',              // (Optional) Size of the favicon, set only if you have favicons of different sizes
+    // }
+  ]
+}
 
-export const SOCIALS: SocialObjects = [
+export const navBarConfig: NavBarConfig = {
+  links: [
+    LinkPreset.Home,
+    LinkPreset.Archive,
+    LinkPreset.About,
     {
-        name: "WRITE",
-        href: "https://mdd.malanxi.top/keystatic",
-        linkTitle: `WRITE`,
-        active: false,
+      name: 'GitHub',
+      url: 'https://github.com/saicaca/fuwari',     // Internal links should not include the base path, as it is automatically added
+      external: true,                               // Show an external link icon and will open in a new tab
+    },
+  ],
+}
+
+export const profileConfig: ProfileConfig = {
+  avatar: 'assets/images/demo-avatar.png',  // Relative to the /src directory. Relative to the /public directory if it starts with '/'
+  name: 'mxz',
+  bio: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  links: [
+    {
+      name: 'Twitter',
+      icon: 'fa6-brands:twitter',       // Visit https://icones.js.org/ for icon codes
+                                        // You will need to install the corresponding icon set if it's not already included
+                                        // `pnpm add @iconify-json/<icon-set-name>`
+      url: 'https://twitter.com',
     },
     {
-        name: "RSS",
-        href: "/atom.xml",
-        linkTitle: `RSS Feed`,
-        active: true,
+      name: 'Steam',
+      icon: 'fa6-brands:steam',
+      url: 'https://store.steampowered.com',
     },
     {
-        name: "Github",
-        href: "https://github.com/mxz94",
-        linkTitle: ` ${SITE.title} on Github`,
-        active: true,
+      name: 'GitHub',
+      icon: 'fa6-brands:github',
+      url: 'https://github.com/saicaca/fuwari',
     },
-    {
-        name: "Facebook",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on Facebook`,
-        active: false,
-    },
-    {
-        name: "Instagram",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on Instagram`,
-        active: false,
-    },
-    {
-        name: "LinkedIn",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on LinkedIn`,
-        active: false,
-    },
-    {
-        name: "Mail",
-        href: "mailto:yourmail@gmail.com",
-        linkTitle: `Send an email to ${SITE.title}`,
-        active: false,
-    },
-    {
-        name: "Twitter",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on Twitter`,
-        active: false,
-    },
-    {
-        name: "Twitch",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on Twitch`,
-        active: false,
-    },
-    {
-        name: "YouTube",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on YouTube`,
-        active: false,
-    },
-    {
-        name: "WhatsApp",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on WhatsApp`,
-        active: false,
-    },
-    {
-        name: "Snapchat",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on Snapchat`,
-        active: false,
-    },
-    {
-        name: "Pinterest",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on Pinterest`,
-        active: false,
-    },
-    {
-        name: "TikTok",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on TikTok`,
-        active: false,
-    },
-    {
-        name: "CodePen",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on CodePen`,
-        active: false,
-    },
-    {
-        name: "Discord",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on Discord`,
-        active: false,
-    },
-    {
-        name: "GitLab",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on GitLab`,
-        active: false,
-    },
-    {
-        name: "Reddit",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on Reddit`,
-        active: false,
-    },
-    {
-        name: "Skype",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on Skype`,
-        active: false,
-    },
-    {
-        name: "Steam",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on Steam`,
-        active: false,
-    },
-    {
-        name: "Telegram",
-        href: "https://t.me/ma741852",
-        linkTitle: `${SITE.title} on Telegram`,
-        active: true,
-    },
-    {
-        name: "Run",
-        href: "https://run.malanxi.top",
-        linkTitle: `${SITE.title} on Run`,
-        active: true,
-    },
-    {
-        name: "Mastodon",
-        href: "https://github.com/satnaing/astro-paper",
-        linkTitle: `${SITE.title} on Mastodon`,
-        active: false,
-    },
-];
+  ],
+}
+
+export const licenseConfig: LicenseConfig = {
+  enable: true,
+  name: 'CC BY-NC-SA 4.0',
+  url: 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
+}

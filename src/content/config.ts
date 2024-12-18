@@ -1,38 +1,24 @@
-import { z, defineCollection } from "astro:content";
-const blogSchema = z.object({
+import { defineCollection, z } from 'astro:content'
+
+const postsCollection = defineCollection({
+  schema: z.object({
     title: z.string(),
-    description: z.string().optional(),
-    pubDatetime: z.coerce.date(),
-    auth: z.boolean().optional(),
-    updatedDate: z.string().optional(),
-    heroImage: z.string().optional(),
-    badge: z.string().optional(),
-    tags: z.array(z.string()).refine(items => new Set(items).size === items.length, {
-        message: 'tags must be unique',
-    }).optional(),
-});
+    pubDatetime: z.date(),
+    updated: z.date().optional(),
+    draft: z.boolean().optional().default(false),
+    description: z.string().optional().default(''),
+    image: z.string().optional().default(''),
+    tags: z.array(z.string()).optional().default([]),
+    category: z.string().optional().default(''),
+    lang: z.string().optional().default(''),
 
-const storeSchema = z.object({
-    title: z.string(),
-    description: z.string(),
-    custom_link_label: z.string(),
-    custom_link: z.string().optional(),
-    updatedDate: z.coerce.date(),
-    pricing: z.string().optional(),
-    oldPricing: z.string().optional(),
-    badge: z.string().optional(),
-    checkoutUrl: z.string().optional(),
-    heroImage: z.string().optional(),
-});
-
-export type BlogSchema = z.infer<typeof blogSchema>;
-export type StoreSchema = z.infer<typeof storeSchema>;
-
-const blogCollection = defineCollection({ schema: blogSchema });
-const storeCollection = defineCollection({ schema: storeSchema });
-
+    /* For internal use */
+    prevTitle: z.string().default(''),
+    prevSlug: z.string().default(''),
+    nextTitle: z.string().default(''),
+    nextSlug: z.string().default(''),
+  }),
+})
 export const collections = {
-    'blog': blogCollection,
-    'note': blogCollection,
-    'store': blogCollection
+  posts: postsCollection,
 }
