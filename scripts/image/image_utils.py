@@ -126,7 +126,57 @@ def resize_and_adjust_quality(input_folder, output_folder, scale=0.3, quality=50
                 resized_img.save(output_path, quality=quality)
                 print(f"Processed {filename} and saved to {output_path}")
 
+def get_image_info(input_file):
+    """
+    将单个 HEIC 文件转换为 JPG 格式，并上传到七牛云，输出文件与输入文件在同一目录。
+    如果文件不是 HEIC 格式，则不进行处理。
+
+    :param input_file: 输入文件路径
+    """
+    if not input_file.lower().endswith('.heic'):
+        print(f"文件 {input_file} 不是 HEIC 格式，跳过处理。")
+        return
+
+    # 打开 HEIC 文件
+    img = Image.open(input_file)
+
+    # 获取exif信息
+    exif = img._getexif()
+    
+    if exif:
+        # 提取GPS信息
+        gps_info = exif.get(34853)
+        if gps_info:
+            # 提取经度和纬度
+            gps_latitude = gps_info[2]
+            gps_longitude = gps_info[4]
+
+            # 将经纬度转换为十进制格式
+            def convert_to_degrees(value):
+                d = float(value[0])
+                m = float(value[1])
+                s = float(value[2])
+                return d + (m / 60.0) + (s / 3600.0)
+
+            lat = convert_to_degrees(gps_latitude)
+            lon = convert_to_degrees(gps_longitude)
+
+            # 如果是南纬或西经，需要取反
+            if gps_info[1] == 'S':
+                lat = -lat
+            if gps_info[3] == 'W':
+                lon = -lon
+
+            return (lon, lat)
+        else:
+            return ("没有GPS信息",)
+    else:
+        return ("没有exif信息",)
+
 # # 使用示例
 # input_folder = r'D:\mxz\mxz_back\scripts\image\plog'
 # output_folder = r'D:\mxz\mxz_back\scripts\image\thumbnail'
 # resize_and_adjust_quality(input_folder, output_folder)
+
+if __name__ == '__main__':
+    print(get_image_info(r'C:\Users\Administrator\Downloads\IMG_1208.HEIC'))

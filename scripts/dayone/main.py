@@ -8,6 +8,7 @@ from typing import List
 
 import jsonschema
 import ujson
+from PIL import Image
 
 
 def validate_schema(data):
@@ -342,11 +343,26 @@ def replace_img_url(file):
     matchs = re.findall(pattern, content)
     i = 0
     for img_url in matchs:
-        if img_url.endswith(".jpg") or img_url.endswith(".png") or img_url.endswith(".jpeg"):
+        if img_url.endswith((".jpg", ".png", ".jpeg", ".webp")):
             img = img_url.split("public")[-1]
-            print(img)
-            shutil.copy2("../../public" + img, "./photos")
-            content = content.replace(img_url, "photos/" + img.split("/")[-1])
+            source_path = "../../public" + img
+            destination_path = "./photos/" + img.split("/")[-1]
+
+            # 复制文件到目标目录
+            shutil.copy2(source_path, destination_path)
+
+            if img_url.endswith(".webp"):
+                # 转换 WebP 为 JPG
+                with Image.open(destination_path) as webp_image:
+                    jpg_path = destination_path.rsplit('.', 1)[0] + ".jpg"
+                    webp_image.convert('RGB').save(jpg_path, 'JPEG')
+                # 删除原始 WebP 文件
+                os.remove(destination_path)
+                # 更新内容中的路径
+                content = content.replace(img_url, "photos/" + os.path.basename(jpg_path))
+            else:
+                # 更新内容中的路径
+                content = content.replace(img_url, "photos/" + os.path.basename(destination_path))
     with open(file, 'w', encoding='utf-8') as f:
         f.write(content)
 
@@ -360,7 +376,7 @@ def move_md(path, start):
         replace_img_url(os.path.join("md", i))
 
 path= r"../../src/content/blog/2024"
-import_start = "2024-05-27"
+import_start = "2024-09-2"
 
 if __name__ == '__main__':
     move_md(path, import_start)

@@ -163,9 +163,11 @@ def out_of_china(lng, lat):
 
 if __name__ == '__main__':
 
-    lng = 112.4706195
-    lat = 34.6150083
+    lng = 112.5095
+    lat = 34.5954
     result3 = wgs84_to_gcj02(lng, lat)
-    url = f'https://restapi.amap.com/v3/geocode/regeo?output=json&location={str(result3[0])},{str(result3[1])}&key=310f991c4a6755a70f5abaf0307493d3&extensions=base'
+    # url = f'https://restapi.amap.com/v3/geocode/regeo?output=json&location={str(result3[0])},{str(result3[1])}&key=310f991c4a6755a70f5abaf0307493d3&extensions=base'
+    # url = f'https://restapi.amap.com/v3/geocode/regeo?output=json&location={lng},{lat}&key=310f991c4a6755a70f5abaf0307493d3&extensions=base'
+    url = f'https://api.map.baidu.com/reverse_geocoding/v3/?ak=M7olmu7pXDVznsM1CdEXTG66B4hl4jWq&output=json&coordtype=wgs84ll&location={str(result3[1])},{str(result3[0])}'
     data = requests.get(url)
     print(data.json())
