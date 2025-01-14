@@ -107,3 +107,15 @@ def baiduImgDownloader(pointsCsvPath,toFolderPath,ak,zoom=3):
 			print(fp)
 		except Exception as e:
 			print(f"下载失败: {e}")
+
+def im(p,toFolderPath,ak,zoom=3, file_name=None):
+    points = []
+    points += convertWGStoBD09MC(p,ak)
+    for i,(x,y) in enumerate(points):
+        try:
+            fp = os.path.join(toFolderPath,f"{i:0>5d}.jpg")
+            download(x,y,zoom,fp)
+            time.sleep(3)
+            print(fp)
+        except Exception as e:
+            print(f"下载失败: {e}")

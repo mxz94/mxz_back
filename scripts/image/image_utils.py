@@ -6,6 +6,27 @@ import os
 
 register_heif_opener()
 
+# 拷贝A文件的exif信息到B文件
+def copy_exif(source_image_path, target_image_path):
+    try:
+        with Image.open(source_image_path) as source_img:
+            exif_data = source_img.info.get('exif', b'')
+    except IOError as e:
+        print(f"Error opening source image: {e}")
+        return
+
+    try:
+        with Image.open(target_image_path) as target_img:
+            # 如果目标图像已经有 EXIF 数据，可以选择是否覆盖
+            if exif_data:
+                target_img.info['exif'] = exif_data
+
+            # 保存带有 EXIF 数据的目标图像
+            target_img.save(target_image_path, exif=target_img.info.get('exif'))
+    except IOError as e:
+        print(f"Error opening or saving target image: {e}")
+
+# tinky 包含exif 信息压缩
 def compress_image(image):
     import tinify
     tinify.key = "FrPpqqhhsrj2zWmbqyTH6z7xl7MMfC1K"
@@ -14,6 +35,7 @@ def compress_image(image):
     copyrighted = source.preserve("copyright", "creation", "location")
     copyrighted.to_file(image)
 
+# heic 转jpg
 def convert_heic_to_jpg_and_upload(input_file):
     """
     将单个 HEIC 文件转换为 JPG 格式，并上传到七牛云，输出文件与输入文件在同一目录。
@@ -39,11 +61,6 @@ def convert_heic_to_jpg_and_upload(input_file):
     img.save(output_file, exif=exif, icc_profile=icc_profile)
     print(f"转换完成: {output_file}")
 
-
-    # 上传转换后的 JPG 文件
-    upload_url = upload_image_R2(output_file)
-    print(f"上传完成: {upload_url}")
-
 def resize_and_adjust_quality2(input_file, scale=0.3, quality=50):
     # 检查文件是否为图像
     if os.path.isfile(input_file) and input_file.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
@@ -61,6 +78,7 @@ def resize_and_adjust_quality2(input_file, scale=0.3, quality=50):
             # 保存图像，设置质量
             resized_img.save(input_file, quality=quality)
 
+#  上传图片和压缩图片到R2
 def upload_image_R2(file:str, prefix= None):
     from botocore.config import Config
     import boto3
@@ -97,6 +115,7 @@ def upload_image_R2(file:str, prefix= None):
 
     return "https://pub-4232cd0528364004a537285f400807bf.r2.dev/" + bucket_file_name
 
+# 压缩缩放图片
 def resize_and_adjust_quality(input_folder, output_folder, scale=0.3, quality=50):
     # 确保输出文件夹存在
     if not os.path.exists(output_folder):
@@ -126,17 +145,8 @@ def resize_and_adjust_quality(input_folder, output_folder, scale=0.3, quality=50
                 resized_img.save(output_path, quality=quality)
                 print(f"Processed {filename} and saved to {output_path}")
 
+#  获取图片信息
 def get_image_info(input_file):
-    """
-    将单个 HEIC 文件转换为 JPG 格式，并上传到七牛云，输出文件与输入文件在同一目录。
-    如果文件不是 HEIC 格式，则不进行处理。
-
-    :param input_file: 输入文件路径
-    """
-    if not input_file.lower().endswith('.heic'):
-        print(f"文件 {input_file} 不是 HEIC 格式，跳过处理。")
-        return
-
     # 打开 HEIC 文件
     img = Image.open(input_file)
 
@@ -179,4 +189,4 @@ def get_image_info(input_file):
 # resize_and_adjust_quality(input_folder, output_folder)
 
 if __name__ == '__main__':
-    print(get_image_info(r'C:\Users\Administrator\Downloads\IMG_1208.HEIC'))
+    data  = get_image_info(r'D:\plog\IMG_8892.jpg')
