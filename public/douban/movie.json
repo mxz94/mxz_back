@@ -22,7 +22,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 64532,
+				"count": 64538,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.6
@@ -829,7 +829,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1890410,
+				"count": 1890412,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1109,7 +1109,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2033194,
+				"count": 2033195,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1133,8 +1133,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
-				"https://img1.doubanio.com/f/frodo/990703f165ee40fa7a023949252882058a2ba57d/pics/vendors/mgtv.png"
+				"https://img1.doubanio.com/f/frodo/990703f165ee40fa7a023949252882058a2ba57d/pics/vendors/mgtv.png",
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "2014",
 			"card_subtitle": "2014 / 美国 英国 加拿大 / 剧情 科幻 冒险 / 克里斯托弗·诺兰 / 马修·麦康纳 安妮·海瑟薇",
@@ -1287,7 +1287,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 437711,
+				"count": 437713,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -3123,7 +3123,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 3115176,
+				"count": 3115183,
 				"max": 10,
 				"star_count": 5,
 				"value": 9.7
