@@ -829,7 +829,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1896044,
+				"count": 1896048,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -938,7 +938,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2219319,
+				"count": 2219321,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1109,7 +1109,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2039216,
+				"count": 2039223,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1640,8 +1640,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
-				"https://img3.doubanio.com/f/frodo/31f275ce1a4a35ed76a45ecc39a0a32896d99c52/pics/vendors/sohu.png"
+				"https://img3.doubanio.com/f/frodo/31f275ce1a4a35ed76a45ecc39a0a32896d99c52/pics/vendors/sohu.png",
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "1994",
 			"card_subtitle": "1994 / 美国 / 剧情 爱情 / 罗伯特·泽米吉斯 / 汤姆·汉克斯 罗宾·怀特",
