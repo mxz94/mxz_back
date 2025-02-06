@@ -51,7 +51,7 @@
                 previousLevel = level;
             });
             tocContent.appendChild(tocList);
-            tocInner.innerHTML = '<div class="toc-head"><button class="toc-toggle">展开/折叠</button><b class="toc-head-title">目录</b><a class="toc-head-top" href="javascript:void(0);" onclick="window.scrollTo({top: 0});">↑ 顶部</a></div>';
+            tocInner.innerHTML = '<div class="toc-head"><button class="toc-toggle" onclick="window.scrollTo({top: 0});" >展开/折叠</button><b class="toc-head-title">目录</b><a class="toc-head-top" href="javascript:void(0);" onclick="window.scrollTo({top: 0});">↑ 顶部</a></div>';
             tocInner.appendChild(tocContent);
             tocWrapper.appendChild(tocInner);
 
@@ -112,12 +112,12 @@
                     }
                 });
             });
-            // document.querySelector(".toc-toggle").addEventListener("click", function () {
-            //     const ul = document.querySelector(".toc > div > ul");
-            //     if (ul) {
-            //         ul.classList.toggle("show");
-            //     }
-            // });
+            document.querySelector(".toc-toggle").addEventListener("click", function () {
+                const ul = document.querySelector(".toc > div > ul");
+                if (ul) {
+                    ul.classList.toggle("show");
+                }
+            });
 
             document.addEventListener('DOMContentLoaded', function () {
                 const toggleButton = document.querySelector(".toc-toggle");
@@ -137,15 +137,15 @@
                 }
             }
 
-            document.addEventListener('click', function (event) {
-                if (event.target.matches('.toc-toggle')) {
-                    console.log("TOC toggle clicked");
-                    const ul = document.querySelector(".toc > div > ul");
-                    if (ul) {
-                        ul.classList.toggle("show");
-                    }
-                }
-            });
+            // document.addEventListener('click', function (event) {
+            //     if (event.target.matches('.toc-toggle')) {
+            //         console.log("TOC toggle clicked");
+            //         const ul = document.querySelector(".toc > div > ul");
+            //         if (ul) {
+            //             ul.classList.toggle("show");
+            //         }
+            //     }
+            // });
 
             window.addEventListener("hashchange", function () {
                 const hash = window.location.hash.substring(1);
