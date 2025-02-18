@@ -67,3 +67,76 @@ page.get_by_role("button", name="Delete issue").click()
 page.locator("text=Delete this issue").click()
 page.get_by_test_id()
 ```
+
+4. docker 部署
+Dockerfile 文件
+```
+FROM python:3.12-slim
+
+# 设置工作目录
+WORKDIR /app
+
+# 设置时区
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+# 配置阿里云和清华镜像源
+RUN echo \
+    "deb http://mirrors.aliyun.com/debian/ bullseye main contrib non-free\n" \
+    "deb http://mirrors.aliyun.com/debian/ bullseye-updates main contrib non-free\n" \
+    "deb http://mirrors.aliyun.com/debian-security bullseye-security main contrib non-free\n" \
+    "deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye main contrib non-free\n" \
+    "deb https://mirrors.tuna.tsinghua.edu.cn/debian/ bullseye-updates main contrib non-free\n" \
+    "deb https://mirrors.tuna.tsinghua.edu.cn/debian-security bullseye-security main contrib non-free" \
+    > /etc/apt/sources.list
+
+# 安装 Playwright 依赖
+RUN apt-get clean && \
+    apt-get update && \
+    apt-get install -y --fix-missing \
+    libwebkit2gtk-4.0-37 \
+    libgtk-3-0 \
+    libgbm1 \
+    libxcb-render0 \
+    libxcomposite1 \
+    libxdamage1 \
+    libxfixes3 \
+    libxrandr2 \
+    libpango-1.0-0 \
+    libcairo2 \
+    libasound2 \
+    libatspi2.0-0 \
+    libglib2.0-0 \
+    libnss3 \
+    libnspr4 \
+    libatk1.0-0 \
+    libatk-bridge2.0-0 \
+    libcups2 \
+    libdrm2 \
+    libdbus-1-3 \
+    libexpat1 \
+    libxcb1 \
+    libxkbcommon0 \
+    libx11-6 && \
+    rm -rf /var/lib/apt/lists/*
+
+# 升级 pip 并安装 playwright
+RUN python -m pip install --upgrade pip && \
+    pip install playwright && \
+    playwright install chrome
+
+# 设置环境变量
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONDONTWRITEBYTECODE=1
+
+# 默认命令
+CMD ["bash"]
+```
+
+```
+# 构建
+docker build -t my-playwright-app .
+
+# 运行
+docker run -it my-playwright-app
+```
