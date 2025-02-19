@@ -1,5 +1,123 @@
 [
 	{
+		"comment": "天才不必符合教条",
+		"rating": {
+			"count": 1,
+			"max": 5,
+			"star_count": 4,
+			"value": 4
+		},
+		"sharing_text": "我的评分：★★★★ 天才不必符合教条 https://www.douban.com/doubanapp/dispatch/movie/3793023 来自@豆瓣App",
+		"sharing_url": "https://www.douban.com/doubanapp/dispatch?uri=/subject/3793023/interest/4445236839",
+		"tags": [
+			"励志"
+		],
+		"charts": [],
+		"platforms": [],
+		"vote_count": 0,
+		"create_time": "2025-02-11 16:03:06",
+		"status": "done",
+		"id": 4445236839,
+		"is_private": false,
+		"subject": {
+			"rating": {
+				"count": 1992082,
+				"max": 10,
+				"star_count": 4.5,
+				"value": 9.2
+			},
+			"controversy_reason": "",
+			"pubdate": [
+				"2011-12-08(中国大陆)"
+			],
+			"pic": {
+				"large": "https://img2.doubanio.com/view/photo/m_ratio_poster/public/p579729551.jpg",
+				"normal": "https://img2.doubanio.com/view/photo/s_ratio_poster/public/p579729551.jpg"
+			},
+			"honor_infos": [
+				{
+					"kind": "movie",
+					"uri": "douban://douban.com/subject_collection/movie_top250",
+					"rank": 14,
+					"title": "豆瓣电影Top250"
+				}
+			],
+			"is_show": false,
+			"vendor_icons": [
+				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png"
+			],
+			"year": "2009",
+			"card_subtitle": "2009 / 印度 / 剧情 喜剧 爱情 歌舞 / 拉吉库马尔·希拉尼 / 阿米尔·汗 卡琳娜·卡普尔",
+			"id": "3793023",
+			"genres": [
+				"剧情",
+				"喜剧",
+				"爱情"
+			],
+			"title": "三傻大闹宝莱坞",
+			"is_released": true,
+			"actors": [
+				{
+					"name": "阿米尔·汗"
+				},
+				{
+					"name": "卡琳娜·卡普尔"
+				},
+				{
+					"name": "马达范"
+				},
+				{
+					"name": "沙尔曼·乔希"
+				},
+				{
+					"name": "奥米·瓦依达"
+				},
+				{
+					"name": "博曼·伊拉尼"
+				},
+				{
+					"name": "莫娜·辛格"
+				},
+				{
+					"name": "拉杰夫·拉宾德拉纳特安"
+				}
+			],
+			"color_scheme": {
+				"is_dark": true,
+				"primary_color_light": "8fa556",
+				"_base_color": [
+					0.21428571428571427,
+					0.4772727272727273,
+					0.17254901960784313
+				],
+				"secondary_color": "f8f9f4",
+				"_avg_color": [
+					0.13117283950617284,
+					0.5934065934065934,
+					0.7137254901960784
+				],
+				"primary_color_dark": "6e7f42"
+			},
+			"type": "movie",
+			"has_linewatch": true,
+			"vendor_desc": "独播",
+			"cover_url": "https://dou.img.lithub.cc/movie/3793023.jpg",
+			"sharing_url": "https://www.douban.com/doubanapp/dispatch/movie/3793023",
+			"url": "https://movie.douban.com/subject/3793023/",
+			"release_date": null,
+			"uri": "douban://douban.com/movie/3793023",
+			"subtype": "movie",
+			"directors": [
+				{
+					"name": "拉吉库马尔·希拉尼"
+				}
+			],
+			"album_no_interact": false,
+			"article_intros": [],
+			"null_rating_reason": ""
+		}
+	},
+	{
 		"comment": "",
 		"rating": {
 			"count": 1,
@@ -22,7 +140,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 71967,
+				"count": 78408,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.6
@@ -211,7 +329,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 695949,
+				"count": 697405,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.8
@@ -394,7 +512,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 544271,
+				"count": 545920,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -522,7 +640,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 922077,
+				"count": 924758,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
@@ -659,7 +777,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1415163,
+				"count": 1419411,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
@@ -829,7 +947,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1896127,
+				"count": 1903462,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -938,7 +1056,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2219398,
+				"count": 2225387,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1109,7 +1227,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2039317,
+				"count": 2047493,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1133,8 +1251,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img1.doubanio.com/f/frodo/990703f165ee40fa7a023949252882058a2ba57d/pics/vendors/mgtv.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
+				"https://img1.doubanio.com/f/frodo/990703f165ee40fa7a023949252882058a2ba57d/pics/vendors/mgtv.png"
 			],
 			"year": "2014",
 			"card_subtitle": "2014 / 美国 英国 加拿大 / 剧情 科幻 冒险 / 克里斯托弗·诺兰 / 马修·麦康纳 安妮·海瑟薇",
@@ -1187,7 +1305,7 @@
 					"name": "比尔·欧文"
 				},
 				{
-					"name": "托弗·戈瑞斯"
+					"name": "托弗·格雷斯"
 				},
 				{
 					"name": "科莱特·沃夫"
@@ -1287,7 +1405,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 438920,
+				"count": 440725,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -1407,7 +1525,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 914885,
+				"count": 917333,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -1616,7 +1734,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2322857,
+				"count": 2329019,
 				"max": 10,
 				"star_count": 5,
 				"value": 9.5
@@ -1640,8 +1758,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img3.doubanio.com/f/frodo/31f275ce1a4a35ed76a45ecc39a0a32896d99c52/pics/vendors/sohu.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
+				"https://img3.doubanio.com/f/frodo/31f275ce1a4a35ed76a45ecc39a0a32896d99c52/pics/vendors/sohu.png"
 			],
 			"year": "1994",
 			"card_subtitle": "1994 / 美国 / 剧情 爱情 / 罗伯特·泽米吉斯 / 汤姆·汉克斯 罗宾·怀特",
@@ -1834,7 +1952,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 141091,
+				"count": 142309,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.9
@@ -1948,7 +2066,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 151777,
+				"count": 151951,
 				"max": 10,
 				"star_count": 3.5,
 				"value": 7.4
@@ -2075,7 +2193,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1070265,
+				"count": 1074490,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -2091,9 +2209,9 @@
 			"honor_infos": [
 				{
 					"kind": "tv",
-					"uri": "douban://douban.com/subject_collection/ECGYCP2VQ?type=rank&category=movie&rank_type=tv_genre",
-					"rank": 5,
-					"title": "豆瓣高分华语剧集榜"
+					"uri": "douban://douban.com/subject_collection/ECQQC5NTQ?type=rank&category=movie&rank_type=tv_genre",
+					"rank": 13,
+					"title": "豆瓣高分电视剧榜"
 				}
 			],
 			"is_show": false,
@@ -2292,7 +2410,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 184730,
+				"count": 184971,
 				"max": 10,
 				"star_count": 4,
 				"value": 7.8
@@ -2429,7 +2547,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 152706,
+				"count": 153019,
 				"max": 10,
 				"star_count": 3,
 				"value": 6
@@ -2538,7 +2656,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 395749,
+				"count": 397102,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.6
@@ -2709,7 +2827,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 127795,
+				"count": 128163,
 				"max": 10,
 				"star_count": 4,
 				"value": 7.9
@@ -2859,7 +2977,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 242534,
+				"count": 243594,
 				"max": 10,
 				"star_count": 4,
 				"value": 7.7
@@ -2990,7 +3108,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 115717,
+				"count": 116005,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -3123,7 +3241,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 3122672,
+				"count": 3132076,
 				"max": 10,
 				"star_count": 5,
 				"value": 9.7
@@ -3287,7 +3405,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 231284,
+				"count": 232439,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.8
@@ -3297,8 +3415,8 @@
 				"2018-05-11(戛纳电影节)"
 			],
 			"pic": {
-				"large": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2521300823.jpg",
-				"normal": "https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2521300823.jpg"
+				"large": "https://img9.doubanio.com/view/photo/m_ratio_poster/public/p2534350834.jpg",
+				"normal": "https://img9.doubanio.com/view/photo/s_ratio_poster/public/p2534350834.jpg"
 			},
 			"honor_infos": [
 				{
@@ -3367,19 +3485,19 @@
 			],
 			"color_scheme": {
 				"is_dark": true,
-				"primary_color_light": "727272",
+				"primary_color_light": "726a5a",
 				"_base_color": [
-					0,
-					0,
-					0.09019607843137255
+					0.11111111111111112,
+					0.21428571428571427,
+					0.10980392156862745
 				],
-				"secondary_color": "f9f4f4",
+				"secondary_color": "f9f8f4",
 				"_avg_color": [
-					0.05555555555555569,
-					0.08108108108108117,
-					0.1450980392156863
+					0.09999999999999999,
+					0.19607843137254902,
+					0.2
 				],
-				"primary_color_dark": "4c4c4c"
+				"primary_color_dark": "4c473c"
 			},
 			"type": "movie",
 			"has_linewatch": false,
@@ -3420,7 +3538,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 79799,
+				"count": 80029,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
