@@ -513,7 +513,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 554162,
+				"count": 554163,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -3271,8 +3271,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
-				"https://img3.doubanio.com/f/frodo/0007fb12821ec88eedf33b5c9188a057b27a6191/pics/vendors/youku.png"
+				"https://img3.doubanio.com/f/frodo/0007fb12821ec88eedf33b5c9188a057b27a6191/pics/vendors/youku.png",
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "1994",
 			"card_subtitle": "1994 / 美国 / 剧情 犯罪 / 弗兰克·德拉邦特 / 蒂姆·罗宾斯 摩根·弗里曼",
