@@ -21,7 +21,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2013472,
+				"count": 2014394,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.2
@@ -140,10 +140,10 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 104036,
+				"count": 108277,
 				"max": 10,
 				"star_count": 4.5,
-				"value": 8.6
+				"value": 8.7
 			},
 			"controversy_reason": "",
 			"pubdate": [
@@ -329,7 +329,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 703989,
+				"count": 704283,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.8
@@ -513,7 +513,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 553840,
+				"count": 554162,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -642,7 +642,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 936283,
+				"count": 936826,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
@@ -779,7 +779,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1436318,
+				"count": 1437058,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
@@ -803,8 +803,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img3.doubanio.com/f/frodo/0007fb12821ec88eedf33b5c9188a057b27a6191/pics/vendors/youku.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
+				"https://img3.doubanio.com/f/frodo/0007fb12821ec88eedf33b5c9188a057b27a6191/pics/vendors/youku.png"
 			],
 			"year": "2008",
 			"card_subtitle": "2008 / 美国 / 科幻 动画 冒险 / 安德鲁·斯坦顿 / 本·贝尔特 艾丽莎·奈特",
@@ -950,7 +950,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1932765,
+				"count": 1934093,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1060,7 +1060,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2250008,
+				"count": 2251093,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1084,8 +1084,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
-				"https://img3.doubanio.com/f/frodo/0007fb12821ec88eedf33b5c9188a057b27a6191/pics/vendors/youku.png"
+				"https://img3.doubanio.com/f/frodo/0007fb12821ec88eedf33b5c9188a057b27a6191/pics/vendors/youku.png",
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "2010",
 			"card_subtitle": "2010 / 美国 英国 / 剧情 科幻 悬疑 冒险 / 克里斯托弗·诺兰 / 莱昂纳多·迪卡普里奥 约瑟夫·高登-莱维特",
@@ -1232,7 +1232,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2081326,
+				"count": 2082901,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1256,8 +1256,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
-				"https://img3.doubanio.com/f/frodo/0007fb12821ec88eedf33b5c9188a057b27a6191/pics/vendors/youku.png"
+				"https://img3.doubanio.com/f/frodo/0007fb12821ec88eedf33b5c9188a057b27a6191/pics/vendors/youku.png",
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "2014",
 			"card_subtitle": "2014 / 美国 英国 加拿大 / 剧情 科幻 冒险 / 克里斯托弗·诺兰 / 马修·麦康纳 安妮·海瑟薇",
@@ -1410,7 +1410,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 448440,
+				"count": 448747,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -1531,7 +1531,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 927736,
+				"count": 928173,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -1741,7 +1741,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2354414,
+				"count": 2355444,
 				"max": 10,
 				"star_count": 5,
 				"value": 9.5
@@ -1959,7 +1959,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 151043,
+				"count": 151339,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.9
@@ -2073,7 +2073,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 152700,
+				"count": 152732,
 				"max": 10,
 				"star_count": 3.5,
 				"value": 7.4
@@ -2199,7 +2199,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1097094,
+				"count": 1098152,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -2416,10 +2416,10 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 186064,
+				"count": 186109,
 				"max": 10,
 				"star_count": 4,
-				"value": 7.8
+				"value": 7.7
 			},
 			"controversy_reason": "",
 			"pubdate": [
@@ -2553,7 +2553,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 154569,
+				"count": 154640,
 				"max": 10,
 				"star_count": 3,
 				"value": 6
@@ -2662,7 +2662,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 405014,
+				"count": 405409,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.6
@@ -2679,7 +2679,7 @@
 				{
 					"kind": "movie",
 					"uri": "douban://douban.com/subject_collection/ECVUO4O4Q?type=rank&category=movie&rank_type=film_genre",
-					"rank": 11,
+					"rank": 12,
 					"title": "华语犯罪片榜"
 				}
 			],
@@ -2833,7 +2833,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 129914,
+				"count": 130001,
 				"max": 10,
 				"star_count": 4,
 				"value": 7.9
@@ -2983,7 +2983,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 246381,
+				"count": 246499,
 				"max": 10,
 				"star_count": 4,
 				"value": 7.7
@@ -3114,7 +3114,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 117784,
+				"count": 117883,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -3247,7 +3247,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 3169154,
+				"count": 3170814,
 				"max": 10,
 				"star_count": 5,
 				"value": 9.7
@@ -3271,8 +3271,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img3.doubanio.com/f/frodo/0007fb12821ec88eedf33b5c9188a057b27a6191/pics/vendors/youku.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
+				"https://img3.doubanio.com/f/frodo/0007fb12821ec88eedf33b5c9188a057b27a6191/pics/vendors/youku.png"
 			],
 			"year": "1994",
 			"card_subtitle": "1994 / 美国 / 剧情 犯罪 / 弗兰克·德拉邦特 / 蒂姆·罗宾斯 摩根·弗里曼",
@@ -3412,7 +3412,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 238504,
+				"count": 238771,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.8
@@ -3545,7 +3545,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 81274,
+				"count": 81333,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
