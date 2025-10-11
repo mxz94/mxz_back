@@ -2,6 +2,14 @@
     display: none;
 }
 
+@font-face {
+    font-family: 'LXGW WenKai Light';
+    src: url("./fonts/LXGWWenKai-Light.ttf") format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 .card-link {
     flex-basis: calc(33.3333% - 2em);
     display: block;
