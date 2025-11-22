@@ -12,6 +12,7 @@
 .card-link:hover {
     text-decoration: none;
 }
+
 .card-container {
     display: flex;
     flex-wrap: wrap;
@@ -53,9 +54,10 @@
     color: #777;
     font-size: 15px;
 }
+
 body {
     /* 原版 */
-     font-family: "LXGW WenKai", sans-serif;
+    font-family: "LXGW WenKai", sans-serif;
     /* 屏幕优化版 */
     /*font-family:'LXGW WenKai Light', sans-serif;*/
 }
@@ -68,14 +70,17 @@ body {
 
 .video-container {
     position: relative;
-    padding-bottom: 56.25%; /* Aspect ratio 16:9 */
+    padding-bottom: 56.25%;
+    /* Aspect ratio 16:9 */
     height: 0;
     overflow: hidden;
     max-width: 100%;
     background: #000;
     border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(255, 255, 255, 0.2); /* Add depth with shadow */
-    transform: translateZ(0); /* Ensure the 3D effect is applied */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(255, 255, 255, 0.2);
+    /* Add depth with shadow */
+    transform: translateZ(0);
+    /* Ensure the 3D effect is applied */
     perspective: 1000px;
 }
 
@@ -87,61 +92,154 @@ body {
     height: 100%;
     border: none;
     border-radius: 15px;
-    transform: translateZ(0); /* Ensure the iframe maintains the 3D effect */
+    transform: translateZ(0);
+    /* Ensure the iframe maintains the 3D effect */
 }
+
 .min_width_1280 {
-    min-height: 478px; /* 设置一个最小高度 */
+    min-height: 478px;
+    /* 设置一个最小高度 */
     min-width: 1280px;
 }
+
 .landscape-img {
-    width: 80%;
-    aspect-ratio: 3 / 4; /* 高度宽度比，即竖向 */
+    width: 90%;
+    max-width: 500px;
+    aspect-ratio: 3 / 4;
+    /* 高度宽度比，即竖向 */
     margin-left: auto;
     margin-right: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+@media (min-width: 768px) {
+    .landscape-img {
+        width: 60%;
+        max-width: 600px;
+    }
+}
+
+/* Article image optimization */
+.prose img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin: 1.5rem auto;
+    display: block;
+}
+
+.prose img[loading="lazy"] {
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+}
+
+.prose img[loading="lazy"].loaded {
+    opacity: 1;
+}
+
+/* Table of Contents Styles */
 .toc-wrapper {
+    display: none;
+    /* Hidden on mobile by default */
     position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 250px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    overflow-y: auto;
-    max-height: calc(100vh - 40px);
+    top: 100px;
+    right: 30px;
+    width: 280px;
+    max-height: calc(100vh - 140px);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    z-index: 40;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Show TOC on large screens (1440px+) */
+@media (min-width: 1440px) {
+    .toc-wrapper {
+        display: block;
+    }
+}
+
+.toc-wrapper:hover {
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.12);
 }
 
 .toc-inner {
-    padding: 10px;
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .toc-head {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.06);
 }
 
 .toc-head-title {
-    font-size: 16px;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: -0.02em;
 }
 
 .toc-head-top {
-    font-size: 14px;
-    color: #007bff;
+    font-size: 13px;
+    color: #666;
     text-decoration: none;
+    padding: 4px 12px;
+    border-radius: 8px;
+    transition: all 0.2s;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.toc-head-top:hover {
+    background: rgba(0, 0, 0, 0.08);
+    color: #333;
+    transform: translateY(-1px);
 }
 
 .toc-toggle {
-    font-size: 14px;
-    color: #007bff;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 0;
+    display: none;
+    /* Hide toggle button */
+}
+
+/* Scrollable content area */
+.toc-inner>div {
+    overflow-y: auto;
+    overflow-x: hidden;
+    flex: 1;
+    padding-right: 8px;
+    margin-right: -8px;
+}
+
+/* Custom scrollbar */
+.toc-inner>div::-webkit-scrollbar {
+    width: 6px;
+}
+
+.toc-inner>div::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.03);
+    border-radius: 3px;
+}
+
+.toc-inner>div::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px;
+    transition: background 0.2s;
+}
+
+.toc-inner>div::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.25);
 }
 
 .toc ul {
@@ -151,27 +249,94 @@ body {
 }
 
 .toc li {
-    margin: 5px 0;
+    margin: 0;
     position: relative;
+    transition: all 0.2s;
 }
 
 .toc li a {
     text-decoration: none;
+    color: #555;
+    display: flex;
+    align-items: flex-start;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.toc li a:hover {
+    background: rgba(0, 0, 0, 0.04);
     color: #333;
-    display: block;
-    padding: 5px 10px;
+    transform: translateX(2px);
 }
 
+/* Indicator box */
+.toc li a .box {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    margin-right: 10px;
+    margin-top: 6px;
+    flex-shrink: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active state */
 .toc li.active a {
-    font-weight: bold;
-    color: #007bff;
-    background-color: #f0f8ff;
+    font-weight: 600;
+    color: oklch(var(--p));
+    background: linear-gradient(90deg,
+            rgba(var(--p), 0.08) 0%,
+            rgba(var(--p), 0.02) 100%);
+    border-left: 3px solid oklch(var(--p));
+    padding-left: 9px;
 }
 
+.toc li.active a .box {
+    width: 8px;
+    height: 8px;
+    background: oklch(var(--p));
+    box-shadow: 0 0 8px rgba(var(--p), 0.4);
+}
+
+/* Nested levels */
 .toc ul ul {
-    margin-left: 10px;
+    margin-left: 12px;
+    padding-left: 12px;
+    border-left: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.toc ul ul li a {
+    font-size: 13px;
+    padding: 6px 10px;
+}
+
+.toc ul ul ul li a {
+    font-size: 12px;
+    color: #666;
+}
+
+/* Smooth reveal animation */
+.toc-wrapper {
+    animation: tocSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes tocSlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
 .show {
-    display: none; /* Show nested lists when .show class is toggled */
+    display: block !important;
 }

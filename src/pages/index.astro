@@ -17,9 +17,12 @@ const last_blog = blogs.slice(0, 3);
 ---
 
 <BaseLayout sideBarActiveItemID="home">
-  <div>
-      <a href={SITE.website + '/note'} >
-        <div class="text-1xl w-full font-thin mb-5 mt-10">最近更新</div>
+  <div class="flex justify-between items-center mb-5 mt-10">
+      <div class="text-3xl font-bold">最近更新</div>
+      <a href="/note" class="btn btn-ghost btn-circle" aria-label="查看更多">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
       </a>
   </div>
   {
@@ -38,11 +41,14 @@ const last_blog = blogs.slice(0, 3);
       </>
     ))
   }
-    <div>
-        <a href={SITE.website + '/blog'} >
-        <div class="text-1xl w-full font-thin mb-5 mt-10">最近</div>
-        </a>
-    </div>
+  <div class="flex justify-between items-center mb-5 mt-10">
+      <div class="text-3xl font-bold">最近</div>
+      <a href="/blog" class="btn btn-ghost btn-circle" aria-label="查看更多">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </a>
+  </div>
     {
         last_blog.map((post) => (
                 <>

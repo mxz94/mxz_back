@@ -6,35 +6,41 @@ import { Image } from "astro:assets";
 <div
   class="rounded-lg bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]"
 >
-  <a href={url} target={target}>
-    <div class="hero-content flex-col md:flex-row">
-      {
-        img && (
+  <div class="hero-content flex-col md:flex-row">
+    {
+      img && (
+        <a href={url} target={target} class="hidden md:flex">
           <Image
             src={img}
             width={600}
             height={600}
             format="webp"
             alt={title}
-            class="max-w-full md:max-w-[8rem] md:max-h-[8rem] rounded-lg"
+            class="max-w-full md:max-w-[13rem] md:max-h-[13rem] rounded-lg object-cover"
+            widths={[200, 400, 600]}
+            sizes="(max-width: 768px) 100vw, 208px"
           />
-        )
-      }
-      <div class="grow w-full">
-        <h1 class="text-xl font-bold">
+        </a>
+      )
+    }
+    <div class="grow w-full">
+      <h1 class="text-xl font-bold">
+        <a href={url} target={target} class="hover:underline">
           {title}
-          {badge && <div class="badge badge-secondary mx-2">{badge}</div>}
-                {
-                    tags &&
-                    tags.map((tag) => (
-                            <a href={`/tag/${tag}`} class="badge badge-outline float-right mr-1">
-                                {tag}
-                            </a>
-                    ))
-                }
-        </h1>
-          <a href={url} target={target}> <p class="py-1 text-1xl">{desc}</p></a>
-      </div>
+        </a>
+        {badge && <div class="badge badge-secondary mx-2">{badge}</div>}
+        {
+          tags &&
+          tags.map((tag) => (
+            <a href={`/tag/${tag}`} class="badge badge-outline float-right mr-1">
+              {tag}
+            </a>
+          ))
+        }
+      </h1>
+      <a href={url} target={target}>
+        <p class="py-1 text-1xl">{desc}</p>
+      </a>
     </div>
-  </a>
+  </div>
 </div>

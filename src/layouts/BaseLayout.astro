@@ -3,6 +3,7 @@ import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import SideBar from "../components/SideBar.astro";
+import BackToTop from "../components/BackToTop.astro";
 import { ViewTransitions } from "astro:transitions";
 import { SITE_TITLE, SITE_DESCRIPTION, TRANSITION_API  } from "../config";
 
@@ -10,15 +11,23 @@ const { image, title = SITE_TITLE, description = SITE_DESCRIPTION, includeSideba
 ---
 
 <!doctype html>
-<html lang="en" data-theme="lofi">
+<html lang="zh-CN" data-theme="lofi">
   <head>
       <meta charset="utf-8"/>
       <meta name="msvalidate.01" content="554974539F0479DABBAF2B9C6886C920" />
       <meta name="baidu-site-verification" content="codeva-Zb1fJaVwQk" />
-      <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.6.0/style.min.css" />
-  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lxgw-wenkai-webfont/1.7.0/style.css" integrity="sha512-N5mr/qafwZh4zYHLQUs1AOS893jjDJuWTiY1b9aJjG9VBoyX8QRjJENO4xl99gJbL/C2UonXkzkXT1o0WJ+NNA==" crossorigin="anonymous" referrerpolicy="no-referrer" />-->
-  <!--    <link rel='stylesheet' href='https://blog.malanxi.top/lxgwwenkai-light/result.css' />-->
-<!--<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css" />-->
+      <!-- Font optimization: preconnect to CDN -->
+      <link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin />
+      <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.6.0/style.min.css" media="print" onload="this.media='all'" />
+      <noscript>
+        <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.6.0/style.min.css" />
+      </noscript>
+      <style>
+        /* Ensure font-display: swap for better performance */
+        body {
+          font-family: "LXGW WenKai", sans-serif;
+        }
+      </style>
     <BaseHead title={title} description={description} image={image} , ogType={ogType} />
     {TRANSITION_API && <ViewTransitions />}
   </head>
@@ -28,7 +37,7 @@ const { image, title = SITE_TITLE, description = SITE_DESCRIPTION, includeSideba
       <div class="drawer-content bg-base-100">
         <Header title={SITE_TITLE} />
         <div class="md:flex md:justify-center">
-          <main class="p-6 pt-10 lg:max-w-[1280px] max-w-[180vw]">
+          <main class="p-6 pt-10 w-full lg:max-w-[1280px]">
             <slot />
           </main>
         </div>
@@ -36,5 +45,42 @@ const { image, title = SITE_TITLE, description = SITE_DESCRIPTION, includeSideba
       </div>
       {includeSidebar && <SideBar sideBarActiveItemID={sideBarActiveItemID} />}
     </div>
+    <BackToTop />
+    
+    <script>
+      // Prevent background scroll when mobile drawer is open
+      function initDrawerScrollLock() {
+        const drawer = document.getElementById('my-drawer');
+        if (!drawer) return;
+
+        let scrollPosition = 0;
+
+        drawer.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            // Drawer is open - lock body scroll
+            scrollPosition = window.pageYOffset;
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollPosition}px`;
+            document.body.style.width = '100%';
+            document.body.style.overflow = 'hidden';
+            document.documentElement.style.overflow = 'hidden';
+          } else {
+            // Drawer is closed - unlock body scroll
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.overflow = '';
+            document.documentElement.style.overflow = '';
+            window.scrollTo(0, scrollPosition);
+          }
+        });
+      }
+
+      // Initialize on page load
+      initDrawerScrollLock();
+
+      // Re-initialize on Astro page transitions
+      document.addEventListener('astro:page-load', initDrawerScrollLock);
+    </script>
   </body>
 </html>

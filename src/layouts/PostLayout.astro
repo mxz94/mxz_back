@@ -23,12 +23,15 @@ if (isBlog) {
 
 import { Image } from "astro:assets";
 import TableOfContents from "../components/TableOfContents.astro";
+import ReadingProgress from "../components/ReadingProgress.astro";
+import CodeCopyButton from "../components/CodeCopyButton.astro";
 
 ---
 
 <BaseLayout title={title} description={description} image={heroImage} ogType="article">
+  <ReadingProgress />
   <main class="md:flex md:justify-center">
-    <article class="prose prose-lg max-w-[1280px] prose-img:mx-auto">
+    <article class="prose prose-lg w-full max-w-full md:max-w-[1280px] prose-img:mx-auto px-4 md:px-6">
       <!--{heroImage && <Image width={750} height={422} format="webp" src={heroImage} alt={title} class="w-full mb-6" />}-->
       <a class="mt-14 text-sm text-gray-500" style="float: right" href={`${url}`}>
         <i aria-label="icon: cloud-download" tabindex="-1" class="anticon anticon-cloud-download download-icon">
@@ -52,6 +55,7 @@ import TableOfContents from "../components/TableOfContents.astro";
     </article>
     <TableOfContents />
   </main>
+  <CodeCopyButton />
   <div id="main-content" class="mt-8"></div>
   <!--<Comment></Comment>-->
   <!--<link-->
@@ -80,9 +84,23 @@ import TableOfContents from "../components/TableOfContents.astro";
         // 获取所有图片元素
         const images = article.querySelectorAll('img');
         images.forEach((image, index) => {
+          // 添加懒加载
+          if (!image.hasAttribute('loading')) {
+            image.setAttribute('loading', 'lazy');
+          }
+          
+          // 图片加载完成后添加 loaded 类
+          if (image.complete) {
+            image.classList.add('loaded');
+          } else {
+            image.addEventListener('load', () => {
+              image.classList.add('loaded');
+            });
+          }
+
           // 获取图片的宽度和高度
-          const width = image.width;
-          const height = image.height;
+          const width = image.naturalWidth || image.width;
+          const height = image.naturalHeight || image.height;
 
           // 如果图片的高度大于宽度，则认为是竖版图片
           if (height > width) {
