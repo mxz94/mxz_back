@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>地图图片下载</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+{#    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">#}
+
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#3B82F6',
+                        secondary: '#10B981',
+                        accent: '#8B5CF6',
+                        neutral: '#6B7280'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .form-input-focus {
+                @apply focus:ring-2 focus:ring-primary/50 focus:border-primary;
+            }
+            .btn-primary {
+                @apply bg-primary hover:bg-primary/90 text-white font-medium py-2 px-4 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg transform hover:-translate-y-0.5;
+            }
+            .card {
+                @apply bg-white rounded-xl shadow-md p-6 transition-all duration-300;
+            }
+            .panorama-controls {
+                @apply flex items-center justify-center space-x-4 py-4;
+            }
+            .control-btn {
+                @apply bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 rounded-full transition-colors duration-200;
+            }
+            .fullscreen-btn {
+                @apply absolute top-2 right-2 bg-gray-800/70 hover:bg-gray-800 text-white p-2 rounded-full transition-all duration-200 z-10;
+            }
+            .panorama-container {
+                @apply relative bg-gray-100 rounded-lg overflow-hidden;
+            }
+            .panorama-canvas {
+                @apply max-w-full cursor-grab active:cursor-grabbing;
+            }
+            .compass-container {
+                @apply absolute bottom-4 right-4 bg-white/80 p-2 rounded-full shadow-md w-12 h-12 flex items-center justify-center;
+            }
+            .compass {
+                @apply relative w-8 h-8 rounded-full border border-gray-300;
+            }
+            .compass-north {
+                @apply absolute top-0 left-1/2 transform -translate-x-1/2 w-1 h-3 bg-red-500;
+            }
+        }
+    </style>
+</head>
+<body class="font-inter bg-gray-50 min-h-screen flex flex-col">
+<!-- 主要内容 -->
+<main class="flex-grow container mx-auto px-4 py-8">
+    <div class="max-w-3xl mx-auto">
+        <!-- 介绍卡片 -->
+        <div class="card mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                <i class="fa fa-info-circle text-primary mr-2"></i>
+                功能说明
+            </h2>
+            <p class="text-gray-600">
+                输入经纬度坐标和缩放级别，点击"下载地图"按钮获取对应位置的高清全景地图图片。
+                图片将包含完整的GPS信息，支持360度全景浏览。
+            </p>
+        </div>
+
+        <!-- 输入表单 -->
+        <div class="card mb-8">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">地图位置设置</h3>
+
+            <form id="downloadForm" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="longitude" class="block text-sm font-medium text-gray-700 mb-1">
+                            经度 <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" id="longitude" name="longitude" step="0.000001"
+                               placeholder="例如: 116.404"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg form-input-focus"
+                               required>
+                    </div>
+
+                    <div>
+                        <label for="latitude" class="block text-sm font-medium text-gray-700 mb-1">
+                            纬度 <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" id="latitude" name="latitude" step="0.000001"
+                               placeholder="例如: 39.915"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg form-input-focus"
+                               required>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="zoom" class="block text-sm font-medium text-gray-700 mb-1">
+                        缩放级别
+                    </label>
+                    <select id="zoom" name="zoom"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-lg form-input-focus">
+                        <option value="1">1 - 城市级（最小）</option>
+                        <option value="2">2 - 区域级</option>
+                        <option value="3">3 - 街道级</option>
+                        <option value="4" selected>4 - 详细级（最大）</option>
+                    </select>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" id="downloadBtn" class="btn-primary w-full md:w-auto flex items-center justify-center">
+                        <i class="fa fa-download mr-2"></i>
+                        下载地图
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- 结果展示 -->
+        <div id="resultSection" class="card hidden">
+            <h3 class="text-xl font-semibold text-gray-800 mb-4">下载结果</h3>
+
+            <div id="loadingIndicator" class="flex items-center justify-center py-8 hidden">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+                <p class="ml-3 text-gray-600">正在获取地图数据，请稍候...</p>
+            </div>
+
+            <div id="successMessage" class="hidden">
+                <div class="bg-green-50 border-l-4 border-green-400 p-4 mb-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fa fa-check-circle text-green-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-green-800">
+                                地图下载成功！点击下方链接下载图片:
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <div class="bg-gray-50 rounded-lg p-4">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="font-medium text-gray-800" id="downloadFilename"></p>
+                                <p class="text-sm text-gray-500" id="downloadLocation"></p>
+                            </div>
+                            <a href="#" id="downloadLink" class="btn-primary text-sm">
+                                <i class="fa fa-download mr-1"></i> 下载
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <h4 class="font-medium text-gray-700 mb-2">360°全景预览</h4>
+                    <div class="panorama-container">
+                        <button id="fullscreenBtn" class="fullscreen-btn" title="全屏查看">
+                            <i class="fa fa-expand"></i>
+                        </button>
+                        <div class="compass-container">
+                            <div class="compass">
+                                <div class="compass-north"></div>
+                            </div>
+                        </div>
+                        <canvas id="panoramaCanvas" class="panorama-canvas" width="800" height="400"></canvas>
+                    </div>
+
+                    <div class="panorama-controls">
+                        <button id="resetViewBtn" class="control-btn" title="重置视图">
+                            <i class="fa fa-refresh"></i>
+                        </button>
+                        <button id="moveLeftBtn" class="control-btn" title="向左转">
+                            <i class="fa fa-arrow-left"></i>
+                        </button>
+                        <button id="moveRightBtn" class="control-btn" title="向右转">
+                            <i class="fa fa-arrow-right"></i>
+                        </button>
+                        <button id="moveUpBtn" class="control-btn" title="向上转">
+                            <i class="fa fa-arrow-up"></i>
+                        </button>
+                        <button id="moveDownBtn" class="control-btn" title="向下转">
+                            <i class="fa fa-arrow-down"></i>
+                        </button>
+                        <div class="ml-4">
+                            <label for="fovLevel" class="text-sm text-gray-600 mr-2">视野:</label>
+                            <input type="range" id="fovLevel" min="40" max="120" step="5" value="80"
+                                   class="w-32 accent-primary">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="errorMessage" class="hidden">
+                <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fa fa-exclamation-circle text-red-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-red-800" id="errorText">
+                                下载失败，请检查输入信息并重试。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- 页脚 -->
+<footer class="bg-gray-800 text-white py-8 mt-12">
+    <div class="container mx-auto px-4">
+        <div class="border-t border-gray-700 mt-8 pt-6 text-center text-gray-400 text-sm">
+            <p>&copy; 2025 地图图片下载工具. 保留所有权利.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const downloadForm = document.getElementById('downloadForm');
+        const resultSection = document.getElementById('resultSection');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const errorText = document.getElementById('errorText');
+        const downloadLink = document.getElementById('downloadLink');
+        const downloadFilename = document.getElementById('downloadFilename');
+        const downloadLocation = document.getElementById('downloadLocation');
+        const panoramaCanvas = document.getElementById('panoramaCanvas');
+        const ctx = panoramaCanvas.getContext('2d');
+
+        // 360度全景预览相关变量
+        let panoramaImage = new Image();
+        let isDragging = false;
+        let lastX, lastY;
+        let targetYaw = 0;      // 目标水平旋转角度
+        let targetPitch = 0;    // 目标垂直旋转角度
+        let currentYaw = 0;     // 当前水平旋转角度
+        let currentPitch = 0;   // 当前垂直旋转角度
+        let fov = 80;           // 视野角度
+        let isPanoramaReady = false;
+        let animationId = null; // 动画帧ID
+
+        // 灵敏度和动画参数
+        const ROTATION_SENSITIVITY = 0.25;  // 降低拖拽灵敏度
+        const ANIMATION_SPEED = 0.15;       // 动画平滑度参数
+
+        // 控制按钮
+        const resetViewBtn = document.getElementById('resetViewBtn');
+        const moveLeftBtn = document.getElementById('moveLeftBtn');
+        const moveRightBtn = document.getElementById('moveRightBtn');
+        const moveUpBtn = document.getElementById('moveUpBtn');
+        const moveDownBtn = document.getElementById('moveDownBtn');
+        const fovLevel = document.getElementById('fovLevel');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        // 历史记录相关变量
+        // 表单提交处理
+        downloadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // 重置结果区域状态
+            resultSection.classList.remove('hidden');
+            loadingIndicator.classList.remove('hidden');
+            successMessage.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+
+            // 获取表单数据
+            const longitude = parseFloat(document.getElementById('longitude').value);
+            const latitude = parseFloat(document.getElementById('latitude').value);
+            const zoom = parseInt(document.getElementById('zoom').value);
+
+            // 构建API URL
+            const apiUrl = `http://localhost:5000/download/map?lng=${longitude}&lat=${latitude}&zoom=${zoom}`;
+
+            // 发送真实的API请求
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    // 获取文件名（从响应头中）
+                    const contentDisposition = response.headers.get('content-disposition');
+                    let filename = `map_${longitude}_${latitude}.jpg`;
+
+                    if (contentDisposition && contentDisposition.includes('filename=')) {
+                        filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
+                    }
+
+                    // 处理二进制响应
+                    return response.blob().then(blob => ({
+                        blob,
+                        filename
+                    }));
+                })
+                .then(data => {
+                    // 生成临时URL
+                    const url = window.URL.createObjectURL(data.blob);
+
+                    // 更新下载链接
+                    downloadLink.href = url;
+                    downloadLink.download = data.filename;
+
+                    // 更新成功消息
+                    downloadFilename.textContent = data.filename;
+                    downloadLocation.textContent = `位置: ${longitude}, ${latitude} | 缩放级别: ${zoom}`;
+
+                    // 加载全景地图图片
+                    panoramaImage.onload = function() {
+                        // 重置视图状态
+                        resetView();
+
+                        // 调整Canvas尺寸
+                        panoramaCanvas.width = Math.min(panoramaImage.width, 800);
+                        panoramaCanvas.height = Math.min(panoramaImage.height / 2, 400);
+
+                        // 标记全景图已就绪
+                        isPanoramaReady = true;
+
+                        // 开始动画循环
+                        startAnimation();
+
+                        // 显示成功消息
+                        successMessage.classList.remove('hidden');
+
+                        // 刷新历史记录
+                    };
+
+                    panoramaImage.src = url;
+
+                    // 设置图片加载失败的处理
+                    panoramaImage.onerror = function() {
+                        errorText.textContent = "地图图片加载失败，请重试。";
+                        errorMessage.classList.remove('hidden');
+                    };
+                })
+                .catch(error => {
+                    console.error('Error downloading map:', error);
+                    errorText.textContent = `下载失败: ${error.message}`;
+                    errorMessage.classList.remove('hidden');
+                })
+                .finally(() => {
+                    loadingIndicator.classList.add('hidden');
+                    downloadBtn.disabled = false;
+                    downloadBtn.innerHTML = '<i class="fa fa-download mr-2"></i> 下载地图';
+                });
+
+            // 禁用按钮防止重复提交
+            downloadBtn.disabled = true;
+            downloadBtn.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 正在下载...';
+        });
+
+        // 动画循环函数
+        function startAnimation() {
+            // 如果已有动画在运行，则取消
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+
+            function animate() {
+                // 平滑过渡到目标角度
+                const yawDiff = targetYaw - currentYaw;
+                const pitchDiff = targetPitch - currentPitch;
+
+                // 如果差异足够小，直接设置为目标值，避免微小移动
+                if (Math.abs(yawDiff) < 0.1) {
+                    currentYaw = targetYaw;
+                } else {
+                    currentYaw += yawDiff * ANIMATION_SPEED;
+                }
+
+                if (Math.abs(pitchDiff) < 0.1) {
+                    currentPitch = targetPitch;
+                } else {
+                    currentPitch += pitchDiff * ANIMATION_SPEED;
+                }
+
+                // 绘制全景图
+                drawPanorama();
+
+                // 继续下一帧
+                animationId = requestAnimationFrame(animate);
+            }
+
+            // 开始动画
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // 绘制全景图函数
+        function drawPanorama() {
+            if (!isPanoramaReady) return;
+
+            // 清除Canvas
+            ctx.clearRect(0, 0, panoramaCanvas.width, panoramaCanvas.height);
+
+            // 计算当前视角下应该显示的全景图区域
+            const imageWidth = panoramaImage.width;
+            const imageHeight = panoramaImage.height;
+
+            // 计算水平和垂直视角范围
+            const viewWidth = imageWidth * (fov / 360);
+            const viewHeight = imageHeight / 2; // 全景图通常是圆柱投影，高度取一半
+
+            // 计算当前视角在全景图中的位置
+            let xPos = ((currentYaw % 360) / 360) * imageWidth;
+            if (xPos < 0) xPos += imageWidth;
+
+            // 垂直视角限制（防止过度向上或向下看）
+            const pitchLimit = 85; // 限制在85度，避免看到两极
+            const yPos = ((currentPitch + pitchLimit) / (2 * pitchLimit)) * (imageHeight / 2);
+
+            // 处理全景图边缘环绕
+            let sourceX = xPos;
+            let sourceWidth = viewWidth;
+
+            // 如果视图跨越了全景图的边缘，需要分两次绘制
+            if (sourceX + sourceWidth > imageWidth) {
+                const part1Width = imageWidth - sourceX;
+                const part2Width = sourceWidth - part1Width;
+
+                // 绘制第一部分（右侧）
+                ctx.drawImage(
+                    panoramaImage,
+                    sourceX, yPos, part1Width, viewHeight,
+                    0, 0, part1Width * (panoramaCanvas.width / sourceWidth), panoramaCanvas.height
+                );
+
+                // 绘制第二部分（左侧）
+                ctx.drawImage(
+                    panoramaImage,
+                    0, yPos, part2Width, viewHeight,
+                    part1Width * (panoramaCanvas.width / sourceWidth), 0,
+                    part2Width * (panoramaCanvas.width / sourceWidth), panoramaCanvas.height
+                );
+            } else {
+                // 正常情况，一次绘制
+                ctx.drawImage(
+                    panoramaImage,
+                    sourceX, yPos, sourceWidth, viewHeight,
+                    0, 0, panoramaCanvas.width, panoramaCanvas.height
+                );
+            }
+
+            // 更新指南针方向
+            updateCompass();
+        }
+
+        // 更新指南针
+        function updateCompass() {
+            const compass = document.querySelector('.compass');
+            const northMarker = document.querySelector('.compass-north');
+
+            // 清除之前的转换
+            northMarker.style.transform = '';
+
+            // 旋转指南针（取模运算确保角度在0-360度之间）
+            const compassRotation = (360 - (currentYaw % 360)) % 360;
+            northMarker.style.transform = `translateX(-50%) rotate(${compassRotation}deg) translateY(-50%)`;
+        }
+
+        // 重置视图
+        function resetView() {
+            targetYaw = 0;
+            targetPitch = 0;
+            fov = 80;
+            fovLevel.value = fov;
+        }
+
+        // 拖拽控制
+        panoramaCanvas.addEventListener('mousedown', function(e) {
+            if (!isPanoramaReady) return;
+
+            isDragging = true;
+            lastX = e.clientX;
+            lastY = e.clientY;
+            panoramaCanvas.style.cursor = 'grabbing';
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isDragging || !isPanoramaReady) return;
+
+            const deltaX = e.clientX - lastX;
+            const deltaY = e.clientY - lastY;
+
+            // 根据鼠标移动更新目标视角，使用更低的灵敏度
+            targetYaw = (targetYaw - deltaX * ROTATION_SENSITIVITY) % 360;
+
+            // 修复垂直视角方向：向上拖拽时视角向上，向下拖拽时视角向下
+            targetPitch = Math.max(-85, Math.min(85, targetPitch - deltaY * ROTATION_SENSITIVITY));
+
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
+
+        document.addEventListener('mouseup', function() {
+            isDragging = false;
+            if (isPanoramaReady) {
+                panoramaCanvas.style.cursor = 'grab';
+            }
+        });
+
+        // 按钮控制
+        resetViewBtn.addEventListener('click', resetView);
+
+        moveLeftBtn.addEventListener('click', function() {
+            targetYaw = (targetYaw - 10) % 360;
+        });
+
+        moveRightBtn.addEventListener('click', function() {
+            targetYaw = (targetYaw + 10) % 360;
+        });
+
+        // 修复按钮控制的垂直视角方向
+        moveUpBtn.addEventListener('click', function() {
+            targetPitch = Math.max(-85, targetPitch - 8);
+        });
+
+        moveDownBtn.addEventListener('click', function() {
+            targetPitch = Math.min(85, targetPitch + 8);
+        });
+
+        // 视野控制
+        fovLevel.addEventListener('input', function() {
+            fov = parseInt(this.value);
+        });
+
+        // 全屏控制
+        fullscreenBtn.addEventListener('click', function() {
+            if (!isPanoramaReady) return;
+
+            if (!document.fullscreenElement) {
+                panoramaCanvas.requestFullscreen().catch(err => {
+                    errorText.textContent = `全屏模式错误: ${err.message}`;
+                    errorMessage.classList.remove('hidden');
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+        // 监听全屏状态变化
+        document.addEventListener('fullscreenchange', function() {
+            if (document.fullscreenElement) {
+                fullscreenBtn.innerHTML = '<i class="fa fa-compress"></i>';
+                fullscreenBtn.title = '退出全屏';
+
+                // 全屏时调整Canvas尺寸
+                panoramaCanvas.width = window.innerWidth;
+                panoramaCanvas.height = window.innerHeight;
+            } else {
+                fullscreenBtn.innerHTML = '<i class="fa fa-expand"></i>';
+                fullscreenBtn.title = '全屏查看';
+
+                // 退出全屏时恢复Canvas尺寸
+                panoramaCanvas.width = Math.min(panoramaImage.width, 800);
+                panoramaCanvas.height = Math.min(panoramaImage.height / 2, 400);
+            }
+        });
+
+        // 鼠标滚轮调整视野
+        panoramaCanvas.addEventListener('wheel', function(e) {
+            e.preventDefault();
+
+            // 根据滚轮方向调整视野
+            if (e.deltaY < 0) {
+                fov = Math.max(40, fov - 5);
+            } else {
+                fov = Math.min(120, fov + 5);
+            }
+
+            // 更新滑块
+            fovLevel.value = fov;
+        });
+
+        // 触摸控制（移动设备）
+        let touchStartX, touchStartY;
+
+        panoramaCanvas.addEventListener('touchstart', function(e) {
+            if (!isPanoramaReady) return;
+
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+            isDragging = true;
+        });
+
+        panoramaCanvas.addEventListener('touchmove', function(e) {
+            if (!isDragging || !isPanoramaReady) return;
+
+            e.preventDefault();
+
+            const touchX = e.touches[0].clientX;
+            const touchY = e.touches[0].clientY;
+
+            const deltaX = touchX - touchStartX;
+            const deltaY = touchY - touchStartY;
+
+            // 根据触摸移动更新目标视角，使用更低的灵敏度
+            targetYaw = (targetYaw - deltaX * ROTATION_SENSITIVITY) % 360;
+
+            // 修复垂直视角方向：向上拖拽时视角向上，向下拖拽时视角向下
+            targetPitch = Math.max(-85, Math.min(85, targetPitch - deltaY * ROTATION_SENSITIVITY));
+
+            touchStartX = touchX;
+            touchStartY = touchY;
+        });
+
+        panoramaCanvas.addEventListener('touchend', function() {
+            isDragging = false;
+        });
+
+        // 显示通知提示
+        function showToast(message, type = 'info') {
+            // 创建toast元素
+            const toast = document.createElement('div');
+            toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transform transition-all duration-300 ease-in-out translate-x-full ${
+                type === 'success' ? 'bg-green-500 text-white' :
+                    type === 'error' ? 'bg-red-500 text-white' :
+                        'bg-blue-500 text-white'
+            }`;
+            toast.textContent = message;
+
+            // 添加到文档
+            document.body.appendChild(toast);
+
+            // 触发动画
+            setTimeout(() => {
+                toast.classList.remove('translate-x-full');
+            }, 10);
+
+            // 3秒后移除
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+    });
+</script>
+</body>
+</html>

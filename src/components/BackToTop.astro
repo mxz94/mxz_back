@@ -1,0 +1,63 @@
+<!-- Back to Top Button -->
+<button
+  id="back-to-top"
+  class="btn btn-circle btn-primary fixed bottom-8 right-8 z-50 opacity-0 pointer-events-none transition-opacity duration-300 shadow-lg hover:shadow-xl"
+  aria-label="返回顶部"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+  </svg>
+</button>
+
+<script>
+  function initBackToTop() {
+    const backToTopButton = document.getElementById('back-to-top');
+    if (!backToTopButton) return;
+
+    // Show/hide button based on scroll position
+    function toggleButton() {
+      if (window.scrollY > 300) {
+        backToTopButton.classList.remove('opacity-0', 'pointer-events-none');
+        backToTopButton.classList.add('opacity-100');
+      } else {
+        backToTopButton.classList.add('opacity-0', 'pointer-events-none');
+        backToTopButton.classList.remove('opacity-100');
+      }
+    }
+
+    // Smooth scroll to top
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
+
+    // Event listeners
+    window.addEventListener('scroll', toggleButton, { passive: true });
+    backToTopButton.addEventListener('click', scrollToTop);
+
+    // Initial check
+    toggleButton();
+  }
+
+  // Initialize on page load
+  initBackToTop();
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', initBackToTop);
+</script>
+
+<style>
+  #back-to-top {
+    backdrop-filter: blur(8px);
+  }
+  
+  #back-to-top:hover {
+    transform: translateY(-2px);
+  }
+  
+  #back-to-top:active {
+    transform: translateY(0);
+  }
+</style>

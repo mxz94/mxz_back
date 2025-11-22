@@ -1,0 +1,47 @@
+<!-- Reading Progress Bar -->
+<div id="reading-progress" class="fixed top-0 left-0 w-full h-1 bg-transparent z-50">
+  <div id="progress-bar" class="h-full bg-primary transition-all duration-150 ease-out" style="width: 0%"></div>
+</div>
+
+<script>
+  function initReadingProgress() {
+    const progressBar = document.getElementById('progress-bar');
+    if (!progressBar) return;
+
+    function updateProgress() {
+      // Calculate scroll progress
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+      const scrollTop = window.scrollY;
+      
+      // Calculate percentage
+      const scrollableDistance = documentHeight - windowHeight;
+      const scrollPercentage = (scrollTop / scrollableDistance) * 100;
+      
+      // Update progress bar width
+      progressBar.style.width = `${Math.min(scrollPercentage, 100)}%`;
+    }
+
+    // Update on scroll
+    window.addEventListener('scroll', updateProgress, { passive: true });
+    
+    // Initial update
+    updateProgress();
+  }
+
+  // Initialize on page load
+  initReadingProgress();
+
+  // Re-initialize on Astro page transitions
+  document.addEventListener('astro:page-load', initReadingProgress);
+</script>
+
+<style>
+  #reading-progress {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  #progress-bar {
+    box-shadow: 0 0 10px rgba(var(--p), 0.5);
+  }
+</style>
