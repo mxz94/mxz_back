@@ -22,7 +22,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2045741,
+				"count": 2048275,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.2
@@ -142,7 +142,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 162373,
+				"count": 163827,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.7
@@ -332,7 +332,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 713226,
+				"count": 713962,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.8
@@ -517,7 +517,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 566268,
+				"count": 567266,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -541,8 +541,8 @@
 			"is_show": false,
 			"vendor_icons": [
 				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
-				"https://img9.doubanio.com/f/frodo/6c7b857e6b2255201e73bf83732d95d572f3f9f7/pics/vendors/iqiyi.png",
-				"https://img3.doubanio.com/f/frodo/6fa5caade3ca480ccd95f455ee4d195ee342eb90/pics/vendors/youku.png"
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png",
+				"https://img9.doubanio.com/f/frodo/6c7b857e6b2255201e73bf83732d95d572f3f9f7/pics/vendors/iqiyi.png"
 			],
 			"year": "1957",
 			"card_subtitle": "1957 / 美国 / 剧情 / 西德尼·吕美特 / 亨利·方达 马丁·鲍尔萨姆",
@@ -648,7 +648,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 953073,
+				"count": 954641,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
@@ -786,7 +786,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1462629,
+				"count": 1464956,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
@@ -809,9 +809,9 @@
 			],
 			"is_show": false,
 			"vendor_icons": [
-				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img3.doubanio.com/f/frodo/6fa5caade3ca480ccd95f455ee4d195ee342eb90/pics/vendors/youku.png"
+				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
+				"https://img9.doubanio.com/f/frodo/6c7b857e6b2255201e73bf83732d95d572f3f9f7/pics/vendors/iqiyi.png"
 			],
 			"year": "2008",
 			"card_subtitle": "2008 / 美国 / 科幻 动画 冒险 / 安德鲁·斯坦顿 / 本·贝尔特 艾丽莎·奈特",
@@ -958,7 +958,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1975930,
+				"count": 1979120,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -981,8 +981,8 @@
 			],
 			"is_show": false,
 			"vendor_icons": [
-				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
 				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
+				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
 				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "1998",
@@ -1069,7 +1069,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2287541,
+				"count": 2290382,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1092,9 +1092,9 @@
 			],
 			"is_show": false,
 			"vendor_icons": [
-				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
+				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
+				"https://img3.doubanio.com/f/frodo/6fa5caade3ca480ccd95f455ee4d195ee342eb90/pics/vendors/youku.png"
 			],
 			"year": "2010",
 			"card_subtitle": "2010 / 美国 英国 / 剧情 科幻 悬疑 冒险 / 克里斯托弗·诺兰 / 莱昂纳多·迪卡普里奥 约瑟夫·高登-莱维特",
@@ -1242,7 +1242,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2131989,
+				"count": 2135828,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -1267,7 +1267,7 @@
 			"vendor_icons": [
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
 				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
-				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
+				"https://img3.doubanio.com/f/frodo/6fa5caade3ca480ccd95f455ee4d195ee342eb90/pics/vendors/youku.png"
 			],
 			"year": "2014",
 			"card_subtitle": "2014 / 美国 英国 加拿大 / 剧情 科幻 冒险 / 克里斯托弗·诺兰 / 马修·麦康纳 安妮·海瑟薇",
@@ -1421,7 +1421,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 460507,
+				"count": 461453,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -1444,8 +1444,8 @@
 			],
 			"is_show": false,
 			"vendor_icons": [
-				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
+				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
 				"https://img3.doubanio.com/f/frodo/6fa5caade3ca480ccd95f455ee4d195ee342eb90/pics/vendors/youku.png"
 			],
 			"year": "2012",
@@ -1543,7 +1543,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 943877,
+				"count": 945123,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -1566,9 +1566,9 @@
 			],
 			"is_show": false,
 			"vendor_icons": [
-				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img3.doubanio.com/f/frodo/6fa5caade3ca480ccd95f455ee4d195ee342eb90/pics/vendors/youku.png"
+				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
+				"https://img9.doubanio.com/f/frodo/6c7b857e6b2255201e73bf83732d95d572f3f9f7/pics/vendors/iqiyi.png"
 			],
 			"year": "2001",
 			"card_subtitle": "2001 / 新西兰 美国 / 剧情 动作 奇幻 冒险 / 彼得·杰克逊 / 伊利亚·伍德 西恩·奥斯汀",
@@ -1754,7 +1754,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2392714,
+				"count": 2395646,
 				"max": 10,
 				"star_count": 5,
 				"value": 9.5
@@ -1779,7 +1779,7 @@
 			"vendor_icons": [
 				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img9.doubanio.com/f/frodo/6c7b857e6b2255201e73bf83732d95d572f3f9f7/pics/vendors/iqiyi.png"
+				"https://img3.doubanio.com/f/frodo/6fa5caade3ca480ccd95f455ee4d195ee342eb90/pics/vendors/youku.png"
 			],
 			"year": "1994",
 			"card_subtitle": "1994 / 美国 / 剧情 爱情 / 罗伯特·泽米吉斯 / 汤姆·汉克斯 罗宾·怀特",
@@ -1973,7 +1973,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 163394,
+				"count": 164594,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9
@@ -2088,7 +2088,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 154020,
+				"count": 154105,
 				"max": 10,
 				"star_count": 3.5,
 				"value": 7.4
@@ -2111,8 +2111,8 @@
 			],
 			"is_show": false,
 			"vendor_icons": [
-				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
+				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
 				"https://img3.doubanio.com/f/frodo/6fa5caade3ca480ccd95f455ee4d195ee342eb90/pics/vendors/youku.png"
 			],
 			"year": "2010",
@@ -2216,7 +2216,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 1137694,
+				"count": 1140779,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -2434,7 +2434,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 187683,
+				"count": 187842,
 				"max": 10,
 				"star_count": 4,
 				"value": 7.7
@@ -2444,8 +2444,8 @@
 				"2021-10-15(日本)"
 			],
 			"pic": {
-				"large": "https://img1.doubanio.com/view/photo/m_ratio_poster/public/p2799611560.jpg",
-				"normal": "https://img1.doubanio.com/view/photo/s_ratio_poster/public/p2799611560.jpg"
+				"large": "https://img3.doubanio.com/view/photo/m_ratio_poster/public/p2681362557.jpg",
+				"normal": "https://img3.doubanio.com/view/photo/s_ratio_poster/public/p2681362557.jpg"
 			},
 			"honor_infos": [
 				{
@@ -2460,12 +2460,12 @@
 				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "2021",
-			"card_subtitle": "2021 / 日本 / 剧情 动画 冒险 / 八田洋介 今井有文 / 日向未南 村濑步",
+			"card_subtitle": "2021 / 日本 / 剧情 动画 奇幻 冒险 / 八田洋介 今井有文 / 日向未南 村濑步",
 			"id": "34927946",
 			"genres": [
 				"剧情",
 				"动画",
-				"冒险"
+				"奇幻"
 			],
 			"title": "国王排名",
 			"is_released": true,
@@ -2515,19 +2515,19 @@
 			],
 			"color_scheme": {
 				"is_dark": true,
-				"primary_color_light": "72694c",
+				"primary_color_light": "a54358",
 				"_base_color": [
-					0.12612612612612614,
-					0.33035714285714285,
-					0.8784313725490196
+					0.9642857142857143,
+					0.591549295774648,
+					0.5568627450980392
 				],
-				"secondary_color": "f9f8f4",
+				"secondary_color": "f9f4f5",
 				"_avg_color": [
-					0.119047619047619,
-					0.17647058823529407,
-					0.4666666666666667
+					0.937037037037037,
+					0.29605263157894735,
+					0.596078431372549
 				],
-				"primary_color_dark": "4c4633"
+				"primary_color_dark": "7f3444"
 			},
 			"type": "tv",
 			"has_linewatch": true,
@@ -2572,7 +2572,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 156903,
+				"count": 157087,
 				"max": 10,
 				"star_count": 3,
 				"value": 6
@@ -2590,7 +2590,7 @@
 			"vendor_icons": [
 				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img3.doubanio.com/f/frodo/6fa5caade3ca480ccd95f455ee4d195ee342eb90/pics/vendors/youku.png"
+				"https://img9.doubanio.com/f/frodo/6c7b857e6b2255201e73bf83732d95d572f3f9f7/pics/vendors/iqiyi.png"
 			],
 			"year": "2021",
 			"card_subtitle": "2021 / 中国大陆 / 剧情 爱情 / 沙漠 / 屈楚萧 张婧仪",
@@ -2683,7 +2683,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 414439,
+				"count": 415211,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.6
@@ -2855,7 +2855,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 132951,
+				"count": 133174,
 				"max": 10,
 				"star_count": 4,
 				"value": 7.9
@@ -3006,7 +3006,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 249821,
+				"count": 250112,
 				"max": 10,
 				"star_count": 4,
 				"value": 7.7
@@ -3138,7 +3138,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 120384,
+				"count": 120643,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.1
@@ -3161,8 +3161,8 @@
 			],
 			"is_show": false,
 			"vendor_icons": [
-				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
 				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
+				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
 				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "1948",
@@ -3273,7 +3273,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 3228114,
+				"count": 3232615,
 				"max": 10,
 				"star_count": 5,
 				"value": 9.7
@@ -3298,7 +3298,7 @@
 			"vendor_icons": [
 				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img3.doubanio.com/f/frodo/6fa5caade3ca480ccd95f455ee4d195ee342eb90/pics/vendors/youku.png"
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "1994",
 			"card_subtitle": "1994 / 美国 / 剧情 犯罪 / 弗兰克·德拉邦特 / 蒂姆·罗宾斯 摩根·弗里曼",
@@ -3439,7 +3439,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 248447,
+				"count": 249337,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 8.8
@@ -3573,7 +3573,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 83766,
+				"count": 83949,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.3
