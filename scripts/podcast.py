@@ -2,34 +2,40 @@ import os
 import datetime
 import subprocess
 import logging
-from feedgen.feed import FeedGenerator
+import re
+# 使用原生 XML 库代替 feedgen，提高稳定性
+import xml.etree.ElementTree as ET
+from xml.dom import minidom
+# Mutagen 用于读取音频元数据
 from mutagen.mp3 import MP3
 from mutagen.flac import FLAC
 from mutagen.mp4 import MP4
-from mutagen.wavpack import WavPack
-from mutagen.ogg import OggFileType
+# from mutagen.ogg import OggFileType # OGG 文件支持可以按需添加
+# tqdm 用于显示进度条
 from tqdm import tqdm
+
+from scripts.podcast_index import generate_player_html_new
 
 # 配置日志记录
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
+# 定义 iTunes 命名空间常量
+ITUNES_NS = 'http://www.itunes.com/dtds/podcast-1.0.dtd'
+
 # ============== 配置信息 (请修改以下内容) ==============
-AUDIO_ROOT_DIR = r"E:\水浒系列"
-PODCAST_TITLE = "水浒系列"
-PODCAST_AUTHOR = "郭德纲"
-PODCAST_DESCRIPTION=PODCAST_TITLE
+# 播客名称 (用于文件夹和 URL)
+PODCAST_TITLE = ""
+# 存放播客音频文件的本地根目录
+AUDIO_ROOT_DIR = r"E:\2"
 # 您的服务器域名，所有播客链接的前缀 (使用 HTTPS 是最佳实践)
 BASE_URL = f"https://malanxi.top/podcast_files/{PODCAST_TITLE}/"
-
-# 存放播客音频文件的根目录 (脚本将递归扫描此目录及其子文件夹)
-# 假设这个脚本在你想要扫描的目录的上一级
-# 如果脚本和音频文件在同一个目录下，可以使用 "."
-
 
 # 输出的 RSS 文件名 (将放置在 AUDIO_ROOT_DIR 目录下)
 OUTPUT_FILE = "podcast.xml"
 
 # 播客整体信息
+PODCAST_AUTHOR = "袁腾飞"
+PODCAST_DESCRIPTION = PODCAST_TITLE
 PODCAST_EMAIL = "your-email@example.com"
 # 播客封面图片 URL (必须是 JPEG 或 PNG 格式，建议尺寸 1400x1400 到 3000x3000)
 PODCAST_IMAGE_URL = BASE_URL + "cover.jpg"
@@ -38,59 +44,58 @@ PODCAST_SUB_CATEGORY = "Books"
 
 # 允许的音频文件扩展名
 ALLOWED_EXTENSIONS = ('.mp3', '.m4a', '.mp4')
-CONVERT_EXTENSIONS = ('.wma', '.flac', '.ogg', '.wav') # 需要转码的格式
+# 需要转码的格式
+CONVERT_EXTENSIONS = ('.wma', '.flac', '.ogg', '.wav')
 
 # =======================================================
 
 def get_audio_duration(file_path):
-    """使用 mutagen 尝试获取音频时长和文件大小。"""
+    """使用mutagen尝试获取音频时长和文件大小。"""
     try:
-        if file_path.lower().endswith('.mp3'):
+        # 简化类型判断，使用 lower() 避免大小写问题
+        path_lower = file_path.lower()
+        if path_lower.endswith('.mp3'):
             audio = MP3(file_path)
-        elif file_path.lower().endswith(('.m4a', '.mp4')):
+        elif path_lower.endswith(('.m4a', '.mp4')):
             audio = MP4(file_path)
-        # 您可以根据需要添加更多格式支持
+        elif path_lower.endswith('.flac'):
+            audio = FLAC(file_path)
         else:
-            # 对于其他格式，如果 mutagen 不支持，可以尝试使用 ffprobe (更复杂，这里简化)
-            logging.warning(f"未知或不受支持的格式：{file_path}。跳过元数据读取。")
+            # 忽略其他不确定能否读取元数据的格式
             return None, None
 
         duration = int(audio.info.length)
         size = os.path.getsize(file_path)
         return duration, size
 
-    except Exception as e:
-        logging.error(f"无法读取文件 {file_path} 的元数据: {e}")
+    except Exception:
+        # 无法读取元数据时，静默返回 None
         return None, None
 
 def convert_to_mp3(wma_path):
-    """使用 FFmpeg 将 WMA 转换为 MP3，并在成功后删除原文件。"""
-    # 新文件路径：替换扩展名
+    """
+    使用 FFmpeg 将其他格式转换为 MP3。
+    采用 -q:a 6 (高质量，约 120kbps) 压缩。
+    """
     mp3_path = os.path.splitext(wma_path)[0] + '.mp3'
 
     if os.path.exists(mp3_path):
-        logging.info(f"MP3 文件已存在，跳过转码: {mp3_path}")
+        # logging.info(f"MP3 文件已存在，跳过转码: {mp3_path}")
         return mp3_path
 
     logging.info(f"正在转码: {wma_path} -> {mp3_path}")
 
-    # FFmpeg 命令：-i 输入 -vn 不包含视频 -acodec libmp3lame 使用高质量MP3编码 -q:a 2 编码质量（0-9, 0最好）
     command = [
         'ffmpeg',
         '-i', wma_path,
-        '-vn',
+        '-vn', # 禁用视频
         '-acodec', 'libmp3lame',
-        # --- 【修改点】将质量等级从 2 更改为 4 ---
-        '-q:a', '4',
-        # ----------------------------------------
+        '-q:a', '6', # 高质量压缩
         mp3_path
     ]
 
     try:
-        # 执行命令，隐藏输出
         subprocess.run(command, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
-        # 成功转码后，删除原文件
         os.remove(wma_path)
         logging.info(f"✅ 转码成功并删除原文件: {wma_path}")
         return mp3_path
@@ -102,777 +107,254 @@ def convert_to_mp3(wma_path):
         return None
 
 
-def generate_podcast_feed():
-    """递归扫描目录、转码并生成播客 RSS 订阅源文件。"""
+def extract_season_info(folder_name):
+    """
+    从文件夹名称中提取季度信息。
+    返回: (season_number, season_display_name)
+    
+    示例:
+    - "第1季" -> (1, "第1季")
+    - "Season 2" -> (2, "Season 2")  
+    - "S03 三国演义" -> (3, "S03 三国演义")
+    - "水浒传" -> (None, "水浒传")
+    """
+    # 尝试匹配各种季度格式
+    patterns = [
+        r'第(\d+)季',           # 第1季, 第2季
+        r'[Ss]eason\s*(\d+)',   # Season 1, season 2
+        r'[Ss](\d+)',           # S1, S01, s1
+        r'^(\d+)',              # 纯数字开头
+    ]
 
-    logging.info("--- 播客 RSS 自动生成脚本开始 ---")
+    for pattern in patterns:
+        match = re.search(pattern, folder_name)
+        if match:
+            season_num = int(match.group(1))
+            return season_num, folder_name
+
+    # 如果没有匹配到数字，返回 None 和文件夹名
+    return None, folder_name
+
+
+def natural_sort_key(file_path):
+    """
+    自然排序键函数，用于正确排序包含数字的文件名。
+    
+    示例:
+    - "2.xxx.mp3" 会排在 "10.xxx.mp3" 前面
+    - "易中天品三国01.mp3" 会排在 "易中天品三国10.mp3" 前面
+    - "40.（四十）赵高之死.mp3" 按数字 40 排序
+    """
+    # 获取文件名（不含路径）
+    basename = os.path.basename(file_path)
+    
+    # 将文件名分割为文本和数字部分
+    # 例如: "40.（四十）赵高之死.mp3" -> ['', '40', '.（四十）赵高之死.mp3']
+    parts = re.split(r'(\d+)', basename)
+    
+    # 将数字部分转换为整数，便于正确排序
+    result = []
+    for part in parts:
+        if part.isdigit():
+            result.append(int(part))  # 数字部分转为整数
+        else:
+            result.append(part.lower())  # 文本部分转为小写（不区分大小写）
+    
+    return result
+
+
+def generate_podcast_feed():
+    """递归扫描目录、转码并生成播客 RSS 订阅源文件（使用原生 XML 模式）。"""
+
+    logging.info("--- 播客 RSS 自动生成脚本开始（原生XML模式 + 智能Season识别 + 自然排序）---")
 
     # 1. 扫描文件并进行转码
     all_files_to_process = []
-
-    # 递归遍历目录
     for root, _, files in os.walk(AUDIO_ROOT_DIR):
         for file in files:
             file_path = os.path.join(root, file)
             ext = os.path.splitext(file)[1].lower()
 
             if ext in CONVERT_EXTENSIONS:
-                # 发现需要转码的文件，立即转码
                 mp3_path = convert_to_mp3(file_path)
                 if mp3_path:
-                    # 将转码后的 MP3 文件加入列表
                     all_files_to_process.append(mp3_path)
-
             elif ext in ALLOWED_EXTENSIONS:
-                # 发现支持的音频文件
                 all_files_to_process.append(file_path)
 
-    # 2. 排序文件
-    # 按照文件名进行自然顺序排序（Python 的 sorted 默认行为）
-    all_files_to_process = sorted(all_files_to_process)
-
+    # 【改进：使用自然排序，确保"2."排在"10."前面】
+    all_files_to_process = sorted(all_files_to_process, key=natural_sort_key)
+    
     if not all_files_to_process:
-        logging.warning("未找到任何音频文件（MP3/M4A）或可转码文件。")
+        logging.warning("未找到任何音频文件。")
         return
 
     logging.info(f"找到 {len(all_files_to_process)} 个文件准备生成 RSS。")
 
-    # 3. 生成 RSS Feed
-    fg = FeedGenerator()
-    fg.load_extension('podcast')
+    # 【新增：检测是否有多个文件夹，决定是否使用季度功能】
+    unique_folders = set()
+    for file_path in all_files_to_process:
+        relative_dir = os.path.relpath(os.path.dirname(file_path), AUDIO_ROOT_DIR)
+        if relative_dir == '.':
+            unique_folders.add('_root_')  # 根目录标记
+        else:
+            folder_name = relative_dir.replace('\\', '/').split('/')[0]
+            unique_folders.add(folder_name)
 
-    # 设置频道/播客整体信息
-    fg.id(BASE_URL)
-    fg.title(PODCAST_TITLE)
-    fg.author({'name': PODCAST_AUTHOR, 'email': PODCAST_EMAIL})
-    fg.link(href=BASE_URL, rel='alternate')
-    fg.logo(PODCAST_IMAGE_URL)
-    fg.subtitle(PODCAST_DESCRIPTION)
-    fg.description(PODCAST_DESCRIPTION)
-    fg.language('zh-CN')
-    fg.pubDate(datetime.datetime.now(datetime.timezone.utc).astimezone())
-    fg.podcast.itunes_image(PODCAST_IMAGE_URL)
-    fg.podcast.itunes_category(PODCAST_CATEGORY, PODCAST_SUB_CATEGORY)
-    fg.podcast.itunes_explicit('no')
-    fg.podcast.itunes_owner(name=PODCAST_AUTHOR, email=PODCAST_EMAIL)
+    use_seasons = len(unique_folders) > 1  # 只有多个文件夹时才使用季度
 
+    if use_seasons:
+        logging.info(f"📁 检测到 {len(unique_folders)} 个文件夹，将使用季度功能分组")
+    else:
+        logging.info("📁 单文件夹播客，不使用季度功能")
 
-    # 4. 遍历文件并添加单集
-    # 使用 tqdm 进度条
+    # 2. 构造 XML 结构 (命名空间修复点)
+
+    # 【修复：使用 register_namespace 避免命名空间冲突】
+    # 预先注册命名空间，让 ElementTree 自动在根元素上添加 xmlns:itunes
+    ET.register_namespace('itunes', ITUNES_NS)
+
+    # 创建根元素，不再手动添加 xmlns:itunes 属性，只添加 version="2.0"
+    rss = ET.Element('rss', version='2.0')
+
+    channel = ET.SubElement(rss, 'channel')
+
+    # 播客频道信息
+    ET.SubElement(channel, 'title').text = PODCAST_TITLE
+    ET.SubElement(channel, 'link').text = BASE_URL
+    ET.SubElement(channel, 'description').text = PODCAST_DESCRIPTION
+    ET.SubElement(channel, 'language').text = 'zh-cn'
+
+    # ITunes 频道标签 (使用命名空间URI方式添加标签)
+    ET.SubElement(channel, f'{{{ITUNES_NS}}}author').text = PODCAST_AUTHOR
+    ET.SubElement(channel, f'{{{ITUNES_NS}}}type').text = 'serial'
+    ET.SubElement(channel, f'{{{ITUNES_NS}}}image', attrib={'href': PODCAST_IMAGE_URL})
+    ET.SubElement(channel, f'{{{ITUNES_NS}}}explicit').text = 'no'
+    ET.SubElement(channel, f'{{{ITUNES_NS}}}owner').text = PODCAST_EMAIL
+
+    # Category 标签
+    category = ET.SubElement(channel, f'{{{ITUNES_NS}}}category', attrib={'text': PODCAST_CATEGORY})
+    if PODCAST_SUB_CATEGORY:
+        ET.SubElement(category, f'{{{ITUNES_NS}}}category', attrib={'text': PODCAST_SUB_CATEGORY})
+
+    # 3. 遍历文件并添加单集
     for local_path in tqdm(all_files_to_process, desc="生成 RSS 条目"):
 
-        # 确保路径是相对路径，用于构造 URL
         relative_path = os.path.relpath(local_path, AUDIO_ROOT_DIR).replace('\\', '/')
-
-        # 构造公开访问的 URL
         file_url = BASE_URL + relative_path
-
-        # 获取文件元数据
         duration_seconds, file_size_bytes = get_audio_duration(local_path)
 
         if duration_seconds is None or file_size_bytes is None:
-            logging.error(f"跳过文件 {relative_path}，无法获取元数据。")
             continue
 
-        # 使用文件名（去除后缀）作为标题
         episode_title = os.path.splitext(os.path.basename(local_path))[0]
+        # 确保时区信息正确，符合 RSS 规范
+        pub_date_str = datetime.datetime.now(datetime.timezone.utc).astimezone().strftime("%a, %d %b %Y %H:%M:%S %z")
 
-        # 为每集使用不同的发布时间，确保客户端能按顺序识别
-        pub_date = datetime.datetime.now(datetime.timezone.utc).astimezone()
+        # 创建 item 元素
+        item = ET.SubElement(channel, 'item')
 
-        fe = fg.add_entry()
-        fe.id(file_url)
-        fe.title(episode_title)
-        fe.description(f"集数: {episode_title}")
-        fe.published(pub_date)
+        # 【根据是否使用季度功能决定标题格式】
+        if use_seasons:
+            # 【智能文件夹分季逻辑】
+            relative_dir = os.path.relpath(os.path.dirname(local_path), AUDIO_ROOT_DIR)
+
+            if relative_dir == '.':
+                # 根目录下的文件视为第 1 季
+                season_number = 1
+                season_name = None
+            else:
+                # 使用一级子文件夹名提取季度信息
+                folder_name = relative_dir.replace('\\', '/').split('/')[0]
+                season_number, season_name = extract_season_info(folder_name)
+
+                # 如果无法提取数字，默认使用 1
+                if season_number is None:
+                    season_number = 1
+
+            # 【在标题中包含季度名称】
+            if season_name:
+                full_title = f"[{season_name}] {episode_title}"
+            else:
+                full_title = episode_title
+        else:
+            # 单文件夹，不添加季度信息
+            full_title = episode_title
+            season_number = None
+            season_name = None
+
+        ET.SubElement(item, 'title').text = full_title
+        ET.SubElement(item, 'description').text = f"集数: {episode_title}"
+        ET.SubElement(item, 'pubDate').text = pub_date_str
 
         # 核心：设置音频附件
-        # 核心：设置音频附件
-        fe.enclosure(url=file_url, length=str(file_size_bytes), type='audio/mpeg')
+        ET.SubElement(item, 'enclosure', attrib={
+            'url': file_url,
+            'length': str(file_size_bytes),
+            'type': 'audio/mpeg'
+        })
 
-        # --- 【最终修正】使用标准的 <guid> 标签，并移除不支持的 isPermaLink 参数 ---
-        fe.guid(relative_path)
+        # GUID
+        ET.SubElement(item, 'guid').text = relative_path
 
-        # iTunes 标签
-        fe.podcast.itunes_duration(duration_seconds)
-        fe.podcast.itunes_author(PODCAST_AUTHOR)
+        # ITunes 剧集标签
+        ET.SubElement(item, f'{{{ITUNES_NS}}}duration').text = str(duration_seconds)
+        ET.SubElement(item, f'{{{ITUNES_NS}}}author').text = PODCAST_AUTHOR
 
-    # 5. 生成并保存 XML 文件
+        # 【只有使用季度功能时才添加 season 相关标签】
+        if use_seasons and season_number is not None:
+            ET.SubElement(item, f'{{{ITUNES_NS}}}season').text = str(season_number)
+
+            # 【可选：添加 subtitle 显示季度完整名称】
+            if season_name:
+                ET.SubElement(item, f'{{{ITUNES_NS}}}subtitle').text = season_name
+
+
+    # 4. 格式化和保存 RSS 文件
     output_path = os.path.join(AUDIO_ROOT_DIR, OUTPUT_FILE)
+
+    # 格式化
+    xml_str = ET.tostring(rss, encoding='utf-8')
+    reparsed = minidom.parseString(xml_str)
+
+    # 修复 minidom 导致的前缀问题 (ET.register_namespace 已经处理了大部分，这里作为二次保险)
+    pretty_xml = reparsed.toprettyxml(indent="  ")
+    pretty_xml = pretty_xml.replace('ns0:', 'itunes:')
+    pretty_xml = pretty_xml.replace(f'xmlns:ns0="{ITUNES_NS}"', f'xmlns:itunes="{ITUNES_NS}"')
+
     try:
-        fg.rss_file(output_path, pretty=True)
+        with open(output_path, 'w', encoding='utf-8') as f:
+            # 确保 XML 声明的编码与文件编码一致
+            if pretty_xml.startswith('<?xml'):
+                f.write(pretty_xml)
+            else:
+                f.write('<?xml version="1.0" encoding="utf-8"?>\n' + pretty_xml)
+
         logging.info(f"\n✅ RSS 订阅源已成功生成到文件: {output_path}")
         logging.info(f"✅ 您的播客 RSS URL 为: {BASE_URL}{OUTPUT_FILE}")
+        logging.info(f"🔢 文件已使用自然排序（数字顺序）")
+        if use_seasons:
+            logging.info(f"📱 iPhone Podcast 将显示文件夹名称作为季度信息")
+        else:
+            logging.info(f"📱 单文件夹播客，无季度分组")
     except Exception as e:
         logging.error(f"\n❌ 生成文件时出错: {e}")
+
 
 def generate_player_html():
     """生成播客 HTML 播放器页面。"""
     rss_url_public = BASE_URL + OUTPUT_FILE
-    # 构造本地输出路径
     html_output_path = os.path.join(AUDIO_ROOT_DIR, 'index.html')
 
     logging.info("--- 静态播放器 HTML 生成脚本开始 ---")
 
-    # 传递封面URL和作者名
-    generate_player_html_new(rss_url_public, OUTPUT_FILE, PODCAST_AUTHOR, PODCAST_IMAGE_URL, html_output_path)
+    generate_player_html_new(rss_url_public, PODCAST_TITLE, PODCAST_AUTHOR, PODCAST_IMAGE_URL, html_output_path)
 
-def generate_player_html_new(rss_url, podcast_title, podcast_author, cover_url, html_output_path):
-    """
-    生成包含 JavaScript 播放器的静态 index.html 文件。
-    - V4: 怀旧复古风格 + 每个剧集独立播放器和自定义进度条
-    - 保持剧集倒序(最新在上)。
-    - 记录每个剧集的播放进度。
-    - 播放互斥:播放某个剧集时自动暂停其他剧集。
-    """
 
-    html_content = f"""
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{podcast_title} | 在线播客</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Courier+Prime&display=swap" rel="stylesheet">
-    <style>
-        :root {{
-            --primary-bg: #e8dcc4;
-            --card-bg: #f5ead6;
-            --text-main: #3d2817;
-            --text-muted: #8b6f47;
-            --accent-color: #a0522d;
-            --accent-warm: #cd853f;
-            --playing-bg: #fef5e7;
-            --shadow-vintage: 0 4px 8px rgba(61, 40, 23, 0.2);
-            --border-vintage: #8b6f47;
-            --radius-vintage: 4px;
-        }}
-
-        body {{ 
-            font-family: 'Noto Serif SC', Georgia, serif;
-            background: #e8dcc4;
-            background-image: 
-                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(139, 111, 71, 0.03) 2px, rgba(139, 111, 71, 0.03) 4px),
-                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(139, 111, 71, 0.03) 2px, rgba(139, 111, 71, 0.03) 4px);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            line-height: 1.8;
-            position: relative;
-        }}
-        
-        body::before {{
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /></filter><rect width="100" height="100" filter="url(%23noise)" opacity="0.05"/></svg>');
-            pointer-events: none;
-            z-index: 1;
-        }}
-        
-        .main-container {{
-            position: relative;
-            z-index: 2;
-            max-width: 900px; 
-            margin: 30px auto; 
-        }}
-
-        .header-hero {{
-            background: linear-gradient(to bottom, #d4b896 0%, #c9a978 100%);
-            border: 3px solid var(--border-vintage);
-            border-radius: var(--radius-vintage);
-            padding: 40px;
-            display: flex;
-            align-items: center;
-            box-shadow: 
-                var(--shadow-vintage),
-                inset 0 1px 0 rgba(255, 255, 255, 0.3),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.2);
-            margin-bottom: 30px;
-            position: relative;
-            overflow: hidden;
-        }}
-        
-        .header-hero::before {{
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(139, 111, 71, 0.02) 10px, rgba(139, 111, 71, 0.02) 20px);
-            pointer-events: none;
-        }}
-        
-        .header-content {{
-            display: flex;
-            align-items: center;
-            z-index: 2;
-        }}
-
-        .cover-image-large {{
-            width: 160px;
-            height: 160px;
-            min-width: 160px;
-            background-image: url('{cover_url}');
-            background-size: cover;
-            background-position: center;
-            border-radius: var(--radius-vintage);
-            margin-right: 35px;
-            box-shadow: 0 0 0 4px #8b6f47, 0 0 0 8px #f5ead6, var(--shadow-vintage);
-            border: 2px solid #3d2817;
-            filter: sepia(0.2) contrast(1.1);
-        }}
-        
-        .title-info h1 {{
-            margin: 0;
-            color: var(--text-main);
-            font-size: 2.4em;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
-        }}
-        
-        .title-info .author {{
-            margin: 10px 0 0 0;
-            font-size: 1.1em;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            font-family: 'Courier Prime', monospace;
-        }}
-        
-        .title-info .author i {{
-            margin-right: 8px;
-            color: var(--accent-color);
-        }}
-
-        .list-header {{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 0 10px;
-        }}
-        .list-header h2 {{
-            margin: 0;
-            font-size: 1.5em;
-            font-weight: 600;
-            color: var(--text-main);
-            letter-spacing: 1px;
-        }}
-        
-        #loading-message {{
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-            font-size: 1.2em;
-        }}
-
-        .episode-list {{ list-style: none; padding: 0; margin: 0; }}
-        
-        .episode-item {{ 
-            padding: 20px; 
-            margin-bottom: 15px;
-            background: var(--card-bg); 
-            border-radius: var(--radius-vintage);
-            box-shadow: var(--shadow-vintage);
-            border: 2px solid var(--border-vintage);
-            transition: all 0.3s ease;
-            position: relative;
-        }}
-        
-        .episode-item::before {{
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(139, 111, 71, 0.02) 1px, rgba(139, 111, 71, 0.02) 2px);
-            pointer-events: none;
-        }}
-        
-        .episode-item:hover {{ 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(61, 40, 23, 0.25);
-            border-color: var(--accent-color);
-        }}
-        
-        .episode-item.playing {{
-            background-color: var(--playing-bg);
-            border-color: var(--accent-color);
-            border-width: 3px;
-        }}
-        .episode-item.playing::after {{
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 6px;
-            background: var(--accent-color);
-        }}
-
-        .episode-header {{
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }}
-
-        .episode-info {{ text-align: left; flex-grow: 1; margin-right: 20px; }}
-        
-        .episode-title {{ 
-            font-weight: 600; 
-            font-size: 1.15em; 
-            color: var(--text-main); 
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }}
-        .episode-item.playing .episode-title {{ 
-            color: var(--accent-color);
-            font-weight: 700;
-        }}
-        
-        .episode-date {{ 
-            font-size: 0.9em; 
-            color: var(--text-muted); 
-            display: flex;
-            align-items: center;
-            font-family: 'Courier Prime', monospace;
-        }}
-        .episode-date i {{ margin-right: 6px; font-size: 0.9em; }}
-
-        .play-button-wrapper {{
-            position: relative;
-            width: 60px;
-            height: 60px;
-            flex-shrink: 0;
-        }}
-        
-        .play-button {{ 
-            background: linear-gradient(to bottom, #8b6f47 0%, #6b5637 50%, #5a4527 100%);
-            color: #f5ead6; 
-            border: 3px solid #3d2817;
-            width: 100%;
-            height: 100%;
-            border-radius: var(--radius-vintage);
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.4em;
-            box-shadow: 0 4px 0 #3d2817, 0 6px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-            cursor: pointer;
-            position: relative;
-        }}
-        
-        .play-button:active {{ 
-            transform: translateY(3px);
-            box-shadow: 0 1px 0 #3d2817, 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(0, 0, 0, 0.3);
-        }}
-        
-        .episode-item.playing .play-button {{
-            background: linear-gradient(to bottom, #cd853f 0%, #a0522d 50%, #8b4513 100%);
-            border-radius: 50%;
-            border-color: #5a3410;
-            box-shadow: 0 4px 0 #5a3410, 0 6px 8px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 0 3px rgba(205, 133, 63, 0.3);
-        }}
-        
-        .episode-item.playing .play-button:active {{
-            box-shadow: 0 1px 0 #5a3410, 0 2px 4px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(0, 0, 0, 0.3), 0 0 0 3px rgba(205, 133, 63, 0.3);
-        }}
-        
-        .play-button:hover:not(:active) {{ filter: brightness(1.1); }}
-
-        /* 嵌入式播放器样式 */
-        .episode-player {{
-            background: linear-gradient(to bottom, #c9a978, #b89968);
-            padding: 15px;
-            border: 2px solid var(--border-vintage);
-            border-radius: var(--radius-vintage);
-            margin-top: 15px;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-            position: relative;
-        }}
-
-        .episode-player::before {{
-            content: '';
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            right: 6px;
-            bottom: 6px;
-            border: 1px solid rgba(61, 40, 23, 0.2);
-            border-radius: 2px;
-            pointer-events: none;
-        }}
-
-        .episode-audio {{
-            display: none;
-        }}
-
-        /* 自定义进度条 */
-        .custom-controls {{
-            position: relative;
-            z-index: 2;
-        }}
-
-        .progress-bar-container {{
-            width: 100%;
-            height: 10px;
-            background: rgba(61, 40, 23, 0.3);
-            border-radius: 5px;
-            cursor: pointer;
-            margin-bottom: 10px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.3);
-        }}
-
-        .progress-bar {{
-            height: 100%;
-            background: linear-gradient(to right, var(--accent-color), var(--accent-warm));
-            border-radius: 5px;
-            width: 0%;
-            transition: width 0.1s linear;
-            position: relative;
-        }}
-
-        .progress-bar::after {{
-            content: '';
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 14px;
-            height: 14px;
-            background: var(--accent-warm);
-            border: 2px solid #3d2817;
-            border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-        }}
-
-        .time-display {{
-            display: flex;
-            justify-content: space-between;
-            font-family: 'Courier Prime', monospace;
-            font-size: 0.85em;
-            color: #3d2817;
-            font-weight: 600;
-            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
-        }}
-
-        .footer {{
-            text-align: center;
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 2px solid var(--border-vintage);
-            font-size: 0.9em;
-            color: var(--text-muted);
-        }}
-        .footer a {{ 
-            color: var(--accent-color); 
-            text-decoration: none;
-            font-weight: 600;
-        }}
-        .footer a:hover {{ text-decoration: underline; }}
-
-        @media (max-width: 768px) {{
-            body {{ padding: 15px; }}
-            .header-hero {{ flex-direction: column; text-align: center; padding: 30px 20px; }}
-            .header-content {{ flex-direction: column; }}
-            .cover-image-large {{ margin-right: 0; margin-bottom: 20px; width: 140px; height: 140px; min-width: 140px; }}
-            .title-info h1 {{ font-size: 1.8em; }}
-            .title-info .author {{ justify-content: center; }}
-            .episode-item {{ padding: 15px; }}
-            .play-button-wrapper {{ width: 52px; height: 52px; }}
-            .play-button {{ font-size: 1.2em; }}
-        }}
-    </style>
-</head>
-<body>
-
-<div class="main-container">
-    <div class="header-hero">
-        <div class="header-content">
-            <div class="cover-image-large"></div>
-            <div class="title-info">
-                <h1>{podcast_title}</h1>
-                <div class="author">
-                    <i class="fas fa-microphone-alt"></i>
-                    <span>主理人:{podcast_author}</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="list-header">
-        <h2>节目列表</h2>
-    </div>
-
-    <div id="loading-message">
-        <i class="fas fa-spinner fa-spin"></i> 正在获取节目单...
-    </div>
-    
-    <ul id="episode-list" class="episode-list"></ul>
-    
-    <div class="footer">
-        <p>
-            源数据基于 RSS 订阅源 <a href="{rss_url}" target="_blank">Feed Link</a>
-            | 自托管播客系统
-        </p>
-    </div>
-</div>
-
-<script>
-    const RSS_FEED_URL = '{rss_url}';
-    const EPISODE_LIST = document.getElementById('episode-list');
-    const LOADING_MESSAGE = document.getElementById('loading-message');
-    const STORAGE_KEY = 'podcast_episodes_progress_v4';
-    
-    let allAudioPlayers = [];
-
-    function formatTime(seconds) {{
-        if (isNaN(seconds)) return '0:00';
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${{mins}}:${{secs.toString().padStart(2, '0')}}`;
-    }}
-
-    function loadAllProgress() {{
-        const stored = localStorage.getItem(STORAGE_KEY);
-        return stored ? JSON.parse(stored) : {{}};
-    }}
-
-    function saveEpisodeProgress(audioUrl, currentTime, duration) {{
-        const allProgress = loadAllProgress();
-        
-        if (currentTime > 5 && currentTime < duration - 10) {{
-            allProgress[audioUrl] = {{
-                time: currentTime,
-                duration: duration,
-                timestamp: Date.now()
-            }};
-        }} else if (currentTime >= duration - 10) {{
-            delete allProgress[audioUrl];
-        }}
-        
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(allProgress));
-    }}
-
-    function getEpisodeProgress(audioUrl) {{
-        const allProgress = loadAllProgress();
-        return allProgress[audioUrl] || null;
-    }}
-
-    function pauseOtherPlayers(currentAudio) {{
-        allAudioPlayers.forEach(audio => {{
-            if (audio !== currentAudio && !audio.paused) {{
-                audio.pause();
-            }}
-        }});
-    }}
-
-    function updatePlayingUI() {{
-        document.querySelectorAll('.episode-item').forEach(item => {{
-            const audio = item.querySelector('.episode-audio');
-            const button = item.querySelector('.play-button');
-            const icon = button.querySelector('i');
-            
-            if (audio && !audio.paused) {{
-                item.classList.add('playing');
-                icon.className = 'fas fa-pause';
-            }} else {{
-                item.classList.remove('playing');
-                icon.className = 'fas fa-play';
-            }}
-        }});
-    }}
-
-    function fetchAndParseRSS() {{
-        fetch(RSS_FEED_URL)
-            .then(response => {{
-                if (!response.ok) throw new Error(response.statusText);
-                return response.text();
-            }})
-            .then(str => {{
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(str, "text/xml");
-                displayEpisodes(xmlDoc);
-            }})
-            .catch(error => {{
-                console.error("Error:", error);
-                LOADING_MESSAGE.innerHTML = `<i class="fas fa-exclamation-circle"></i> 加载失败。<br><small>请检查跨域(CORS)配置或网络。</small>`;
-                LOADING_MESSAGE.style.color = '#e74c3c';
-            }});
-    }}
-
-    function displayEpisodes(xmlDoc) {{
-        LOADING_MESSAGE.style.display = 'none';
-        const items = xmlDoc.querySelectorAll('item');
-        
-        if (items.length === 0) {{
-             EPISODE_LIST.innerHTML = '<li style="text-align:center;padding:20px;">暂无节目</li>';
-             return;
-        }}
-        
-        const reversedItems = Array.from(items).reverse();
-
-        reversedItems.forEach((item, index) => {{
-            const title = item.querySelector('title')?.textContent || `第 ${{index + 1}} 集`;
-            let pubDateStr = item.querySelector('pubDate')?.textContent;
-            let formattedDate = '暂无日期';
-            if (pubDateStr) {{
-                try {{ formattedDate = new Date(pubDateStr).toLocaleDateString('zh-CN'); }} catch(e) {{}}
-            }}
-            
-            const enclosure = item.querySelector('enclosure');
-            const audioUrl = enclosure ? enclosure.getAttribute('url') : null;
-            if (!audioUrl) return; 
-
-            const listItem = document.createElement('li');
-            listItem.className = 'episode-item';
-            
-            const progress = getEpisodeProgress(audioUrl);
-            const progressIndicator = progress ? ' <span style="color: var(--accent-color); font-weight: 600;">• 继续播放</span>' : '';
-            
-            listItem.innerHTML = `
-                <div class="episode-header">
-                    <div class="episode-info">
-                        <div class="episode-title">${{title}}</div>
-                        <div class="episode-date">
-                            <i class="far fa-calendar-alt"></i> ${{formattedDate}}${{progressIndicator}}
-                        </div>
-                    </div>
-                    <div class="play-button-wrapper">
-                        <button class="play-button" title="播放/暂停">
-                            <i class="fas fa-play"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="episode-player">
-                    <audio class="episode-audio" preload="metadata" data-url="${{audioUrl}}">
-                        <source src="${{audioUrl}}" type="audio/mpeg">
-                    </audio>
-                    <div class="custom-controls">
-                        <div class="progress-bar-container">
-                            <div class="progress-bar" style="width: 0%"></div>
-                        </div>
-                        <div class="time-display">
-                            <span class="current-time">0:00</span>
-                            <span class="duration">0:00</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            const audio = listItem.querySelector('.episode-audio');
-            const button = listItem.querySelector('.play-button');
-            const progressBar = listItem.querySelector('.progress-bar');
-            const progressContainer = listItem.querySelector('.progress-bar-container');
-            const currentTimeEl = listItem.querySelector('.current-time');
-            const durationEl = listItem.querySelector('.duration');
-            
-            allAudioPlayers.push(audio);
-
-            // 恢复播放进度
-            if (progress && progress.time) {{
-                audio.addEventListener('loadedmetadata', () => {{
-                    audio.currentTime = progress.time;
-                    progressBar.style.width = `${{(progress.time / audio.duration) * 100}}%`;
-                    currentTimeEl.textContent = formatTime(progress.time);
-                }}, {{ once: true }});
-            }}
-
-            // 元数据加载完成后更新总时长
-            audio.addEventListener('loadedmetadata', () => {{
-                durationEl.textContent = formatTime(audio.duration);
-            }});
-
-            // 播放/暂停按钮
-            button.addEventListener('click', (e) => {{
-                e.stopPropagation();
-                if (audio.paused) {{
-                    pauseOtherPlayers(audio);
-                    audio.play().catch(err => console.warn('播放失败:', err));
-                }} else {{
-                    audio.pause();
-                }}
-            }});
-
-            // 进度条更新
-            audio.addEventListener('timeupdate', () => {{
-                if (audio.duration) {{
-                    const percent = (audio.currentTime / audio.duration) * 100;
-                    progressBar.style.width = `${{percent}}%`;
-                    currentTimeEl.textContent = formatTime(audio.currentTime);
-                    
-                    // 每10秒保存一次进度
-                    if (!audio.paused && audio.currentTime % 10 < 0.5) {{
-                        saveEpisodeProgress(audioUrl, audio.currentTime, audio.duration);
-                    }}
-                }}
-            }});
-
-            // 进度条拖动
-            progressContainer.addEventListener('click', (e) => {{
-                if (audio.duration) {{
-                    const rect = progressContainer.getBoundingClientRect();
-                    const percent = (e.clientX - rect.left) / rect.width;
-                    audio.currentTime = percent * audio.duration;
-                }}
-            }});
-
-            audio.addEventListener('play', () => {{
-                pauseOtherPlayers(audio);
-                updatePlayingUI();
-            }});
-
-            audio.addEventListener('pause', () => {{
-                updatePlayingUI();
-                saveEpisodeProgress(audioUrl, audio.currentTime, audio.duration);
-            }});
-
-            audio.addEventListener('ended', () => {{
-                updatePlayingUI();
-                saveEpisodeProgress(audioUrl, audio.currentTime, audio.duration);
-            }});
-
-            EPISODE_LIST.appendChild(listItem);
-        }});
-    }}
-
-    window.addEventListener('beforeunload', () => {{
-        allAudioPlayers.forEach(audio => {{
-            if (audio.src && !audio.paused) {{
-                const url = audio.dataset.url;
-                saveEpisodeProgress(url, audio.currentTime, audio.duration);
-            }}
-        }});
-    }});
-
-    fetchAndParseRSS();
-
-</script>
-</body>
-</html>
-"""
-    try:
-        os.makedirs(os.path.dirname(html_output_path), exist_ok=True)
-        with open(html_output_path, 'w', encoding='utf-8') as f:
-            f.write(html_content)
-
-        logging.info(f"\n✅ **怀旧复古版 HTML (独立播放器+自定义进度条)** 已成功生成: {html_output_path}")
-        logging.info(f"请上传至服务器,访问 URL: {rss_url.replace(OUTPUT_FILE, 'index.html')}")
-    except Exception as e:
-        logging.error(f"❌ 生成 HTML 文件时出错: {e}")
 
 if __name__ == '__main__':
+    # 1. 先生成包含 Season 标签的 RSS 文件
     generate_podcast_feed()
+
+    # 2. 再生成包含 Season 切换逻辑的 HTML 文件
     generate_player_html()
