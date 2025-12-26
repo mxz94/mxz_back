@@ -447,7 +447,13 @@ def handle_video(content):
     for i in range(len(lines)):
         if lines[i].startswith("https://github.com/user-attachments"):
             url = transfer_from_github_2_r2(lines[i])
-            content = content.replace(lines[i], f'<video src="{url}" autoplay="false" controls="controls" width="800" height="600"/></video>')
+            # 使用响应式视频容器，去掉固定宽高
+            video_html = f'''<div class="video-wrapper">
+  <video src="{url}" controls controlsList="nodownload" preload="metadata" class="responsive-video">
+    您的浏览器不支持视频播放
+  </video>
+</div>'''
+            content = content.replace(lines[i], video_html)
     return content
 
 
@@ -531,4 +537,5 @@ if __name__ == "__main__":
     options = parser.parse_args()
     R2_TOKEN = options.r2_token
     R2_KEY = options.r2_key
+
     main(options.github_token, options.repo_name, options.issue_number)
