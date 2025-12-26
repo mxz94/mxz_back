@@ -811,7 +811,7 @@
 			"vendor_icons": [
 				"https://img2.doubanio.com/f/frodo/8e1b7f8b48804cf759fc411e75d62c5ffd4f8f42/pics/vendors/migu_video.png",
 				"https://img9.doubanio.com/f/frodo/fbc90f355fc45d5d2056e0d88c697f9414b56b44/pics/vendors/tencent.png",
-				"https://img9.doubanio.com/f/frodo/6c7b857e6b2255201e73bf83732d95d572f3f9f7/pics/vendors/iqiyi.png"
+				"https://img9.doubanio.com/f/frodo/88a62f5e0cf9981c910e60f4421c3e66aac2c9bc/pics/vendors/bilibili.png"
 			],
 			"year": "2008",
 			"card_subtitle": "2008 / 美国 / 科幻 动画 冒险 / 安德鲁·斯坦顿 / 本·贝尔特 艾丽莎·奈特",
@@ -1242,7 +1242,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 2143981,
+				"count": 2143985,
 				"max": 10,
 				"star_count": 4.5,
 				"value": 9.4
@@ -3273,7 +3273,7 @@
 		"is_private": false,
 		"subject": {
 			"rating": {
-				"count": 3242181,
+				"count": 3242182,
 				"max": 10,
 				"star_count": 5,
 				"value": 9.7
