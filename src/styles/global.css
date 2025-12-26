@@ -339,4 +339,54 @@ body {
 
 .show {
     display: block !important;
+
+}
+/* 响应式视频容器 */
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    margin: 2rem auto;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    background: #000;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-wrapper:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+
+/* 响应式视频元素 */
+.responsive-video {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: contain;
+    background: #000;
+}
+
+/* 竖屏视频特殊处理 */
+.responsive-video.portrait {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 移动端优化 */
+@media (max-width: 768px) {
+    .video-wrapper {
+        margin: 1.5rem auto;
+        border-radius: 12px;
+    }
+    
+    .responsive-video {
+        max-height: 60vh;
+    }
+    
+    .responsive-video.portrait {
+        max-width: 100%;
+    }
 }
