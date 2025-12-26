@@ -4739,7 +4739,7 @@
 "average_speed": 6.94,
 "source": "strava",
 "relive_url": "https://www.relive.com/view/vWqBdB4DeYO",
-"video_url": "https://video.relive.cc/elif-86756269691_garmin-health_1752209582836.mp4?x-ref=app",
+"video_url": "https://video.relive.cc/elif-86756269691_garmin-health_1765604487739.mp4?x-ref=app",
 "streak": 1
 },
 {
@@ -4756,7 +4756,7 @@
 "average_speed": 3.803448275862069,
 "source": "gpx",
 "relive_url": "https://www.relive.com/view/vMv8LZe1dNv",
-"video_url": "https://video.relive.cc/elif-41679407891_garmin-health_1753683963573.mp4?x-ref=app",
+"video_url": "https://video.relive.cc/elif-41679407891_garmin-health_1765863867344.mp4?x-ref=app",
 "streak": 1
 },
 {
@@ -4806,8 +4806,8 @@
 "average_heartrate": null,
 "average_speed": 3.192,
 "source": "strava",
-"relive_url": null,
-"video_url": null,
+"relive_url": "https://www.relive.com/view/vevW5neGPy6",
+"video_url": "https://video.relive.cc/elif-13450735991_garmin-health_1765518211784.mp4?x-ref=app",
 "streak": 1
 },
 {
@@ -5336,5 +5336,39 @@
 "relive_url": "https://www.relive.com/view/vYvExKRRmGq",
 "video_url": "https://video.relive.cc/elif-99881011112_garmin-health_1764308462576.mp4?x-ref=app",
 "streak": 3
+},
+{
+"run_id": 16782037658,
+"name": "\u65e9\u4e0a\u8dd1\u6b65",
+"distance": 1674.2,
+"moving_time": "0:14:32",
+"type": "Run",
+"start_date": "2025-12-19 00:29:01+00:00",
+"start_date_local": "2025-12-19 08:29:01",
+"location_country": "\u5173\u6797\u8857\u9053, \u6d1b\u9f99\u533a, \u6d1b\u9633\u5e02, \u6cb3\u5357\u7701, \u4e2d\u56fd",
+"summary_polyline": "ynfrEmlsmTFBDENJGQK?KEUCGBJVRLN?HCBIAEKGIEI?CBAJHHRDDEEISGMAM@CFBHJFJDL?LCJG?KGI[MM?IDALDLFHJDJ?JCFG?GEGWIYGANBJDDRBRCBA@ICGKGYGK@GBDNFHTHF?JEBCICADg@W@IE@ABDLLLJDJ@HCDG?Ic@OUD?NFDRFZAK[[KSBJZFDNBJ?HCBEKGIMa@GEDHTTJP?FCBEEM_@MU??JDLXHP@DCBIEGIIUGMAKDNTVJH?F?DGCYK@k@IEB@FJNNHLBPABG?IGIo@KG@?HLPTJJBLIEQ_@MOAIDTXZHLG?MEEWIWAG@@FNRVFNADCKWi@KIB?BFLJJJFN@HCDG?GEMI@i@KEBLVFFFBT@HC@KKKk@MG?ABNVHDPBLAFC@Cg@ISOE??BDD",
+"average_heartrate": null,
+"average_speed": 1.92,
+"source": "strava",
+"relive_url": "https://www.relive.com/view/vRO7N9mjLKv",
+"video_url": "https://video.relive.cc/elif-25388059212_garmin-health_1766123055139.mp4?x-ref=app",
+"streak": 1
+},
+{
+"run_id": 16826464226,
+"name": "\u65e9\u4e0a\u8dd1\u6b65",
+"distance": 670.1,
+"moving_time": "0:06:21",
+"type": "Run",
+"start_date": "2025-12-24 00:37:18+00:00",
+"start_date_local": "2025-12-24 08:37:18",
+"location_country": "\u5173\u6797\u8857\u9053, \u6d1b\u9f99\u533a, \u6d1b\u9633\u5e02, \u6cb3\u5357\u7701, \u4e2d\u56fd",
+"summary_polyline": "_ofrE{lsmT?R@FHALDJE?IEEk@UKFA`@\\JXADEMQCO]OI?EBD\\JJJDR@JEBKMOc@SE?G@?JLXBDJBN?LEDGKMm@WGBADBLJTJDN@RGBE?CCGs@[E@EDFXHJNFNAJCBIGMi@UK?CFBJLRLDPBNEACSIU]Q?ID?FJL",
+"average_heartrate": null,
+"average_speed": 1.759,
+"source": "strava",
+"relive_url": "https://www.relive.com/view/v1vjZPmJQYv",
+"video_url": "https://video.relive.cc/elif-86438573312_garmin-health_1766564863975.mp4?x-ref=app",
+"streak": 1
 }
 ]
