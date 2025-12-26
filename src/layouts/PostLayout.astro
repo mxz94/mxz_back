@@ -30,8 +30,8 @@ import CodeCopyButton from "../components/CodeCopyButton.astro";
 
 <BaseLayout title={title} description={description} image={heroImage} ogType="article">
   <ReadingProgress />
-  <main class="md:flex md:justify-center">
-    <article class="prose prose-lg w-full max-w-full md:max-w-[1280px] prose-img:mx-auto px-4 md:px-6">
+  <main class="w-full flex justify-center">
+    <article class="prose prose-lg w-full max-w-full sm:max-w-[95%] md:max-w-[90%] lg:max-w-[900px] xl:max-w-[1000px] 2xl:max-w-[1100px] prose-img:mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
       <!--{heroImage && <Image width={750} height={422} format="webp" src={heroImage} alt={title} class="w-full mb-6" />}-->
       <a class="mt-14 text-sm text-gray-500" style="float: right" href={`${url}`}>
         <i aria-label="icon: cloud-download" tabindex="-1" class="anticon anticon-cloud-download download-icon">
@@ -111,14 +111,19 @@ import CodeCopyButton from "../components/CodeCopyButton.astro";
         const videos = article.querySelectorAll('video');
 
         videos.forEach((video, index) => {
-          // 获取视频的宽度和高度
-          const width = video.videoWidth;
-          const height = video.videoHeight;
-          // 如果视频的高度大于宽度，则认为是竖版视频
-          if (height > width) {
-            // 设置竖版视频的宽度以适应父容器，保持高度自动调整
-            video.classList.add("landscape-img");
-          }
+          // 等待视频元数据加载完成
+          video.addEventListener('loadedmetadata', function() {
+            const width = video.videoWidth;
+            const height = video.videoHeight;
+            
+            // 如果视频的高度大于宽度，则认为是竖版视频
+            if (height > width) {
+              video.classList.add("portrait");
+              console.log(`视频 ${index + 1} 是竖屏视频: ${width}x${height}`);
+            } else {
+              console.log(`视频 ${index + 1} 是横屏视频: ${width}x${height}`);
+            }
+          });
         });
       });
     }
@@ -145,3 +150,4 @@ import CodeCopyButton from "../components/CodeCopyButton.astro";
     });
   </script>
 </BaseLayout>
+
