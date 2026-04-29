@@ -1,29 +1,36 @@
 ---
 const { sideBarActiveItemID } = Astro.props;
-const activeClass = "bg-base-300"; // For primary color replace with `active` class
+
+const items = [
+  { id: "home", href: "/", label: "首页" },
+  { id: "note", href: "/note", label: "笔记" },
+  { id: "blog", href: "/blog/", label: "日记" },
+  { id: "archives", href: "/archives", label: "归档" },
+  { id: "tags", href: "/tags", label: "标签" },
+];
 ---
 
-<ul class="menu grow shrink menu-md overflow-y-auto">
-    <li><a class="py-3 text-base" id="home" href="/">首页</a></li>
-    <li><a class="py-3 text-base" id="note" href="/note">笔记</a></li>
-    <li><a class="py-3 text-base" id="blog" href="/blog/">日记</a></li>
-    <li><a class="py-3 text-base" id="archives" href="/archives">归档</a></li>
-    <li><a class="py-3 text-base" id="tags" href="/tags">标签</a></li>
-    <!--<li><a class="py-3 text-base" id="chat" href="/chat">留言</a></li>-->
-    <!--<li><a class="py-3 text-base" id="cv" href="/cv">关于</a></li>-->
-    <!--<li><a class="py-3 text-base" id="move" href="/move">书影音</a></li>-->
-    <!--<li><a class="py-3 text-base" id="lifemap" href="/lifemap">人生地图</a></li>-->
-    <!--<li>-->
-    <!--    <a-->
-    <!--        class="py-3 text-base"-->
-    <!--        href="mailto:contact.manuelernestog@gmail.com"-->
-    <!--        target="_blank"-->
-    <!--        referrerpolicy="no-referrer-when-downgrade">Contact</a-->
-    <!--    >-->
-    <!--</li>-->
-</ul>
-
-<script define:vars={{ sideBarActiveItemID: sideBarActiveItemID, activeClass: activeClass }}>
-const activeItemElem = document.getElementById(sideBarActiveItemID);
-activeItemElem && activeItemElem.classList.add(activeClass);
-</script>
+<nav class="grow overflow-y-auto" aria-label="主导航">
+  <ul class="menu menu-md gap-1">
+    {
+      items.map((item) => {
+        const isActive = sideBarActiveItemID === item.id;
+        return (
+          <li>
+            <a
+              id={item.id}
+              href={item.href}
+              aria-current={isActive ? "page" : undefined}
+              class:list={[
+                "py-3 text-base transition",
+                isActive && "bg-base-300 font-medium text-base-content",
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        );
+      })
+    }
+  </ul>
+</nav>

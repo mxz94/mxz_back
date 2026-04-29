@@ -1,24 +1,18 @@
 ---
-import {getAllPosts} from "../../utils";
-import { getCollection } from "astro:content";
+import { getAllPosts } from "../../utils";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import PageHeader from "../../components/PageHeader.astro";
 import getUniqueTags from "../../utils/getUniqueTags";
 import Tag from "@components/Tag.astro";
-import SearchBar2 from "../../components/Search2";
-import {getNotes} from "../../utils";
 
-var posts = await getAllPosts();
-const {tags, tagCounts} = getUniqueTags(posts);
+const posts = await getAllPosts();
+const { tags, tagCounts } = getUniqueTags(posts);
 
 ---
 
-<BaseLayout title = "标签" sideBarActiveItemID="tags">
-    <div>
-        <div class="text-3xl w-full font-bold mb-5">标签</div>
-    </div>
-    <ul>
-        {tags.map(tag => <Tag name={tag} size="lg" count={tagCounts[tag]}/>)}
-    </ul>
-    <br />
-    <!--<SearchBar2 client:load />-->
+<BaseLayout title="标签" sideBarActiveItemID="tags">
+  <PageHeader title="标签" description="按主题翻找文章，数量越多越容易被重新遇见。" count={`${tags.length} 个`} />
+  <ul class="flex flex-wrap gap-3">
+    {tags.map((tag) => <Tag name={tag} size="lg" count={tagCounts[tag]} />)}
+  </ul>
 </BaseLayout>

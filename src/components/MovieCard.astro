@@ -1,46 +1,44 @@
 ---
-// MovieCard.astro
-import Image from 'astro/components/Image.astro';
+import { Image } from "astro:assets";
 
-
-const { tags, comment, subject, create_time, rating} = Astro.props;
+const { tags = [], comment, subject, create_time, rating } = Astro.props;
 const { card_subtitle, title, cover_url, url } = subject;
-let rate = rating ? rating.value: null;
-console.log(rate)
+const rate = rating?.value;
+const watchedDate = create_time?.substring(0, 10);
 ---
-<div
-        class="rounded-lg bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]"
->
-    <a href={url} >
-        <div class="hero-content flex-col md:flex-row">
-            {
-                cover_url && (
-                            <Image
-                                    src={cover_url}
-                                    width={600}
-                                    height={600}
-                                    format="webp"
-                                    alt={title}
-                                    class="max-w-full md:max-w-[8rem] md:max-h-[8rem] rounded-lg"
-                            />
-                )
-            }
-            <div class="grow w-full">
-                <h1 class="text-xl font-bold">
-                    {title}
-                    {
-                        tags &&
-                        tags.map((tag) => (
-                                <a class="badge badge-outline float-right mr-1">
-                                    {tag}
-                                </a>
-                        ))
-                    }
-                </h1>
-                 <p class="py-1 text-1xl">{card_subtitle}</p>
-                <p class="py-1 text-1xl">观看时间：{create_time.substring(0, 10)}  {rate ? "| " + rate + "星" : ""}</p>
-                {comment && <p class="py-1 text-1xl">评论：{comment}</p>}
-            </div>
+
+<article class="rounded-lg border border-base-300 bg-base-100 shadow-sm transition hover:border-base-content/20 hover:bg-base-200/40 hover:shadow-md">
+  <a href={url} target="_blank" rel="noreferrer" class="block no-underline">
+    <div class="flex gap-4 p-3 sm:p-4">
+      {
+        cover_url && (
+          <Image
+            src={cover_url}
+            width={220}
+            height={320}
+            format="webp"
+            alt={title}
+            loading="lazy"
+            class="h-32 w-24 flex-none rounded-md object-cover sm:h-40 sm:w-28"
+          />
+        )
+      }
+      <div class="min-w-0 grow">
+        <div class="flex flex-wrap items-start justify-between gap-2">
+          <h2 class="m-0 text-lg font-semibold leading-snug text-base-content sm:text-xl">{title}</h2>
+          {rate && <span class="badge badge-secondary whitespace-nowrap">{rate} 星</span>}
         </div>
-    </a>
-</div>
+        {card_subtitle && <p class="mt-2 line-clamp-2 text-sm leading-6 text-base-content/60">{card_subtitle}</p>}
+        <div class="mt-3 flex flex-wrap items-center gap-2 text-sm text-base-content/60">
+          {watchedDate && <span>{watchedDate}</span>}
+          {
+            tags.map((tag) => (
+              <span class="badge badge-outline badge-sm">{tag}</span>
+            ))
+          }
+        </div>
+        {comment && <p class="mt-3 line-clamp-2 text-sm leading-6 text-base-content/75">{comment}</p>}
+      </div>
+    </div>
+  </a>
+</article>

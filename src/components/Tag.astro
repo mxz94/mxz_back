@@ -6,28 +6,24 @@ export interface Props {
 }
 
 const { name, size = "sm", count } = Astro.props;
-const url = name.startsWith("20") || name.startsWith("展望") || name.startsWith("朝花夕拾") || name.startsWith("梦") ? "blog" : "note"
+const isLarge = size === "lg";
 ---
 
-<li
-  class={`inline-block ${
-    size === "sm" ? "my-1 underline-offset-4" : "my-3 mx-1 underline-offset-8"
-  }`}
->
+<li class="inline-flex">
   <a
     href={`/tag/${name.toLowerCase()}`}
-    transition:name={name.toLowerCase()}
-    class={`${size === "sm" ? "text-sm" : "text-lg"} pr-2 group`}
+    class:list={[
+      "group inline-flex items-center gap-2 rounded-full border border-base-300 bg-base-100 text-base-content/75 no-underline shadow-sm transition hover:-translate-y-0.5 hover:border-base-content/20 hover:bg-base-200 hover:text-base-content focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+      isLarge ? "px-4 py-2 text-base" : "px-3 py-1.5 text-sm",
+    ]}
   >
-    <span>#{name.toLowerCase()}</span>{count != undefined ? "(" + count + ")" : ""}
+    <span>#{name.toLowerCase()}</span>
+    {
+      count !== undefined && (
+        <span class="rounded-full bg-base-200 px-2 py-0.5 text-xs text-base-content/60 group-hover:bg-base-100">
+          {count}
+        </span>
+      )
+    }
   </a>
 </li>
-
-<style>
-  a {
-    @apply relative underline decoration-dashed hover:-top-0.5  focus-visible:p-1;
-  }
-  a svg {
-    @apply -mr-5 h-6 w-6 scale-95  opacity-80 ;
-  }
-</style>

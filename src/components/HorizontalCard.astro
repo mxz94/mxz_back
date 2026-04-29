@@ -3,44 +3,52 @@ const { title, img, desc, url, badge, tags, target = "_blank" } = Astro.props;
 import { Image } from "astro:assets";
 ---
 
-<div
-  class="rounded-lg bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]"
->
-  <div class="hero-content flex-col md:flex-row">
+<article class="rounded-lg bg-base-100 border border-base-200 transition-colors hover:bg-base-200/40">
+  <div class="flex gap-4 p-3 sm:p-4">
     {
       img && (
-        <a href={url} target={target} class="hidden md:flex">
+        <a href={url} target={target} class="block w-24 shrink-0 sm:w-32 md:w-40">
           <Image
             src={img}
             width={600}
             height={600}
             format="webp"
             alt={title}
-            class="max-w-full md:max-w-[13rem] md:max-h-[13rem] rounded-lg object-cover"
+            loading="lazy"
+            decoding="async"
+            class="aspect-square w-full rounded-md object-cover"
             widths={[200, 400, 600]}
-            sizes="(max-width: 768px) 100vw, 208px"
+            sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 160px"
           />
         </a>
       )
     }
-    <div class="grow w-full">
-      <h1 class="text-xl font-bold">
-        <a href={url} target={target} class="hover:underline">
-          {title}
-        </a>
-        {badge && <div class="badge badge-secondary mx-2">{badge}</div>}
+    <div class="min-w-0 grow">
+      <div class="flex items-start gap-2">
+        <h2 class="m-0 min-w-0 text-lg font-semibold leading-snug sm:flex-1 sm:text-xl">
+          <a href={url} target={target} class="hover:underline">
+            {title}
+          </a>
+          {badge && <span class="badge badge-secondary badge-sm ml-2 align-middle">{badge}</span>}
+        </h2>
         {
-          tags &&
-          tags.map((tag) => (
-            <a href={`/tag/${tag}`} class="badge badge-outline float-right mr-1">
-              {tag}
-            </a>
-          ))
+          tags && tags.length > 0 && (
+            <div class="ml-auto flex max-w-[42%] shrink-0 flex-wrap justify-end gap-1 pt-0.5 sm:max-w-[45%]">
+              {tags.map((tag) => (
+                <a
+                  href={`/tag/${tag}`}
+                  class="badge badge-outline badge-sm h-auto min-h-0 px-2 py-0.5 text-[11px] leading-tight no-underline"
+                >
+                  {tag}
+                </a>
+              ))}
+            </div>
+          )
         }
-      </h1>
-      <a href={url} target={target}>
-        <p class="py-1 text-1xl">{desc}</p>
+      </div>
+      <a href={url} target={target} class="block">
+        <p class="mt-2 line-clamp-3 text-sm leading-7 text-base-content/75 sm:text-base">{desc}</p>
       </a>
     </div>
   </div>
-</div>
+</article>

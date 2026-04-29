@@ -2,70 +2,50 @@
     display: none;
 }
 
-.card-link {
-    flex-basis: calc(33.3333% - 2em);
-    display: block;
-    text-decoration: none;
-    color: inherit;
-}
-
-.card-link:hover {
-    text-decoration: none;
-}
-
-.card-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 1em;
-}
-
-.card {
-    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
-    overflow: hidden;
-    transition: all 0.3s ease-in-out;
-}
-
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.15);
-}
-
-.card-img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-}
-
-.card-body {
-    padding: 20px;
-    background-color: #fff;
-}
-
-.card-title {
-    font-size: 25px;
-    color: #333;
-    margin: 0;
-    margin-bottom: 10px;
-}
-
-.card-text {
-    color: #777;
-    font-size: 15px;
-}
-
 body {
-    /* 原版 */
-    font-family: "LXGW WenKai", sans-serif;
-    /* 屏幕优化版 */
-    /*font-family:'LXGW WenKai Light', sans-serif;*/
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI",
+        "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC",
+        "Helvetica Neue", Arial, sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #2f3437;
 }
 
 .live-photo-container {
     width: 100%;
     aspect-ratio: 16 / 9;
     object-fit: cover;
+}
+
+.prose {
+    font-family: inherit;
+    font-size: 17px;
+    line-height: 1.85;
+    color: #2f3437;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6,
+.title,
+.menu,
+.btn,
+.badge {
+    font-family: inherit;
+}
+
+.prose p,
+.prose li {
+    line-height: 1.9;
+}
+
+.prose strong {
+    font-weight: 650;
 }
 
 .video-container {
@@ -97,9 +77,12 @@ body {
 }
 
 .min_width_1280 {
-    min-height: 478px;
+    min-height: 220px;
     /* 设置一个最小高度 */
-    min-width: 1280px;
+    width: 100%;
+    max-width: 1280px;
+    min-width: 0;
+    margin-inline: auto;
 }
 
 .landscape-img {
@@ -377,6 +360,10 @@ body {
 
 /* 移动端优化 */
 @media (max-width: 768px) {
+    .min_width_1280 {
+        min-height: 0;
+    }
+
     .video-wrapper {
         margin: 1.5rem auto;
         border-radius: 12px;

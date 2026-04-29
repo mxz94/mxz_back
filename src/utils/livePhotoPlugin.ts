@@ -5,17 +5,11 @@ export function livePhotoPlugin() {
         try {
             visit(tree, 'image', (node) => {
                 const { url } = node;
-                // 验证 URL 是否有效
-                if (!url || typeof url !== 'string') {
-                    console.warn('Invalid image URL, skipping:', node);
-                    return;
-                }
-                const d = url.split('?v=');
-                // 确保是 LivePhoto 格式
-                if (d.length !== 2 || !d[0] || !d[1]) {
-                    console.warn('Non-LivePhoto URL, treating as regular image:', url);
-                    return; // 保留原图片节点
-                }
+                if (!url || typeof url !== 'string') return;
+
+                const parts = url.split('?v=');
+                if (parts.length !== 2 || !parts[0] || !parts[1]) return;
+
                 node.type = 'html';
                 node.value = `
           <div class="live-photo-container min_width_1280"
@@ -24,8 +18,8 @@ export function livePhotoPlugin() {
                data-playback-style="full"
                data-proactively-loads-video="true"
                data-role="default"
-               data-photo-src="${d[0]}"
-               data-video-src="${d[1]}"></div>`;
+               data-photo-src="${parts[0]}"
+               data-video-src="${parts[1]}"></div>`;
             });
         } catch (error) {
             console.warn('livePhotoPlugin error, ignored:', error.message);

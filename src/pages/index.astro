@@ -1,68 +1,62 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HorizontalCard from "../components/HorizontalCard.astro";
-import { getCollection } from "astro:content";
 import suppDesc from "../utils/suppDesc";
 import createSlug from "../utils/createSlug";
-import {getBlogs, getNotes} from "../utils";
-import {SITE} from "../config";
+import { getBlogs, getNotes } from "../utils";
 import getHeroImageLinkFromMd from "../utils/getHeroImageLinkFromMd";
-const posts = (await getNotes());
 
-const blogs = (await getBlogs());
+const notes = await getNotes();
+const blogs = await getBlogs();
 
-const last_posts = posts.slice(0, 3);
-
-const last_blog = blogs.slice(0, 3);
+const sections = [
+  {
+    title: "最近笔记",
+    description: "整理技术、工具和日常折腾里留下来的记录。",
+    href: "/note",
+    posts: notes.slice(0, 3),
+  },
+  {
+    title: "最近日记",
+    description: "一些更生活化的片段，慢慢放在这里。",
+    href: "/blog",
+    posts: blogs.slice(0, 3),
+  },
+];
 ---
 
 <BaseLayout sideBarActiveItemID="home">
-  <div class="flex justify-between items-center mb-5 mt-10">
-      <div class="text-3xl font-bold">最近更新</div>
-      <a href="/note" class="btn btn-ghost btn-circle" aria-label="查看更多">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-      </a>
-  </div>
-  {
-    last_posts.map((post) => (
-      <>
-        <HorizontalCard
-          title={post.data.title}
-          img={getHeroImageLinkFromMd(post)}
-          desc={suppDesc(post.data.description, post.body)}
-          url={createSlug(post)}
-          target="_self"
-          badge={post.data.badge}
-          tags={post.data.tags}
-        />
-        <div class="divider my-0" />
-      </>
-    ))
-  }
-  <div class="flex justify-between items-center mb-5 mt-10">
-      <div class="text-3xl font-bold">最近</div>
-      <a href="/blog" class="btn btn-ghost btn-circle" aria-label="查看更多">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-      </a>
-  </div>
+  <div class="space-y-12">
     {
-        last_blog.map((post) => (
-                <>
-                    <HorizontalCard
-                            title={post.data.title}
-                            img={getHeroImageLinkFromMd(post)}
-                            desc={suppDesc(post.data.description, post.body)}
-                            url={createSlug(post)}
-                            target="_self"
-                            badge={post.data.badge}
-                            tags={post.data.tags}
-                    />
-                    <div class="divider my-0" />
-                </>
-        ))
+      sections.map((section) => (
+        <section>
+          <div class="mb-5 flex items-end justify-between gap-4">
+            <div>
+              <h2 class="m-0 text-3xl font-bold leading-tight text-base-content">{section.title}</h2>
+              <p class="mt-2 text-sm leading-6 text-base-content/60">{section.description}</p>
+            </div>
+            <a href={section.href} class="btn btn-ghost btn-sm gap-1" aria-label={`查看更多${section.title}`}>
+              更多
+              <svg aria-hidden="true" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+          <div class="space-y-3">
+            {section.posts.map((post) => (
+              <HorizontalCard
+                title={post.data.title}
+                img={getHeroImageLinkFromMd(post)}
+                desc={suppDesc(post.data.description, post.body)}
+                url={createSlug(post)}
+                target="_self"
+                badge={post.data.badge}
+                tags={post.data.tags}
+              />
+            ))}
+          </div>
+        </section>
+      ))
     }
+  </div>
 </BaseLayout>

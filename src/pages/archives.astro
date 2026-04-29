@@ -1,158 +1,76 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import TimeLineElement from "../components/cv/TimeLine.astro";
-import {Image} from "astro:assets";
-import {SITE} from "../config";
-import data from '/public/douban/movie.json'
+import PageHeader from "../components/PageHeader.astro";
+import data from "/public/douban/movie.json";
 
-const m = data[0].subject.cover_url
+const movieCover = data[0]?.subject?.cover_url ?? "/img/cover/2026.webp";
+
+const archiveSections = [
+  {
+    title: "碎笔",
+    description: "按主题和年份慢慢翻。",
+    items: [
+      { title: "成长日记", desc: "兰汐", href: "/blog/archives/成长日记", img: "/img/cover/child2.webp" },
+      { title: "朝花夕拾", desc: "朝花夕拾", href: "/blog/archives/朝花夕拾", img: "/img/cover/朝花夕拾.webp" },
+      { title: "技术笔记", desc: "笔记", href: "/note/archives/notes", img: "/img/cover/teg.webp" },
+      { title: "看过的电影", desc: `已看过电影数（${data.length}）`, href: "/move", img: movieCover },
+      { title: "二零二六", desc: "年度词：健康", href: "/blog/archives/2026", img: "/img/cover/2026.webp" },
+      { title: "二零二五", desc: "年度词：改变，运动", href: "/blog/archives/2025", img: "/img/cover/2025.webp" },
+      { title: "二零二四", desc: "年度词：孩子", href: "/blog/archives/2024", img: "/img/cover/2024.webp" },
+      { title: "二零二三", desc: "年度词：成长", href: "/blog/archives/2023", img: "/img/cover/2023.webp" },
+      { title: "二零二二", desc: "年度词：家庭", href: "/blog/archives/2022", img: "/img/cover/2022.webp" },
+      { title: "二零二一", desc: "年度词：陪伴", href: "/blog/archives/2021", img: "/img/cover/2021.webp" },
+      { title: "二零二零", desc: "年度词：工作", href: "/blog/archives/2020", img: "/img/cover/2020.webp" },
+      { title: "二零一九", desc: "年度词：目标", href: "/blog/archives/2019", img: "/img/cover/2019.webp" },
+    ],
+  },
+  {
+    title: "相册",
+    description: "一些照片集合。",
+    items: [
+      { title: "孩子", href: "https://photos.app.goo.gl/BRJnpup68WtWKQXo7", img: "/img/cover/child2.webp", external: true },
+      { title: "足迹", href: "https://photos.app.goo.gl/pqPnNBxxSL63T4wXA", img: "/img/cover/footer.webp", external: true },
+      { title: "健身", href: "https://photos.app.goo.gl/wmWsr1Nxtf75Uz8R8", img: "/img/cover/640.webp", external: true },
+    ],
+  },
+];
 ---
 
 <BaseLayout title="归档" sideBarActiveItemID="archives">
-    <br/>
-    <div class="mb-5">
-        <div class="text-3xl w-full font-bold">碎笔</div>
-    </div>
-    <div class="card-container">
-        <a href={SITE.website + "/blog/archives/成长日记"}  class="card-link">
-            <div class="card">
-                <img src="/img/cover/child2.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">成长日记</h2>
-                    <p class="card-text">兰汐</p>
-                </div>
-            </div>
-        </a>
-        <a href={SITE.website + "/blog/archives/朝花夕拾"} class="card-link">
-            <div class="card">
-                <img src="/img/cover/朝花夕拾.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">朝花夕拾</h2>
-                    <p class="card-text">朝花夕拾</p>
-                </div>
-            </div>
-        </a>
-        <a href={SITE.website + "/note/archives/notes"}  class="card-link">
-            <div class="card">
-                <img src="/img/cover/teg.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">技术笔记</h2>
-                    <p class="card-text">笔记</p>
-                </div>
-            </div>
-        </a>
-        <a href={SITE.website + "/move"}   class="card-link">
-            <div class="card">
-                <img src={m} alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">看过的电影</h2>
-                    <p class="card-text">已看过电影数（{data.length}）</p>
-                </div>
-            </div>
-        </a>
-        <a href={SITE.website + "/blog/archives/2026"} class="card-link">
-            <div class="card">
-                <img src="/img/cover/2026.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">二零二六</h2>
-                    <p class="card-text">年度词：健康</p>
-                </div>
-            </div>
-        </a>
-        <a href={SITE.website + "/blog/archives/2025"} class="card-link">
-            <div class="card">
-                <img src="/img/cover/2025.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">二零二五</h2>
-                    <p class="card-text">年度词：改变，运动</p>
-                </div>
-            </div>
-        </a>
-        <a href={SITE.website + "/blog/archives/2024"} class="card-link">
-            <div class="card">
-                <img src="/img/cover/2024.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">二零二四</h2>
-                    <p class="card-text">年度词：孩子</p>
-                </div>
-            </div>
-        </a>
-        <a href={SITE.website + "/blog/archives/2023"} class="card-link">
-            <div class="card">
-                <img src="/img/cover/2023.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">二零二三</h2>
-                    <p class="card-text">年度词：成长</p>
-                </div>
-            </div>
-        </a>
-        <a href={SITE.website + "/blog/archives/2022"} class="card-link">
-            <div class="card">
-                <img src="/img/cover/2022.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">二零二二</h2>
-                    <p class="card-text">年度词：家庭</p>
-                </div>
-            </div>
-        </a>
-        <a href={SITE.website + "/blog/archives/2021"} class="card-link">
-            <div class="card">
-                <img src="/img/cover/2021.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">二零二一</h2>
-                    <p class="card-text">年度词：陪伴</p>
-                </div>
-            </div>
-        </a>
-        <a href={SITE.website + "/blog/archives/2020"} class="card-link">
-            <div class="card">
-                <img src="/img/cover/2020.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">二零二零</h2>
-                    <p class="card-text">年度词：工作</p>
-                </div>
-            </div>
-        </a>
-        <a href={SITE.website + "/blog/archives/2019"}  class="card-link">
-            <div class="card">
-                <img src="/img/cover/2019.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">二零一九</h2>
-                    <p class="card-text">年度词：目标</p>
-                </div>
-            </div>
-        </a>
-    </div>
-    <br/>
-    <div class="mb-5">
-        <div class="text-3xl w-full font-bold">相册</div>
-    </div>
-    <div class="card-container">
-        <a href="https://photos.app.goo.gl/BRJnpup68WtWKQXo7"  class="card-link">
-            <div class="card">
-                <img src="/img/cover/child2.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">孩子</h2>
-                </div>
-            </div>
-        </a>
-        <a href="https://photos.app.goo.gl/pqPnNBxxSL63T4wXA" class="card-link">
-            <div class="card">
-                <img src="/img/cover/footer.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">足迹</h2>
-                </div>
-            </div>
-        </a>
-        <a href="https://photos.app.goo.gl/wmWsr1Nxtf75Uz8R8" class="card-link">
-            <div class="card">
-                <img src="/img/cover/640.webp" alt="Image description" class="card-img">
-                <div class="card-body">
-                    <h2 class="card-title">健身</h2>
-                </div>
-            </div>
-        </a>
-    </div>
+  <PageHeader title="归档" description="把文章、年份和相册放在同一个入口里。" />
 
+  <div class="space-y-12">
+    {
+      archiveSections.map((section) => (
+        <section>
+          <div class="mb-4">
+            <h2 class="m-0 text-2xl font-bold text-base-content">{section.title}</h2>
+            <p class="mt-1 text-sm text-base-content/60">{section.description}</p>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            {section.items.map((item) => (
+              <a
+                href={item.href}
+                target={item.external ? "_blank" : undefined}
+                rel={item.external ? "noreferrer" : undefined}
+                class="group overflow-hidden rounded-lg border border-base-300 bg-base-100 no-underline shadow-sm transition hover:-translate-y-0.5 hover:border-base-content/20 hover:shadow-md"
+              >
+                <img
+                  src={item.img}
+                  alt={item.title}
+                  loading="lazy"
+                  decoding="async"
+                  class="aspect-[16/9] w-full object-cover transition duration-300 group-hover:scale-[1.02]"
+                />
+                <div class="p-4">
+                  <h3 class="m-0 text-lg font-semibold leading-tight text-base-content">{item.title}</h3>
+                  {item.desc && <p class="mt-1 text-sm text-base-content/60">{item.desc}</p>}
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
 </BaseLayout>
-

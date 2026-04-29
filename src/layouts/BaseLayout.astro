@@ -4,8 +4,7 @@ import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import SideBar from "../components/SideBar.astro";
 import BackToTop from "../components/BackToTop.astro";
-import { ViewTransitions } from "astro:transitions";
-import { SITE_TITLE, SITE_DESCRIPTION, TRANSITION_API  } from "../config";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../config";
 
 const { image, title = SITE_TITLE, description = SITE_DESCRIPTION, includeSidebar = true, sideBarActiveItemID,ogType } = Astro.props;
 ---
@@ -16,20 +15,7 @@ const { image, title = SITE_TITLE, description = SITE_DESCRIPTION, includeSideba
       <meta charset="utf-8"/>
       <meta name="msvalidate.01" content="554974539F0479DABBAF2B9C6886C920" />
       <meta name="baidu-site-verification" content="codeva-Zb1fJaVwQk" />
-      <!-- Font optimization: preconnect to CDN -->
-      <link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin />
-      <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.6.0/style.min.css" media="print" onload="this.media='all'" />
-      <noscript>
-        <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-webfont/1.6.0/style.min.css" />
-      </noscript>
-      <style>
-        /* Ensure font-display: swap for better performance */
-        body {
-          font-family: "LXGW WenKai", sans-serif;
-        }
-      </style>
     <BaseHead title={title} description={description} image={image} , ogType={ogType} />
-    {TRANSITION_API && <ViewTransitions />}
   </head>
   <body>
     <div class="bg-base-100 drawer lg:drawer-open">
@@ -52,6 +38,8 @@ const { image, title = SITE_TITLE, description = SITE_DESCRIPTION, includeSideba
       function initDrawerScrollLock() {
         const drawer = document.getElementById('my-drawer');
         if (!drawer) return;
+        if (drawer.dataset.scrollLockInitialized === 'true') return;
+        drawer.dataset.scrollLockInitialized = 'true';
 
         let scrollPosition = 0;
 

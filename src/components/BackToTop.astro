@@ -13,6 +13,8 @@
   function initBackToTop() {
     const backToTopButton = document.getElementById('back-to-top');
     if (!backToTopButton) return;
+    if (backToTopButton.dataset.initialized === 'true') return;
+    backToTopButton.dataset.initialized = 'true';
 
     // Show/hide button based on scroll position
     function toggleButton() {

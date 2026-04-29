@@ -17,7 +17,7 @@ export const SITE: Site = {
 };
 export const SITE_TITLE = SITE.desc;
 export const LOCALE = ["zh-cn"]; // set to [] to use the environment default
-export const TRANSITION_API = true
+export const TRANSITION_API = false
 export const LOGO_IMAGE = {
     enable: false,
     svg: true,

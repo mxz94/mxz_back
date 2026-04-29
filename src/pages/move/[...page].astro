@@ -2,49 +2,44 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Pagination from "../../components/Pagination.astro";
 import MovieCard from "../../components/MovieCard.astro";
-import data from '/public/douban/movie.json'
+import PageHeader from "../../components/PageHeader.astro";
+import data from "/public/douban/movie.json";
+
 export async function getStaticPaths({ paginate }) {
-  let posts = data;
-  return paginate(posts, { pageSize: 10 });
+  return paginate(data, { pageSize: 10 });
 }
+
 const { page } = Astro.props;
+const firstPage = page.url.prev ? "/move" : null;
+const lastPage = page.url.next ? `/move/${page.lastPage}` : null;
 ---
 
-<BaseLayout title="电影" sideBarActiveItemID="movies">
-  <div class="mb-5">
-    <div class="text-3xl w-full font-bold">我看过的电影</div>
-  </div>
+<BaseLayout title="电影" sideBarActiveItemID="move">
+  <PageHeader title="我看过的电影" description="看过的片子和当时留下的一点记录。" count={`${page.total} 部`} />
   {
     page.data.length === 0 ? (
-      <div class="bg-base-200 border-l-4 border-secondary w-full p-4 min-w-full">
-        <p class="font-bold">Sorry!</p>
-        <p>There are no blog posts to show at the moment. Check back later!</p>
+      <div class="rounded-lg border border-base-300 bg-base-100 p-5 text-base-content/70">
+        <p class="font-semibold text-base-content">暂时还没有内容</p>
+        <p class="mt-1 text-sm">之后再回来看看。</p>
       </div>
     ) : (
-      <ul>
+      <div class="space-y-3">
         {page.data.map((movie) => (
-          <>
-              <MovieCard {...movie} />
-            <div class="divider my-0" />
-          </>
+          <MovieCard {...movie} />
         ))}
-      </ul>
+      </div>
     )
   }
-      <div class="flex justify-between mt-2 float-right">
-          {
-              page.lastPage > 1 ? (
-                      <Pagination
-                              firstPage={page.url.prev ? "/"+page.url.current.split("/")[1]: null}
-                              previousPage={page.url.prev ? page.url.prev : null}
-                              nextPage={page.url.next ? page.url.next : null}
-                              lastPage={page.url.next ? "/"+page.url.current.split("/")[1] + "/" + page.lastPage : null}
-                              currentPage={page.currentPage}
-                              totalPages={page.lastPage}
-                      />
-              ) : (
-                      <div />
-              )
-          }
-      </div>
+  {
+    page.lastPage > 1 && (
+      <Pagination
+        firstPage={firstPage}
+        previousPage={page.url.prev}
+        nextPage={page.url.next}
+        lastPage={lastPage}
+        currentPage={page.currentPage}
+        totalPages={page.lastPage}
+      />
+    )
+  }
 </BaseLayout>
