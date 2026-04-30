@@ -1,5 +1,7 @@
 ---
-const { title, img, desc, url, badge, tags, target = "_blank" } = Astro.props;
+const { title, img, desc, url, badge, tags, target = "_blank", priority = false } = Astro.props;
+const imageLoading = priority ? "eager" : "lazy";
+const imageFetchPriority = priority ? "high" : undefined;
 import { Image } from "astro:assets";
 ---
 
@@ -10,14 +12,15 @@ import { Image } from "astro:assets";
         <a href={url} target={target} class="block w-24 shrink-0 sm:w-32 md:w-40">
           <Image
             src={img}
-            width={600}
-            height={600}
+            width={320}
+            height={320}
             format="webp"
             alt={title}
-            loading="lazy"
+            loading={imageLoading}
+            fetchpriority={imageFetchPriority}
             decoding="async"
             class="aspect-square w-full rounded-md object-cover"
-            widths={[200, 400, 600]}
+            widths={[160, 240, 320]}
             sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 160px"
           />
         </a>

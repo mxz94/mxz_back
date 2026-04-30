@@ -6,9 +6,13 @@ import TableOfContents from "../components/TableOfContents.astro";
 import ReadingProgress from "../components/ReadingProgress.astro";
 import CodeCopyButton from "../components/CodeCopyButton.astro";
 
-export interface Props extends BlogSchema {}
+export interface Props extends BlogSchema {
+  hasCode?: boolean;
+  hasToc?: boolean;
+  hasLivePhoto?: boolean;
+}
 
-const { title, description, pubDatetime, heroImage, badge, tags = [], type } = Astro.props;
+const { title, description, pubDatetime, heroImage, badge, tags = [], type, hasCode = false, hasToc = false, hasLivePhoto = false } = Astro.props;
 const displayDate = dayjs(pubDatetime).format("YYYY-MM-DD HH:mm");
 const isBlog = type === "blog";
 const isNumber = title.startsWith("20");
@@ -53,9 +57,9 @@ if (isBlog) {
 
       <slot />
     </article>
-    <TableOfContents />
+    {hasToc && <TableOfContents />}
   </main>
-  <CodeCopyButton />
+  {hasCode && <CodeCopyButton />}
 
   <script is:inline>
     function optimizeVerticalImages() {
@@ -95,46 +99,52 @@ if (isBlog) {
       });
     }
 
-    function loadLivePhotosKit() {
-      if (window.LivePhotosKit) {
-        return Promise.resolve();
-      }
-      if (window.__livePhotosKitLoading) {
-        return window.__livePhotosKitLoading;
-      }
-
-      window.__livePhotosKitLoading = new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.apple-livephotoskit.com/lpk/1/livephotoskit.js';
-        script.defer = true;
-        script.onload = resolve;
-        script.onerror = reject;
-        document.head.appendChild(script);
-      });
-
-      return window.__livePhotosKitLoading;
-    }
-
-    function initializeLivePhotos() {
-      const livePhotoElements = document.querySelectorAll('.live-photo-container:not([data-live-photo-ready])');
-      if (!livePhotoElements.length) return;
-
-      loadLivePhotosKit().then(() => {
-        livePhotoElements.forEach(element => {
-          LivePhotosKit.Player(element);
-          element.setAttribute('data-live-photo-ready', 'true');
-        });
-      }).catch(() => {
-        window.__livePhotosKitLoading = null;
-      });
-    }
-
     optimizeVerticalImages();
-    initializeLivePhotos();
 
     document.addEventListener('astro:page-load', () => {
       optimizeVerticalImages();
-      initializeLivePhotos();
     });
   </script>
+  {
+    hasLivePhoto && (
+      <script is:inline>
+        function loadLivePhotosKit() {
+          if (window.LivePhotosKit) {
+            return Promise.resolve();
+          }
+          if (window.__livePhotosKitLoading) {
+            return window.__livePhotosKitLoading;
+          }
+
+          window.__livePhotosKitLoading = new Promise((resolve, reject) => {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.apple-livephotoskit.com/lpk/1/livephotoskit.js';
+            script.defer = true;
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+          });
+
+          return window.__livePhotosKitLoading;
+        }
+
+        function initializeLivePhotos() {
+          const livePhotoElements = document.querySelectorAll('.live-photo-container:not([data-live-photo-ready])');
+          if (!livePhotoElements.length) return;
+
+          loadLivePhotosKit().then(() => {
+            livePhotoElements.forEach(element => {
+              LivePhotosKit.Player(element);
+              element.setAttribute('data-live-photo-ready', 'true');
+            });
+          }).catch(() => {
+            window.__livePhotosKitLoading = null;
+          });
+        }
+
+        initializeLivePhotos();
+        document.addEventListener('astro:page-load', initializeLivePhotos);
+      </script>
+    )
+  }
 </BaseLayout>

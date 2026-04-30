@@ -2,169 +2,133 @@
 ---
 
 <script type="module">
-    function setupToc() {
-        const article = document.getElementsByTagName("article")[0];
-        if (article) {
-            const oldheadings = article.querySelectorAll("h1, h2, h3, h4, h5, h6");
-            let headings = Array.from(oldheadings).filter(heading => !heading.classList.contains('title'));
-            if (headings.length === 0) {
-                return;
-            }
+  function createTocLink(heading) {
+    const link = document.createElement('a');
+    link.href = `#${heading.id}`;
 
-            const tocWrapper = document.createElement("div");
-            tocWrapper.classList.add("toc-wrapper");
-            document.body.appendChild(tocWrapper);
+    const dot = document.createElement('span');
+    dot.className = 'box';
+    dot.setAttribute('aria-hidden', 'true');
 
-            const tocInner = document.createElement("div");
-            tocInner.classList.add("toc-inner");
+    const text = document.createElement('span');
+    text.textContent = heading.textContent || '';
 
-            const tocContent = document.createElement("div");
-            tocInner.classList.add("toc");
+    link.append(dot, text);
+    return link;
+  }
 
-            const tocList = document.createElement("ul");
-            let currentList = tocList;
-            let previousLevel = 1;
+  function setupToc() {
+    if (document.querySelector('.toc-wrapper')) return;
 
-            headings.forEach(function (heading) {
-                let id = heading.id;
-                if (!id) {
-                    id = 'toc-' + Math.random().toString(36).substring(2, 11);
-                    heading.id = id;
-                }
+    const article = document.querySelector('article');
+    if (!article) return;
 
-                const level = parseInt(heading.tagName.substring(1), 10);
-                const listItem = document.createElement("li");
-                listItem.innerHTML = '<a href="#' + id + '"><span class="box"></span>' + heading.innerText + '</a>';
+    const headings = Array.from(article.querySelectorAll('h2, h3, h4, h5, h6'))
+      .filter((heading) => !heading.classList.contains('title') && heading.textContent?.trim());
 
-                if (level > previousLevel) {
-                    const nestedList = document.createElement("ul");
-                    currentList.lastElementChild.appendChild(nestedList);
-                    currentList = nestedList;
-                } else if (level < previousLevel) {
-                    while (level < previousLevel && currentList.parentElement.tagName.toLowerCase() === 'li') {
-                        currentList = currentList.parentElement.parentElement;
-                        previousLevel--;
-                    }
-                }
+    if (headings.length < 2) return;
 
-                currentList.appendChild(listItem);
-                previousLevel = level;
-            });
-            tocContent.appendChild(tocList);
-            tocInner.innerHTML = '<div class="toc-head"><button class="toc-toggle" onclick="window.scrollTo({top: 0});" >展开/折叠</button><b class="toc-head-title">目录</b><a class="toc-head-top" href="javascript:void(0);" onclick="window.scrollTo({top: 0});">↑ 顶部</a></div>';
-            tocInner.appendChild(tocContent);
-            tocWrapper.appendChild(tocInner);
+    const tocWrapper = document.createElement('aside');
+    tocWrapper.className = 'toc-wrapper';
+    tocWrapper.setAttribute('aria-label', '目录');
 
-            let isClicking = false;
-            let intersectionObserver;
+    const tocInner = document.createElement('div');
+    tocInner.className = 'toc-inner';
 
-            const observeHeadings = () => {
-                intersectionObserver = new IntersectionObserver(function (entries) {
-                    if (isClicking) return;
+    const tocHead = document.createElement('div');
+    tocHead.className = 'toc-head';
 
-                    entries.forEach(function (entry) {
-                        const tocLink = document.querySelector('.toc li a[href="#' + entry.target.getAttribute("id") + '"]');
-                        if (tocLink && entry.isIntersecting) {
-                            document.querySelectorAll(".toc li.active").forEach(function (activeItem) {
-                                activeItem.classList.remove("active");
-                            });
-                            tocLink.parentElement.classList.add("active");
-                        }
-                    });
-                },  {
-                    rootMargin: '-43% 0% -43% 0%'
-                });
+    const tocTitle = document.createElement('b');
+    tocTitle.className = 'toc-head-title';
+    tocTitle.textContent = '目录';
 
-                headings.forEach(function (heading) {
-                    intersectionObserver.observe(heading);
-                });
-            };
-
-            observeHeadings();
-
-            document.querySelectorAll(".toc li a").forEach(function (link) {
-                link.addEventListener("click", function (event) {
-                    event.preventDefault();
-                    const targetId = link.getAttribute("href").substring(1);
-                    const targetElement = document.getElementById(targetId);
-                    if (targetElement) {
-                        isClicking = true;
-                        intersectionObserver.disconnect();
-                        targetElement.scrollIntoView({ behavior: "smooth", block: "start" });
-                        document.querySelectorAll(".toc li.active").forEach(function (activeItem) {
-                            activeItem.classList.remove("active");
-                        });
-                        link.parentElement.classList.add("active");
-                        // 定位到中间
-                        const elementRect = targetElement.getBoundingClientRect();
-                        const offset = window.innerHeight / 3 - (elementRect.height / 2);
-                        window.scrollTo({
-                            top: window.scrollY + elementRect.top - offset,
-                            behavior: "smooth"
-                        });
-
-                        setTimeout(function () {
-                            isClicking = false;
-                            observeHeadings();
-                        }, 1000);
-
-                        history.pushState(null, null, '#' + targetId);
-                    }
-                });
-            });
-            document.querySelector(".toc-toggle").addEventListener("click", function () {
-                const ul = document.querySelector(".toc > div > ul");
-                if (ul) {
-                    ul.classList.toggle("show");
-                }
-            });
-
-            document.addEventListener('DOMContentLoaded', function () {
-                const toggleButton = document.querySelector(".toc-toggle");
-                if (toggleButton) {
-                    toggleButton.removeEventListener("click", handleToggleClick); // 移除现有监听器
-                    toggleButton.addEventListener("click", handleToggleClick);
-                } else {
-                    console.error("TOC toggle button not found");
-                }
-            });
-
-            function handleToggleClick() {
-                console.log("TOC toggle clicked");
-                const ul = document.querySelector(".toc > div > ul");
-                if (ul) {
-                    ul.classList.toggle("show");
-                }
-            }
-
-            // document.addEventListener('click', function (event) {
-            //     if (event.target.matches('.toc-toggle')) {
-            //         console.log("TOC toggle clicked");
-            //         const ul = document.querySelector(".toc > div > ul");
-            //         if (ul) {
-            //             ul.classList.toggle("show");
-            //         }
-            //     }
-            // });
-
-            window.addEventListener("hashchange", function () {
-                const hash = window.location.hash.substring(1);
-                const targetElement = document.getElementById(hash);
-                if (targetElement) {
-                    document.querySelectorAll(".toc li.active").forEach(function (activeItem) {
-                        activeItem.classList.remove("active");
-                    });
-                    const activeLink = document.querySelector('.toc li a[href="#' + hash + '"]');
-                    if (activeLink) {
-                        activeLink.parentElement.classList.add("active");
-                    }
-                }
-            });
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-        setupToc()
+    const topLink = document.createElement('a');
+    topLink.className = 'toc-head-top';
+    topLink.href = '#';
+    topLink.textContent = '↑ 顶部';
+    topLink.addEventListener('click', (event) => {
+      event.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-    setupToc();
+
+    tocHead.append(tocTitle, topLink);
+
+    const tocContent = document.createElement('div');
+    tocContent.className = 'toc';
+
+    const rootList = document.createElement('ul');
+    const stack = [{ level: 2, list: rootList }];
+
+    headings.forEach((heading, index) => {
+      if (!heading.id) {
+        heading.id = `toc-${index}-${heading.textContent.trim().toLowerCase().replace(/\s+/g, '-')}`;
+      }
+
+      const level = Math.min(Number(heading.tagName.substring(1)), 6);
+      const listItem = document.createElement('li');
+      listItem.appendChild(createTocLink(heading));
+
+      while (stack.length > 1 && level <= stack[stack.length - 1].level) {
+        stack.pop();
+      }
+
+      if (level > stack[stack.length - 1].level) {
+        const nestedList = document.createElement('ul');
+        const parentItem = stack[stack.length - 1].list.lastElementChild;
+        if (parentItem) {
+          parentItem.appendChild(nestedList);
+          stack.push({ level, list: nestedList });
+        }
+      }
+
+      stack[stack.length - 1].list.appendChild(listItem);
+    });
+
+    tocContent.appendChild(rootList);
+    tocInner.append(tocHead, tocContent);
+    tocWrapper.appendChild(tocInner);
+    document.body.appendChild(tocWrapper);
+
+    const links = tocWrapper.querySelectorAll('a[href^="#toc-"], a[href^="#"]');
+    const setActive = (id) => {
+      tocWrapper.querySelectorAll('li.active').forEach((item) => item.classList.remove('active'));
+      const activeLink = tocWrapper.querySelector(`a[href="#${CSS.escape(id)}"]`);
+      activeLink?.parentElement?.classList.add('active');
+    };
+
+    links.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        const targetId = link.getAttribute('href')?.slice(1);
+        if (!targetId) return;
+
+        const target = document.getElementById(targetId);
+        if (!target) return;
+
+        event.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        history.pushState(null, '', `#${targetId}`);
+        setActive(targetId);
+      });
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+      const visible = entries.find((entry) => entry.isIntersecting);
+      if (visible?.target?.id) {
+        setActive(visible.target.id);
+      }
+    }, { rootMargin: '-42% 0% -52% 0%' });
+
+    headings.forEach((heading) => observer.observe(heading));
+  }
+
+  const scheduleToc = () => {
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(setupToc, { timeout: 1200 });
+    } else {
+      window.requestAnimationFrame(setupToc);
+    }
+  };
+
+  scheduleToc();
+  document.addEventListener('astro:page-load', scheduleToc);
 </script>

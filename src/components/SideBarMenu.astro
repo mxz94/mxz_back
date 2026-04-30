@@ -2,16 +2,41 @@
 const { sideBarActiveItemID } = Astro.props;
 
 const items = [
-  { id: "home", href: "/", label: "首页" },
-  { id: "note", href: "/note", label: "笔记" },
-  { id: "blog", href: "/blog/", label: "日记" },
-  { id: "archives", href: "/archives", label: "归档" },
-  { id: "tags", href: "/tags", label: "标签" },
+  {
+    id: "home",
+    href: "/",
+    label: "首页",
+    icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M3 10.8 12 3l9 7.8V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>',
+  },
+  {
+    id: "note",
+    href: "/note",
+    label: "笔记",
+    icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M7 4h8l3 3v13H7a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8"/><path d="M14 4v4h4M8 12h8M8 16h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  },
+  {
+    id: "blog",
+    href: "/blog/",
+    label: "日记",
+    icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M6 4h12a1 1 0 0 1 1 1v15l-3-2-3 2-3-2-3 2-2-1.4V5a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 9h7M8.5 13h7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  },
+  {
+    id: "archives",
+    href: "/archives",
+    label: "归档",
+    icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M6 7l1-3h10l1 3M6 7v12a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V7" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  },
+  {
+    id: "tags",
+    href: "/tags",
+    label: "标签",
+    icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M4 12V5h7l8.5 8.5a2 2 0 0 1 0 2.8l-3.2 3.2a2 2 0 0 1-2.8 0L4 12Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 8.5h.01" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>',
+  },
 ];
 ---
 
 <nav class="grow overflow-y-auto" aria-label="主导航">
-  <ul class="menu menu-md gap-1">
+  <ul class="menu menu-md gap-1 p-0">
     {
       items.map((item) => {
         const isActive = sideBarActiveItemID === item.id;
@@ -20,13 +45,15 @@ const items = [
             <a
               id={item.id}
               href={item.href}
+              title={item.label}
               aria-current={isActive ? "page" : undefined}
               class:list={[
-                "py-3 text-base transition",
+                "sidebar-menu-link flex items-center gap-3 rounded-lg px-3 py-3 text-base transition",
                 isActive && "bg-base-300 font-medium text-base-content",
               ]}
             >
-              {item.label}
+              <span class="sidebar-menu-icon shrink-0 text-base-content/70" aria-hidden="true" set:html={item.icon} />
+              <span class="sidebar-label">{item.label}</span>
             </a>
           </li>
         );

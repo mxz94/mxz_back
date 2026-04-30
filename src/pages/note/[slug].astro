@@ -24,6 +24,9 @@ interface Props {
 const { entry, prev, next } = Astro.props;
 const post: BlogSchema = entry.data;
 const heroImage = getHeroImageLinkFromMd(entry.body)
+const hasCode = entry.body.includes("```");
+const hasToc = /^#{2,6}\s/m.test(entry.body);
+const hasLivePhoto = /!\[[^\]]*]\([^)]*\?v=/m.test(entry.body);
 const { Content } = await entry.render();
 ---
 
@@ -36,6 +39,9 @@ const { Content } = await entry.render();
   badge={post.badge}
   tags={post.tags}
   type = "note"
+  hasCode={hasCode}
+  hasToc={hasToc}
+  hasLivePhoto={hasLivePhoto}
 >
   <Content />
     <div class="flex justify-between">

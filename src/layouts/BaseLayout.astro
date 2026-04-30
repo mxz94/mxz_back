@@ -16,14 +16,23 @@ const { image, title = SITE_TITLE, description = SITE_DESCRIPTION, includeSideba
       <meta name="msvalidate.01" content="554974539F0479DABBAF2B9C6886C920" />
       <meta name="baidu-site-verification" content="codeva-Zb1fJaVwQk" />
     <BaseHead title={title} description={description} image={image} , ogType={ogType} />
+    <script is:inline>
+      try {
+        if (localStorage.getItem('mxz-sidebar-collapsed') === 'true') {
+          document.documentElement.classList.add('sidebar-collapsed-init');
+        }
+      } catch {
+        // localStorage can be unavailable in strict browser modes.
+      }
+    </script>
   </head>
   <body>
-    <div class="bg-base-100 drawer lg:drawer-open">
+    <div class="site-drawer bg-base-100 drawer lg:drawer-open" data-layout-drawer>
       <input id="my-drawer" type="checkbox" class="drawer-toggle" />
       <div class="drawer-content bg-base-100">
         <Header title={SITE_TITLE} />
-        <div class="md:flex md:justify-center">
-          <main class="p-6 pt-10 w-full lg:max-w-[1280px]">
+        <div class="flex justify-center">
+          <main class="site-main w-full px-4 py-8 sm:px-6 lg:px-8 xl:px-10">
             <slot />
           </main>
         </div>
@@ -69,6 +78,44 @@ const { image, title = SITE_TITLE, description = SITE_DESCRIPTION, includeSideba
 
       // Re-initialize on Astro page transitions
       document.addEventListener('astro:page-load', initDrawerScrollLock);
+
+      function initSidebarCollapse() {
+        const drawer = document.querySelector('[data-layout-drawer]');
+        const toggle = document.querySelector('[data-sidebar-toggle]');
+        if (!drawer || !toggle) return;
+        if (toggle.dataset.initialized === 'true') return;
+        toggle.dataset.initialized = 'true';
+
+        const storageKey = 'mxz-sidebar-collapsed';
+        const setCollapsed = (collapsed) => {
+          drawer.classList.toggle('sidebar-collapsed', collapsed);
+          document.documentElement.classList.toggle('sidebar-collapsed-init', collapsed);
+          toggle.setAttribute('aria-expanded', String(!collapsed));
+          toggle.setAttribute('title', collapsed ? '展开侧边栏' : '收起侧边栏');
+        };
+
+        let storedCollapsed = false;
+        try {
+          storedCollapsed = localStorage.getItem(storageKey) === 'true';
+        } catch {
+          storedCollapsed = document.documentElement.classList.contains('sidebar-collapsed-init');
+        }
+
+        setCollapsed(storedCollapsed);
+
+        toggle.addEventListener('click', () => {
+          const collapsed = !drawer.classList.contains('sidebar-collapsed');
+          setCollapsed(collapsed);
+          try {
+            localStorage.setItem(storageKey, String(collapsed));
+          } catch {
+            // Ignore storage failures; the current view still updates.
+          }
+        });
+      }
+
+      initSidebarCollapse();
+      document.addEventListener('astro:page-load', initSidebarCollapse);
     </script>
   </body>
 </html>

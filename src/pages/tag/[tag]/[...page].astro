@@ -30,6 +30,14 @@ const { page } = Astro.props;
 const params = Astro.params;
 const firstPage = page.url.prev ? `/tag/${params.tag}` : null;
 const lastPage = page.url.next ? `/tag/${params.tag}/${page.lastPage}` : null;
+let priorityImageCount = 0;
+const postItems = page.data.map((post) => {
+  const img = getHeroImageLinkFromMd(post);
+  const priority = Boolean(img) && priorityImageCount < 2;
+  if (img) priorityImageCount += 1;
+
+  return { post, img, priority };
+});
 ---
 
 <BaseLayout title={"标签 - " + params.tag} sideBarActiveItemID="tags">
@@ -42,15 +50,16 @@ const lastPage = page.url.next ? `/tag/${params.tag}/${page.lastPage}` : null;
       </div>
     ) : (
       <div class="space-y-3">
-        {page.data.map((post) => (
+        {postItems.map(({ post, img, priority }) => (
           <HorizontalCard
             title={post.data.title}
-            img={getHeroImageLinkFromMd(post)}
+            img={img}
             desc={suppDesc(post.data.description, post.body)}
             url={createSlug(post)}
             target="_self"
             badge={post.data.badge}
             tags={post.data.tags}
+            priority={priority}
           />
         ))}
       </div>

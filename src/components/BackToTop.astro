@@ -16,7 +16,8 @@
     if (backToTopButton.dataset.initialized === 'true') return;
     backToTopButton.dataset.initialized = 'true';
 
-    // Show/hide button based on scroll position
+    let ticking = false;
+
     function toggleButton() {
       if (window.scrollY > 300) {
         backToTopButton.classList.remove('opacity-0', 'pointer-events-none');
@@ -27,7 +28,15 @@
       }
     }
 
-    // Smooth scroll to top
+    function requestToggle() {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        toggleButton();
+        ticking = false;
+      });
+    }
+
     function scrollToTop() {
       window.scrollTo({
         top: 0,
@@ -35,18 +44,13 @@
       });
     }
 
-    // Event listeners
-    window.addEventListener('scroll', toggleButton, { passive: true });
+    window.addEventListener('scroll', requestToggle, { passive: true });
     backToTopButton.addEventListener('click', scrollToTop);
 
-    // Initial check
     toggleButton();
   }
 
-  // Initialize on page load
   initBackToTop();
-
-  // Re-initialize on Astro page transitions
   document.addEventListener('astro:page-load', initBackToTop);
 </script>
 

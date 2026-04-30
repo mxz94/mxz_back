@@ -23,12 +23,24 @@ const sections = [
     posts: blogs.slice(0, 3),
   },
 ];
+
+let priorityImageCount = 0;
+const listSections = sections.map((section) => ({
+  ...section,
+  posts: section.posts.map((post) => {
+    const img = getHeroImageLinkFromMd(post);
+    const priority = Boolean(img) && priorityImageCount < 2;
+    if (img) priorityImageCount += 1;
+
+    return { post, img, priority };
+  }),
+}));
 ---
 
 <BaseLayout sideBarActiveItemID="home">
   <div class="space-y-12">
     {
-      sections.map((section) => (
+      listSections.map((section) => (
         <section>
           <div class="mb-5 flex items-end justify-between gap-4">
             <div>
@@ -43,15 +55,16 @@ const sections = [
             </a>
           </div>
           <div class="space-y-3">
-            {section.posts.map((post) => (
+            {section.posts.map(({ post, img, priority }) => (
               <HorizontalCard
                 title={post.data.title}
-                img={getHeroImageLinkFromMd(post)}
+                img={img}
                 desc={suppDesc(post.data.description, post.body)}
                 url={createSlug(post)}
                 target="_self"
                 badge={post.data.badge}
                 tags={post.data.tags}
+                priority={priority}
               />
             ))}
           </div>

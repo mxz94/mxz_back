@@ -18,6 +18,14 @@ export async function getStaticPaths({ paginate }) {
 const { page } = Astro.props;
 const firstPage = page.url.prev ? "/note" : null;
 const lastPage = page.url.next ? `/note/${page.lastPage}` : null;
+let priorityImageCount = 0;
+const postItems = page.data.map((post) => {
+  const img = getHeroImageLinkFromMd(post);
+  const priority = Boolean(img) && priorityImageCount < 2;
+  if (img) priorityImageCount += 1;
+
+  return { post, img, priority };
+});
 ---
 
 <BaseLayout title="笔记" sideBarActiveItemID="note">
@@ -31,15 +39,16 @@ const lastPage = page.url.next ? `/note/${page.lastPage}` : null;
       </div>
     ) : (
       <div class="space-y-3">
-        {page.data.map((post) => (
+        {postItems.map(({ post, img, priority }) => (
           <HorizontalCard
             title={post.data.title}
-            img={getHeroImageLinkFromMd(post)}
+            img={img}
             desc={suppDesc(post.data.description, post.body)}
             url={createSlug(post)}
             target="_self"
             badge={post.data.badge}
             tags={post.data.tags}
+            priority={priority}
           />
         ))}
       </div>
