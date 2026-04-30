@@ -14,15 +14,21 @@ const sections = [
     title: "最近笔记",
     description: "整理技术、工具和日常折腾里留下来的记录。",
     href: "/note",
-    posts: notes.slice(0, 3),
+    posts: notes.slice(0, 6),
   },
   {
     title: "最近日记",
     description: "一些更生活化的片段，慢慢放在这里。",
     href: "/blog",
-    posts: blogs.slice(0, 3),
+    posts: blogs.slice(0, 6),
   },
 ];
+
+const getHomePostClass = (index) => {
+  if (index < 3) return "";
+  if (index < 4) return "hidden lg:block";
+  return "hidden 2xl:block";
+};
 
 let priorityImageCount = 0;
 const listSections = sections.map((section) => ({
@@ -55,17 +61,19 @@ const listSections = sections.map((section) => ({
             </a>
           </div>
           <div class="grid gap-3">
-            {section.posts.map(({ post, img, priority }) => (
-              <HorizontalCard
-                title={post.data.title}
-                img={img}
-                desc={suppDesc(post.data.description, post.body)}
-                url={createSlug(post)}
-                target="_self"
-                badge={post.data.badge}
-                tags={post.data.tags}
-                priority={priority}
-              />
+            {section.posts.map(({ post, img, priority }, index) => (
+              <div class={getHomePostClass(index)}>
+                <HorizontalCard
+                  title={post.data.title}
+                  img={img}
+                  desc={suppDesc(post.data.description, post.body)}
+                  url={createSlug(post)}
+                  target="_self"
+                  badge={post.data.badge}
+                  tags={post.data.tags}
+                  priority={priority}
+                />
+              </div>
             ))}
           </div>
         </section>
