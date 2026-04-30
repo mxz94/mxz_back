@@ -437,7 +437,7 @@ def day_local_jian():
         # locl_to_github()
         if fileName is not None:
             FileUtil.init_archives_table_readme()
-            FileUtil.run_cmd("node {}/src/components/lib/algoliasearch.js".format(src))
+            FileUtil.run_cmd("node {}/scripts/writenote/algoliasearch.js".format(src))
             FileUtil.run_cmd("cd {} && git pull && git add -A && git commit -m '{}' && git push -f ".format(src, fileName))
     except Exception as e:
         print(e)

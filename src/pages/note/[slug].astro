@@ -1,5 +1,5 @@
 ---
-import { CollectionEntry, getCollection } from "astro:content";
+import { CollectionEntry } from "astro:content";
 import { BlogSchema } from "../../content/config";
 import PostLayout from "../../layouts/PostLayout.astro";
 import {getNotes} from "../../utils";
@@ -26,6 +26,7 @@ const post: BlogSchema = entry.data;
 const heroImage = getHeroImageLinkFromMd(entry.body)
 const hasCode = entry.body.includes("```");
 const hasToc = /^#{2,6}\s/m.test(entry.body);
+const hasArticleMedia = /!\[[^\]]*]\([^)]*\)|<img\b|<picture\b|<video\b|<iframe\b|!bv\{/i.test(entry.body);
 const { Content } = await entry.render();
 ---
 
@@ -40,6 +41,7 @@ const { Content } = await entry.render();
   type = "note"
   hasCode={hasCode}
   hasToc={hasToc}
+  hasArticleMedia={hasArticleMedia}
 >
   <Content />
     <div class="flex justify-between">

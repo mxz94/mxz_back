@@ -9,9 +9,21 @@ import CodeCopyButton from "../components/CodeCopyButton.astro";
 export interface Props extends BlogSchema {
   hasCode?: boolean;
   hasToc?: boolean;
+  hasArticleMedia?: boolean;
 }
 
-const { title, description, pubDatetime, heroImage, badge, tags = [], type, hasCode = false, hasToc = false } = Astro.props;
+const {
+  title,
+  description,
+  pubDatetime,
+  heroImage,
+  badge,
+  tags = [],
+  type,
+  hasCode = false,
+  hasToc = false,
+  hasArticleMedia = false,
+} = Astro.props;
 const displayDate = dayjs(pubDatetime).format("YYYY-MM-DD HH:mm");
 const isBlog = type === "blog";
 const isNumber = title.startsWith("20");
@@ -62,15 +74,18 @@ if (isBlog) {
   </main>
   {hasCode && <CodeCopyButton />}
 
-  <script is:inline>
+  {hasArticleMedia && <script is:inline>
     const articleImageSizes = "(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) 92vw, (max-width: 1439px) calc(100vw - 22rem), 1280px";
 
-    function optimizeVerticalImages() {
+    function optimizeArticleMedia() {
       const articles = document.querySelectorAll('article');
 
       articles.forEach(article => {
         const images = article.querySelectorAll('img');
         images.forEach((image) => {
+          if (image.dataset.mediaEnhanced === 'true') return;
+          image.dataset.mediaEnhanced = 'true';
+
           if (!image.hasAttribute('loading')) {
             image.setAttribute('loading', 'lazy');
           }
@@ -99,6 +114,19 @@ if (isBlog) {
 
         const videos = article.querySelectorAll('video');
         videos.forEach((video) => {
+          if (video.dataset.mediaEnhanced === 'true') return;
+          video.dataset.mediaEnhanced = 'true';
+
+          if (!video.hasAttribute('preload')) {
+            video.setAttribute('preload', 'metadata');
+          }
+          if (!video.hasAttribute('playsinline')) {
+            video.setAttribute('playsinline', '');
+          }
+          if (!video.hasAttribute('webkit-playsinline')) {
+            video.setAttribute('webkit-playsinline', '');
+          }
+
           video.addEventListener('loadedmetadata', function() {
             if (video.videoHeight > video.videoWidth) {
               video.classList.add("portrait");
@@ -106,13 +134,26 @@ if (isBlog) {
             }
           }, { once: true });
         });
+
+        const iframes = article.querySelectorAll('iframe');
+        iframes.forEach((iframe) => {
+          if (iframe.dataset.mediaEnhanced === 'true') return;
+          iframe.dataset.mediaEnhanced = 'true';
+
+          if (!iframe.hasAttribute('loading')) {
+            iframe.setAttribute('loading', 'lazy');
+          }
+          if (!iframe.hasAttribute('referrerpolicy')) {
+            iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+          }
+        });
       });
     }
 
-    optimizeVerticalImages();
+    optimizeArticleMedia();
 
     document.addEventListener('astro:page-load', () => {
-      optimizeVerticalImages();
+      optimizeArticleMedia();
     });
-  </script>
+  </script>}
 </BaseLayout>

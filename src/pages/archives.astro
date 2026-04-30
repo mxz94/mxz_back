@@ -1,6 +1,7 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import PageHeader from "../components/PageHeader.astro";
+import { Image } from "astro:assets";
 import data from "/public/douban/movie.json";
 
 const movieCover = data[0]?.subject?.cover_url ?? "/img/cover/2026.webp";
@@ -55,11 +56,16 @@ const archiveSections = [
                 rel={item.external ? "noreferrer" : undefined}
                 class="group overflow-hidden rounded-lg border border-base-300 bg-base-100 no-underline shadow-sm transition hover:-translate-y-0.5 hover:border-base-content/20 hover:shadow-md"
               >
-                <img
+                <Image
                   src={item.img}
+                  width={640}
+                  height={360}
+                  format="webp"
                   alt={item.title}
                   loading="lazy"
                   decoding="async"
+                  widths={[320, 480, 640]}
+                  sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1280px) 50vw, 33vw"
                   class="aspect-[16/9] w-full object-cover transition duration-300 group-hover:scale-[1.02]"
                 />
                 <div class="p-4">

@@ -19,8 +19,6 @@
       "@assets/*": [
         "assets/*"
       ]
-    },
-    "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    }
   }
 }

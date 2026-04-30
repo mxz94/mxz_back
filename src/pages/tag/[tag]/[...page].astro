@@ -11,9 +11,13 @@ import getHeroImageLinkFromMd from "../../../utils/getHeroImageLinkFromMd";
 export async function getStaticPaths({ paginate }) {
   let all_posts = await getAllPosts();
   all_posts = all_posts.filter((item) => !item.data.auth);
-  const all_tags = all_posts.flatMap((post) => {
-    return post.data.tags || [];
-  });
+  const all_tags = Array.from(
+    new Set(
+      all_posts.flatMap((post) => {
+        return post.data.tags || [];
+      }),
+    ),
+  );
 
   return all_tags.flatMap((tag) => {
     const filtred_posts = all_posts.filter((post) => {

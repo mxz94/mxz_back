@@ -2,13 +2,16 @@
 const { title, img, desc, url, badge, tags, target = "_blank", priority = false } = Astro.props;
 const imageLoading = priority ? "eager" : "lazy";
 const imageFetchPriority = priority ? "high" : undefined;
+const titleText = String(title || "");
+const placeholderMatch = titleText.match(/\d{4}/);
+const placeholderLabel = placeholderMatch?.[0] || Array.from(titleText.replace(/\s+/g, "")).slice(0, 2).join("") || "Mxz";
 import { Image } from "astro:assets";
 ---
 
 <article class="group rounded-lg border border-base-200 bg-base-100/90 transition hover:border-base-300 hover:bg-base-100 hover:shadow-sm">
   <div class="flex gap-4 p-3.5 sm:gap-5 sm:p-4">
     {
-      img && (
+      img ? (
         <a href={url} target={target} class="block w-28 shrink-0 overflow-hidden rounded-lg sm:w-36 md:w-44 lg:w-48">
           <Image
             src={img}
@@ -23,6 +26,19 @@ import { Image } from "astro:assets";
             widths={[192, 288, 384]}
             sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, (max-width: 1024px) 176px, 192px"
           />
+        </a>
+      ) : (
+        <a
+          href={url}
+          target={target}
+          class="relative block aspect-square w-28 shrink-0 overflow-hidden rounded-lg border border-base-300 bg-base-200/70 text-base-content/65 transition group-hover:border-base-content/20 group-hover:bg-base-200 sm:w-36 md:w-44 lg:w-48"
+          aria-label={titleText}
+        >
+          <span class="absolute inset-x-3 top-3 h-px bg-base-content/10"></span>
+          <span class="flex h-full w-full items-center justify-center px-3 text-center text-lg font-semibold leading-tight sm:text-xl">
+            {placeholderLabel}
+          </span>
+          <span class="absolute bottom-3 left-3 right-3 h-px bg-base-content/10"></span>
         </a>
       )
     }

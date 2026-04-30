@@ -56,10 +56,6 @@ jobs:
           dir: ./public/douban
 
         
-      - name: Pull activities.json
-        run: |
-          curl -o public/activities.json https://raw.githubusercontent.com/mxz94/mxz_run/refs/heads/master/src/static/activities.json
-        
       - name: Push README
         run: |
           git config --local user.email "action@github.com"
