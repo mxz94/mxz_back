@@ -5,23 +5,23 @@ const imageFetchPriority = priority ? "high" : undefined;
 import { Image } from "astro:assets";
 ---
 
-<article class="rounded-lg bg-base-100 border border-base-200 transition-colors hover:bg-base-200/40">
-  <div class="flex gap-4 p-3 sm:p-4">
+<article class="group rounded-lg border border-base-200 bg-base-100/90 transition hover:border-base-300 hover:bg-base-100 hover:shadow-sm">
+  <div class="flex gap-4 p-3.5 sm:gap-5 sm:p-4">
     {
       img && (
-        <a href={url} target={target} class="block w-24 shrink-0 sm:w-32 md:w-40">
+        <a href={url} target={target} class="block w-28 shrink-0 overflow-hidden rounded-lg sm:w-36 md:w-44 lg:w-48">
           <Image
             src={img}
-            width={320}
-            height={320}
+            width={384}
+            height={384}
             format="webp"
             alt={title}
             loading={imageLoading}
             fetchpriority={imageFetchPriority}
             decoding="async"
-            class="aspect-square w-full rounded-md object-cover"
-            widths={[160, 240, 320]}
-            sizes="(max-width: 640px) 96px, (max-width: 768px) 128px, 160px"
+            class="aspect-square w-full rounded-lg object-cover transition duration-200 group-hover:scale-[1.015]"
+            widths={[192, 288, 384]}
+            sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, (max-width: 1024px) 176px, 192px"
           />
         </a>
       )

@@ -29,9 +29,9 @@ if (isBlog) {
 
 <BaseLayout title={title} description={description} image={heroImage} ogType="article">
   <ReadingProgress />
-  <main class="w-full flex justify-center">
-    <article class="prose prose-lg w-full max-w-full sm:max-w-[95%] md:max-w-[90%] lg:max-w-[860px] xl:max-w-[900px] prose-img:mx-auto px-4 sm:px-6 md:px-8">
-      <header class="not-prose mb-8 border-b border-base-300 pb-6">
+  <main class="post-shell w-full flex justify-center">
+    <article class="post-article prose prose-lg w-full max-w-full sm:max-w-[95%] md:max-w-[92%] lg:max-w-[960px] xl:max-w-[1000px] 2xl:max-w-[1040px] prose-img:mx-auto px-0">
+      <header class="not-prose mb-6 border-b border-base-300 pb-5 sm:mb-7 sm:pb-6">
         <div class="mb-3 flex flex-wrap items-center gap-3 text-sm text-base-content/60">
           {pubDatetime && <time datetime={pubDatetime.toISOString()}>{displayDate}</time>}
           {badge && <span class="badge badge-secondary">{badge}</span>}
@@ -43,16 +43,18 @@ if (isBlog) {
             原文
           </a>
         </div>
-        <h1 class="title m-0 text-3xl font-bold leading-tight sm:text-4xl">{title}</h1>
-        {tags.length > 0 && (
-          <div class="mt-4 flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <a href={`/tag/${tag}`} class="badge badge-outline no-underline">
-                {tag}
-              </a>
-            ))}
-          </div>
-        )}
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <h1 class="title m-0 min-w-0 text-3xl font-bold leading-tight sm:flex-1 sm:text-4xl">{title}</h1>
+          {tags.length > 0 && (
+            <div class="flex max-w-full shrink-0 flex-wrap gap-1.5 pt-1 sm:max-w-[42%] sm:justify-end">
+              {tags.map((tag) => (
+                <a href={`/tag/${tag}`} class="badge badge-outline badge-sm h-auto min-h-0 px-2 py-0.5 text-[11px] leading-tight no-underline">
+                  {tag}
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
       </header>
 
       <slot />
@@ -93,6 +95,7 @@ if (isBlog) {
           video.addEventListener('loadedmetadata', function() {
             if (video.videoHeight > video.videoWidth) {
               video.classList.add("portrait");
+              video.closest('.video-wrapper')?.classList.add('portrait-video-wrapper');
             }
           }, { once: true });
         });

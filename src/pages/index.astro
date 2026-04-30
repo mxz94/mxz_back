@@ -38,10 +38,10 @@ const listSections = sections.map((section) => ({
 ---
 
 <BaseLayout sideBarActiveItemID="home">
-  <div class="space-y-12">
+  <div class="grid gap-8 xl:grid-cols-2 xl:gap-7">
     {
       listSections.map((section) => (
-        <section>
+        <section class="min-w-0">
           <div class="mb-5 flex items-end justify-between gap-4">
             <div>
               <h2 class="m-0 text-3xl font-bold leading-tight text-base-content">{section.title}</h2>
@@ -54,7 +54,7 @@ const listSections = sections.map((section) => ({
               </svg>
             </a>
           </div>
-          <div class="space-y-3">
+          <div class="grid gap-3">
             {section.posts.map(({ post, img, priority }) => (
               <HorizontalCard
                 title={post.data.title}

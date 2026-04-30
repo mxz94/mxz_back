@@ -14,7 +14,7 @@ body {
 }
 
 .site-main {
-    max-width: min(100%, 1500px);
+    max-width: min(100%, 1680px);
 }
 
 .sidebar-shell {
@@ -151,16 +151,70 @@ body {
     font-weight: 650;
 }
 
+.post-shell {
+    align-items: flex-start;
+}
+
+.post-article {
+    --post-media-width: min(100%, 1280px);
+}
+
+@media (min-width: 1024px) {
+    .post-article {
+        --post-media-width: min(1280px, calc(100vw - 22rem));
+    }
+
+    .site-drawer.sidebar-collapsed .post-article,
+    html.sidebar-collapsed-init .site-drawer .post-article {
+        --post-media-width: min(1360px, calc(100vw - 10rem));
+    }
+}
+
+.post-article>p:has(> img:only-child),
+.post-article>.video-wrapper,
+.post-article>.video-container,
+.post-article>.live-photo-container {
+    width: var(--post-media-width);
+    max-width: var(--post-media-width);
+    margin: 2rem 0;
+    margin-left: 50%;
+    margin-right: 0;
+    transform: translateX(-50%);
+}
+
+.post-article>p:has(> img.landscape-img:only-child) {
+    width: min(640px, var(--post-media-width));
+    max-width: min(640px, var(--post-media-width));
+}
+
+.post-article>p:has(> img:only-child) {
+    line-height: 0;
+}
+
+@media (max-width: 767px) {
+    .post-article>p:has(> img:only-child),
+    .post-article>.video-wrapper,
+    .post-article>.video-container,
+    .post-article>.live-photo-container {
+        width: 100%;
+        max-width: 100%;
+        margin-left: 0;
+        transform: none;
+    }
+}
+
 .video-container {
     position: relative;
     padding-bottom: 56.25%;
     /* Aspect ratio 16:9 */
     height: 0;
     overflow: hidden;
+    width: 100%;
+    margin: 2rem auto;
     max-width: 100%;
     background: #000;
-    border-radius: 15px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3), 0 -4px 8px rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 10px 28px rgba(18, 24, 30, 0.16);
     /* Add depth with shadow */
     transform: translateZ(0);
     /* Ensure the 3D effect is applied */
@@ -174,13 +228,17 @@ body {
     width: 100%;
     height: 100%;
     border: none;
-    border-radius: 15px;
+    border-radius: 12px;
     transform: translateZ(0);
     /* Ensure the iframe maintains the 3D effect */
 }
 
+.video-container.min_width_1280 {
+    min-height: 0;
+}
+
 .min_width_1280 {
-    min-height: 220px;
+    min-height: clamp(220px, 42vw, 620px);
     /* 设置一个最小高度 */
     width: 100%;
     max-width: 1280px;
@@ -189,31 +247,39 @@ body {
 }
 
 .landscape-img {
-    width: 90%;
-    max-width: 500px;
-    aspect-ratio: 3 / 4;
+    width: 100%;
+    max-width: min(640px, 100%);
+    max-height: 82vh;
+    object-fit: contain;
+    aspect-ratio: auto;
     /* 高度宽度比，即竖向 */
     margin-left: auto;
     margin-right: auto;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 24px rgba(18, 24, 30, 0.12);
 }
 
 @media (min-width: 768px) {
     .landscape-img {
-        width: 60%;
-        max-width: 600px;
+        max-width: min(640px, 70vw);
     }
 }
 
 /* Article image optimization */
 .prose img {
+    width: auto;
     max-width: 100%;
     height: auto;
     border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    margin: 1.5rem auto;
+    box-shadow: 0 8px 24px rgba(18, 24, 30, 0.12);
+    margin: 1.35rem auto;
     display: block;
+}
+
+.post-article>p:has(> img:only-child)>img:not(.landscape-img) {
+    width: 100%;
+    max-height: 84vh;
+    object-fit: contain;
 }
 
 .prose img[loading="lazy"] {
@@ -231,8 +297,8 @@ body {
     /* Hidden on mobile by default */
     position: fixed;
     top: 100px;
-    right: 30px;
-    width: 280px;
+    right: 24px;
+    width: 240px;
     max-height: calc(100vh - 140px);
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
@@ -244,8 +310,8 @@ body {
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Show TOC on large screens (1440px+) */
-@media (min-width: 1440px) {
+/* Show TOC only when there is enough room beside wider media. */
+@media (min-width: 1800px) {
     .toc-wrapper {
         display: block;
     }
@@ -431,11 +497,11 @@ body {
 .video-wrapper {
     position: relative;
     width: 100%;
-    max-width: 900px;
+    max-width: 1280px;
     margin: 2rem auto;
-    border-radius: 16px;
+    border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 10px 28px rgba(18, 24, 30, 0.16);
     background: #000;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -445,19 +511,24 @@ body {
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
 }
 
+.post-article>.video-wrapper.portrait-video-wrapper {
+    width: min(560px, var(--post-media-width));
+    max-width: min(560px, var(--post-media-width));
+}
+
 /* 响应式视频元素 */
 .responsive-video {
     display: block;
     width: 100%;
     height: auto;
-    max-height: 80vh;
+    max-height: 84vh;
     object-fit: contain;
     background: #000;
 }
 
 /* 竖屏视频特殊处理 */
 .responsive-video.portrait {
-    max-width: 600px;
+    max-width: 560px;
     margin: 0 auto;
 }
 
