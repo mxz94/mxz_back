@@ -9,10 +9,9 @@ import CodeCopyButton from "../components/CodeCopyButton.astro";
 export interface Props extends BlogSchema {
   hasCode?: boolean;
   hasToc?: boolean;
-  hasLivePhoto?: boolean;
 }
 
-const { title, description, pubDatetime, heroImage, badge, tags = [], type, hasCode = false, hasToc = false, hasLivePhoto = false } = Astro.props;
+const { title, description, pubDatetime, heroImage, badge, tags = [], type, hasCode = false, hasToc = false } = Astro.props;
 const displayDate = dayjs(pubDatetime).format("YYYY-MM-DD HH:mm");
 const isBlog = type === "blog";
 const isNumber = title.startsWith("20");
@@ -64,6 +63,8 @@ if (isBlog) {
   {hasCode && <CodeCopyButton />}
 
   <script is:inline>
+    const articleImageSizes = "(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) 92vw, (max-width: 1439px) calc(100vw - 22rem), 1280px";
+
     function optimizeVerticalImages() {
       const articles = document.querySelectorAll('article');
 
@@ -72,6 +73,12 @@ if (isBlog) {
         images.forEach((image) => {
           if (!image.hasAttribute('loading')) {
             image.setAttribute('loading', 'lazy');
+          }
+          if (!image.hasAttribute('decoding')) {
+            image.setAttribute('decoding', 'async');
+          }
+          if (!image.hasAttribute('sizes')) {
+            image.setAttribute('sizes', articleImageSizes);
           }
 
           if (image.complete) {
@@ -108,46 +115,4 @@ if (isBlog) {
       optimizeVerticalImages();
     });
   </script>
-  {
-    hasLivePhoto && (
-      <script is:inline>
-        function loadLivePhotosKit() {
-          if (window.LivePhotosKit) {
-            return Promise.resolve();
-          }
-          if (window.__livePhotosKitLoading) {
-            return window.__livePhotosKitLoading;
-          }
-
-          window.__livePhotosKitLoading = new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = 'https://cdn.apple-livephotoskit.com/lpk/1/livephotoskit.js';
-            script.defer = true;
-            script.onload = resolve;
-            script.onerror = reject;
-            document.head.appendChild(script);
-          });
-
-          return window.__livePhotosKitLoading;
-        }
-
-        function initializeLivePhotos() {
-          const livePhotoElements = document.querySelectorAll('.live-photo-container:not([data-live-photo-ready])');
-          if (!livePhotoElements.length) return;
-
-          loadLivePhotosKit().then(() => {
-            livePhotoElements.forEach(element => {
-              LivePhotosKit.Player(element);
-              element.setAttribute('data-live-photo-ready', 'true');
-            });
-          }).catch(() => {
-            window.__livePhotosKitLoading = null;
-          });
-        }
-
-        initializeLivePhotos();
-        document.addEventListener('astro:page-load', initializeLivePhotos);
-      </script>
-    )
-  }
 </BaseLayout>

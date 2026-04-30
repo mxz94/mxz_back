@@ -1,46 +1,91 @@
-import { slugifyAll } from "./slugify";
 import type { CollectionEntry } from "astro:content";
 
-export default function (post) {
-    if (post.heroImage)
-        return post.heroImage;
-    const mdText = post.body;
-    const markdownImagePattern = /!\[(.*?)\]\(([^)]+)\)/g; // 匹配标准图片语法
-    const referencePattern = /^\[(.+?)\]:\s*(\S+)(?:\s+"(.+?)")?\s*$/mg; // 匹配参考式链接语法
-
-    const standardImages = [];
-    let match;
-    while ((match = markdownImagePattern.exec(mdText)) !== null) {
-        standardImages.push(match[2]); // 提取第二个捕获组，即图片 URL
+type PostLike =
+  | CollectionEntry<"blog">
+  | CollectionEntry<"note">
+  | {
+      body?: string;
+      data?: {
+        heroImage?: string;
+      };
+      heroImage?: string;
     }
+  | string
+  | null
+  | undefined;
 
-    // const referenceLinks = {};
-    // let refMatch;
-    // while ((refMatch = referencePattern.exec(mdText)) !== null) {
-    //     if (refMatch[2].startsWith('http')) { // 确保是 URL 类型的参考链接
-    //         referenceLinks[refMatch[1]] = refMatch[2]; // 存储参考名与对应的 URL
-    //     }
-    // }
+const VIDEO_EXTENSIONS = /\.(mp4|mov|m4v|webm|ogv)(?:[?#].*)?$/i;
+const IMAGE_EXTENSIONS = /\.(avif|gif|jpe?g|png|svg|webp)(?:[?#].*)?$/i;
 
-    const allImageLinks = [...standardImages]; // 合并两种类型的图片链接
+function cleanAssetPath(src?: string | null) {
+  if (!src) return null;
 
-    // 处理包含参考式链接的图片
-    // markdownImagePattern.lastIndex = 0; // 重置正则表达式索引
-    // while ((match = markdownImagePattern.exec(mdText)) !== null) {
-    //     const altText = match[1];
-    //     const refName = match[2].slice(1, -1); // 去除方括号
-    //     if (referenceLinks.hasOwnProperty(refName)) {
-    //         allImageLinks.push(referenceLinks[refName]);
-    //     } else {
-    //         console.warn(`未找到参考链接 "${refName}" 对应的图片 URL`);
-    //     }
-    // }
+  const cleanSrc = src.trim().replace(/^['"]|['"]$/g, "");
+  if (!cleanSrc || cleanSrc.startsWith("#") || cleanSrc.startsWith("data:")) {
+    return null;
+  }
 
-    if (allImageLinks.length === 0) {
-        return null
-    } else {
-        var image = allImageLinks[0]
-        return  image.startsWith('http') ? image : image.split('public')[1];
-    }
+  const imageCandidate = cleanSrc.split("?v=")[0];
+  if (
+    !imageCandidate ||
+    VIDEO_EXTENSIONS.test(imageCandidate) ||
+    /[{}<>]/.test(imageCandidate)
+  ) {
+    return null;
+  }
+
+  const normalized = imageCandidate.replace(/\\/g, "/");
+  const publicIndex = normalized.lastIndexOf("public/");
+
+  if (publicIndex >= 0) {
+    return `/${normalized.slice(publicIndex + "public/".length)}`;
+  }
+
+  if (normalized.startsWith("//")) {
+    return `https:${normalized}`;
+  }
+
+  if (/^https?:\/\//i.test(normalized) || normalized.startsWith("/")) {
+    return normalized;
+  }
+
+  if (normalized.startsWith("img/") && IMAGE_EXTENSIONS.test(normalized)) {
+    return `/${normalized}`;
+  }
+
+  return null;
 }
 
+function addMatches(
+  candidates: Array<{ src: string; index: number }>,
+  body: string,
+  pattern: RegExp,
+) {
+  let match;
+  while ((match = pattern.exec(body)) !== null) {
+    const src = cleanAssetPath(match[1]);
+    if (src) {
+      candidates.push({ src, index: match.index });
+    }
+  }
+}
+
+export default function getHeroImageLinkFromMd(post: PostLike) {
+  if (!post) return null;
+
+  if (typeof post !== "string") {
+    const heroImage = cleanAssetPath(post.data?.heroImage || post.heroImage);
+    if (heroImage) return heroImage;
+  }
+
+  const body = typeof post === "string" ? post : post.body || "";
+  const candidates: Array<{ src: string; index: number }> = [];
+
+  addMatches(candidates, body, /!\[[^\]]*]\(([^)\s]+)(?:\s+["'][^)]*["'])?\)/g);
+  addMatches(candidates, body, /<img\b[^>]*\bsrc=["']([^"']+)["'][^>]*>/gi);
+  addMatches(candidates, body, /<video\b[^>]*\bposter=["']([^"']+)["'][^>]*>/gi);
+  addMatches(candidates, body, /\bdata-photo-src=["']([^"']+)["']/gi);
+
+  candidates.sort((a, b) => a.index - b.index);
+  return candidates[0]?.src || null;
+}

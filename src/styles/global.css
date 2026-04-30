@@ -116,12 +116,6 @@ body {
     }
 }
 
-.live-photo-container {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-}
-
 .prose {
     font-family: inherit;
     font-size: 17px;
@@ -172,8 +166,7 @@ body {
 
 .post-article>p:has(> img:only-child),
 .post-article>.video-wrapper,
-.post-article>.video-container,
-.post-article>.live-photo-container {
+.post-article>.video-container {
     width: var(--post-media-width);
     max-width: var(--post-media-width);
     margin: 2rem 0;
@@ -194,8 +187,7 @@ body {
 @media (max-width: 767px) {
     .post-article>p:has(> img:only-child),
     .post-article>.video-wrapper,
-    .post-article>.video-container,
-    .post-article>.live-photo-container {
+    .post-article>.video-container {
         width: 100%;
         max-width: 100%;
         margin-left: 0;
