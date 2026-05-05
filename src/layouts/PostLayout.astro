@@ -41,8 +41,8 @@ if (isBlog) {
 <BaseLayout title={title} description={description} image={heroImage} ogType="article">
   <ReadingProgress />
   <main class="post-shell w-full flex justify-center">
-    <article class="post-article prose prose-lg w-full max-w-full sm:max-w-[95%] md:max-w-[92%] lg:max-w-[960px] xl:max-w-[1000px] 2xl:max-w-[1040px] prose-img:mx-auto px-0">
-      <header class="not-prose mb-6 border-b border-base-300 pb-5 sm:mb-7 sm:pb-6">
+    <article class="post-article prose prose-lg w-full max-w-full sm:max-w-[95%] md:max-w-[92%] lg:max-w-[900px] xl:max-w-[960px] 2xl:max-w-[1000px] prose-img:mx-auto px-0">
+      <header class="not-prose mb-7 border-b border-base-300 pb-5 sm:mb-8 sm:pb-6">
         <div class="mb-3 flex flex-wrap items-center gap-3 text-sm text-base-content/60">
           {pubDatetime && <time datetime={pubDatetime.toISOString()}>{displayDate}</time>}
           {badge && <span class="badge badge-secondary">{badge}</span>}
@@ -67,6 +67,8 @@ if (isBlog) {
           )}
         </div>
       </header>
+
+      {description && <p class="not-prose mb-8 rounded-lg border border-base-200 bg-base-200/35 px-4 py-3 text-base leading-8 text-base-content/70 sm:px-5">{description}</p>}
 
       <slot />
     </article>
@@ -95,6 +97,8 @@ if (isBlog) {
           if (!image.hasAttribute('sizes')) {
             image.setAttribute('sizes', articleImageSizes);
           }
+          image.setAttribute('tabindex', '0');
+          image.setAttribute('role', 'button');
 
           if (image.complete) {
             image.classList.add('loaded');
@@ -152,8 +156,57 @@ if (isBlog) {
 
     optimizeArticleMedia();
 
+    function setupArticleLightbox() {
+      if (document.querySelector('.article-lightbox')) return;
+
+      const lightbox = document.createElement('button');
+      lightbox.type = 'button';
+      lightbox.className = 'article-lightbox';
+      lightbox.setAttribute('aria-label', 'Close image preview');
+
+      const image = document.createElement('img');
+      image.alt = '';
+      lightbox.appendChild(image);
+      document.body.appendChild(lightbox);
+
+      const close = () => {
+        lightbox.classList.remove('is-open');
+        image.removeAttribute('src');
+        document.documentElement.classList.remove('article-lightbox-open');
+      };
+
+      lightbox.addEventListener('click', close);
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') close();
+      });
+
+      document.addEventListener('click', (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLImageElement)) return;
+        if (!target.closest('.post-article')) return;
+
+        image.src = target.currentSrc || target.src;
+        image.alt = target.alt || '';
+        lightbox.classList.add('is-open');
+        document.documentElement.classList.add('article-lightbox-open');
+      });
+
+      document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        const target = event.target;
+        if (!(target instanceof HTMLImageElement)) return;
+        if (!target.closest('.post-article')) return;
+
+        event.preventDefault();
+        target.click();
+      });
+    }
+
+    setupArticleLightbox();
+
     document.addEventListener('astro:page-load', () => {
       optimizeArticleMedia();
+      setupArticleLightbox();
     });
   </script>}
 </BaseLayout>

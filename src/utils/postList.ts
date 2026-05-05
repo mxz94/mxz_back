@@ -44,7 +44,7 @@ function getCachedSlug(post: PostEntry) {
 }
 
 export function sortPostsByDate(posts: PostEntry[]) {
-  return posts.sort((a, b) => {
+  return [...posts].sort((a, b) => {
     const aDate = a.data.pubDatetime || new Date(0);
     const bDate = b.data.pubDatetime || new Date(0);
     return bDate.getTime() - aDate.getTime();
@@ -67,4 +67,22 @@ export function buildPostListItems(posts: PostEntry[], priorityImageLimit = 2): 
       priority,
     };
   });
+}
+
+export function groupPostsByTag(posts: PostEntry[]) {
+  const postsByTag = new Map<string, PostEntry[]>();
+
+  posts.forEach((post) => {
+    post.data.tags?.forEach((tag) => {
+      const taggedPosts = postsByTag.get(tag);
+
+      if (taggedPosts) {
+        taggedPosts.push(post);
+      } else {
+        postsByTag.set(tag, [post]);
+      }
+    });
+  });
+
+  return postsByTag;
 }

@@ -44,20 +44,17 @@ const { Content } = await entry.render();
   hasArticleMedia={hasArticleMedia}
 >
   <Content />
-    <div class="flex justify-between">
+    <nav class="not-prose mt-12 grid gap-3 border-t border-base-300 pt-6 sm:grid-cols-2" aria-label="Post navigation">
         {
             prev ? (
-                    <a href={`/note/${prev?.slug}/`} class="btn btn-ghost">
-                        <svg
-                                class="h-6 w-6 fill-current md:h-8 md:w-8"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                        >
-                            <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
-                        </svg>
-                        {prev.data.title}
+                    <a href={`/note/${prev?.slug}/`} class="group rounded-lg border border-base-300 bg-base-100 p-4 no-underline transition hover:-translate-y-0.5 hover:border-base-content/20 hover:bg-base-200/50">
+                        <span class="mb-1 block text-xs text-base-content/45">Previous</span>
+                        <span class="flex items-center gap-2 text-sm font-semibold leading-6 text-base-content">
+                            <svg class="h-5 w-5 shrink-0 fill-current transition group-hover:-translate-x-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
+                            </svg>
+                            <span class="line-clamp-2">{prev.data.title}</span>
+                        </span>
                     </a>
             ) : (
                     <div />
@@ -65,21 +62,18 @@ const { Content } = await entry.render();
         }
         {
             next ? (
-                    <a href={`/note/${next?.slug}/`} class="btn btn-ghost">
-                        {next.data.title}
-                        <svg
-                                class="h-6 w-6 fill-current md:h-8 md:w-8"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                        >
-                            <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
-                        </svg>
+                    <a href={`/note/${next?.slug}/`} class="group rounded-lg border border-base-300 bg-base-100 p-4 text-right no-underline transition hover:-translate-y-0.5 hover:border-base-content/20 hover:bg-base-200/50">
+                        <span class="mb-1 block text-xs text-base-content/45">Next</span>
+                        <span class="flex items-center justify-end gap-2 text-sm font-semibold leading-6 text-base-content">
+                            <span class="line-clamp-2">{next.data.title}</span>
+                            <svg class="h-5 w-5 shrink-0 fill-current transition group-hover:translate-x-0.5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M8.59,16.58L13.17,12L8.59,7.41L10,6L16,12L10,18L8.59,16.58Z" />
+                            </svg>
+                        </span>
                     </a>
             ) : (
                     <div />
             )
         }
-    </div>
+    </nav>
 </PostLayout>

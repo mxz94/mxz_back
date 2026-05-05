@@ -1,7 +1,6 @@
 **/__pycache__
 mxz_back.iml
-!/.idea/
-!/.idea/
+.idea/
 /node_modules/
 /.astro/
 /.vscode/
@@ -17,6 +16,8 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+astro-dev.log
+astro-dev.err.log
 
 
 # environment variables

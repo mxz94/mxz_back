@@ -3,8 +3,11 @@ const { title, img, desc, url, badge, tags, target = "_blank", priority = false 
 const imageLoading = priority ? "eager" : "lazy";
 const imageFetchPriority = priority ? "high" : undefined;
 const titleText = String(title || "");
-const placeholderMatch = titleText.match(/\d{4}/);
-const placeholderLabel = placeholderMatch?.[0] || Array.from(titleText.replace(/\s+/g, "")).slice(0, 2).join("") || "Mxz";
+const visibleTags = tags?.slice(0, 3) || [];
+const hiddenTagCount = Math.max((tags?.length || 0) - visibleTags.length, 0);
+const displayDate = Astro.props.pubDatetime
+  ? new Date(Astro.props.pubDatetime).toISOString().slice(0, 10)
+  : undefined;
 import { Image } from "astro:assets";
 ---
 
@@ -23,7 +26,7 @@ import { Image } from "astro:assets";
             fetchpriority={imageFetchPriority}
             decoding="async"
             class="aspect-square w-full rounded-lg object-cover transition duration-200 group-hover:scale-[1.015]"
-            widths={[192, 288, 384]}
+            widths={[384]}
             sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, (max-width: 1024px) 176px, 192px"
           />
         </a>
@@ -31,29 +34,27 @@ import { Image } from "astro:assets";
         <a
           href={url}
           target={target}
-          class="relative block aspect-square w-28 shrink-0 overflow-hidden rounded-lg border border-base-300 bg-base-200/70 text-base-content/65 transition group-hover:border-base-content/20 group-hover:bg-base-200 sm:w-36 md:w-44 lg:w-48"
+          class="block aspect-square w-28 shrink-0 overflow-hidden rounded-lg border border-base-300 bg-base-200/70 transition group-hover:border-base-content/20 group-hover:bg-base-200 sm:w-36 md:w-44 lg:w-48"
           aria-label={titleText}
-        >
-          <span class="absolute inset-x-3 top-3 h-px bg-base-content/10"></span>
-          <span class="flex h-full w-full items-center justify-center px-3 text-center text-lg font-semibold leading-tight sm:text-xl">
-            {placeholderLabel}
-          </span>
-          <span class="absolute bottom-3 left-3 right-3 h-px bg-base-content/10"></span>
-        </a>
+        />
       )
     }
     <div class="min-w-0 grow">
-      <div class="flex items-start gap-2">
-        <h2 class="m-0 min-w-0 text-lg font-semibold leading-snug sm:flex-1 sm:text-xl">
+      <div class="flex min-h-full flex-col">
+        <div class="flex items-start gap-2">
+          <div class="min-w-0 sm:flex-1">
+            {displayDate && <time datetime={displayDate} class="mb-1 block text-xs text-base-content/45">{displayDate}</time>}
+            <h2 class="m-0 min-w-0 text-lg font-semibold leading-snug sm:text-xl">
           <a href={url} target={target} class="hover:underline">
             {title}
           </a>
           {badge && <span class="badge badge-secondary badge-sm ml-2 align-middle">{badge}</span>}
-        </h2>
+            </h2>
+          </div>
         {
-          tags && tags.length > 0 && (
+            visibleTags.length > 0 && (
             <div class="ml-auto flex max-w-[42%] shrink-0 flex-wrap justify-end gap-1 pt-0.5 sm:max-w-[45%]">
-              {tags.map((tag) => (
+                {visibleTags.map((tag) => (
                 <a
                   href={`/tag/${tag}`}
                   class="badge badge-outline badge-sm h-auto min-h-0 px-2 py-0.5 text-[11px] leading-tight no-underline"
@@ -61,13 +62,19 @@ import { Image } from "astro:assets";
                   {tag}
                 </a>
               ))}
+                {hiddenTagCount > 0 && (
+                  <span class="badge badge-ghost badge-sm h-auto min-h-0 px-2 py-0.5 text-[11px] leading-tight">
+                    +{hiddenTagCount}
+                  </span>
+                )}
             </div>
           )
         }
+        </div>
+        <a href={url} target={target} class="block">
+          <p class="mt-2 line-clamp-2 text-sm leading-7 text-base-content/70 sm:line-clamp-3 sm:text-base">{desc}</p>
+        </a>
       </div>
-      <a href={url} target={target} class="block">
-        <p class="mt-2 line-clamp-3 text-sm leading-7 text-base-content/75 sm:text-base">{desc}</p>
-      </a>
     </div>
   </div>
 </article>

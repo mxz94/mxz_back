@@ -1,6 +1,4 @@
 ---
-import { Image } from "astro:assets";
-
 const { tags = [], comment, subject, create_time, rating } = Astro.props;
 const { card_subtitle, title, cover_url, url } = subject;
 const rate = rating?.value;
@@ -12,13 +10,13 @@ const watchedDate = create_time?.substring(0, 10);
     <div class="flex gap-4 p-3 sm:p-4">
       {
         cover_url && (
-          <Image
+          <img
             src={cover_url}
             width={220}
             height={320}
-            format="webp"
             alt={title}
             loading="lazy"
+            decoding="async"
             class="h-32 w-24 flex-none rounded-md object-cover sm:h-40 sm:w-28"
           />
         )
