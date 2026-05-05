@@ -1,10 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import HorizontalCard from "../components/HorizontalCard.astro";
-import suppDesc from "../utils/suppDesc";
-import createSlug from "../utils/createSlug";
 import { getBlogs, getNotes } from "../utils";
-import getHeroImageLinkFromMd from "../utils/getHeroImageLinkFromMd";
+import { buildPostListItems } from "../utils/postList";
 
 const notes = await getNotes();
 const blogs = await getBlogs();
@@ -30,16 +28,9 @@ const getHomePostClass = (index) => {
   return "hidden 2xl:block";
 };
 
-let priorityImageCount = 0;
 const listSections = sections.map((section) => ({
   ...section,
-  posts: section.posts.map((post) => {
-    const img = getHeroImageLinkFromMd(post);
-    const priority = Boolean(img) && priorityImageCount < 2;
-    if (img) priorityImageCount += 1;
-
-    return { post, img, priority };
-  }),
+  posts: buildPostListItems(section.posts),
 }));
 ---
 
@@ -61,13 +52,13 @@ const listSections = sections.map((section) => ({
             </a>
           </div>
           <div class="grid gap-3">
-            {section.posts.map(({ post, img, priority }, index) => (
+            {section.posts.map(({ post, img, desc, url, priority }, index) => (
               <div class={getHomePostClass(index)}>
                 <HorizontalCard
                   title={post.data.title}
                   img={img}
-                  desc={suppDesc(post.data.description, post.body)}
-                  url={createSlug(post)}
+                  desc={desc}
+                  url={url}
                   target="_self"
                   badge={post.data.badge}
                   tags={post.data.tags}
