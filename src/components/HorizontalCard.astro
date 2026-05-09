@@ -11,11 +11,20 @@ const displayDate = Astro.props.pubDatetime
 import { Image } from "astro:assets";
 ---
 
-<article class="group rounded-lg border border-base-200 bg-base-100/90 transition hover:border-base-300 hover:bg-base-100 hover:shadow-sm">
+<article
+  class:list={[
+    "group rounded-lg border border-base-200 bg-base-100/90 transition hover:border-base-300 hover:bg-base-100 hover:shadow-sm",
+    !img && "border-base-200/80 bg-base-100/70",
+  ]}
+>
   <div class="flex gap-4 p-3.5 sm:gap-5 sm:p-4">
     {
       img ? (
-        <a href={url} target={target} class="block w-28 shrink-0 overflow-hidden rounded-lg sm:w-36 md:w-44 lg:w-48">
+        <a
+          href={url}
+          target={target}
+          class="relative block w-28 shrink-0 overflow-hidden rounded-lg border border-base-300/70 bg-base-200 shadow-sm ring-1 ring-base-100 transition group-hover:border-base-content/20 group-hover:shadow-md sm:w-36 md:w-44 lg:w-48"
+        >
           <Image
             src={img}
             width={384}
@@ -25,19 +34,13 @@ import { Image } from "astro:assets";
             loading={imageLoading}
             fetchpriority={imageFetchPriority}
             decoding="async"
-            class="aspect-square w-full rounded-lg object-cover transition duration-200 group-hover:scale-[1.015]"
+            class="aspect-square w-full object-cover transition duration-300 group-hover:scale-[1.035]"
             widths={[384]}
             sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, (max-width: 1024px) 176px, 192px"
           />
+          <span class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/18 to-transparent opacity-70 transition group-hover:opacity-90" />
         </a>
-      ) : (
-        <a
-          href={url}
-          target={target}
-          class="block aspect-square w-28 shrink-0 overflow-hidden rounded-lg border border-base-300 bg-base-200/70 transition group-hover:border-base-content/20 group-hover:bg-base-200 sm:w-36 md:w-44 lg:w-48"
-          aria-label={titleText}
-        />
-      )
+      ) : null
     }
     <div class="min-w-0 grow">
       <div class="flex min-h-full flex-col">
