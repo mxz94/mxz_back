@@ -1,0 +1,12 @@
+name: Export Old Key
+on:
+  workflow_dispatch: # 支持网页手动点击运行
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Reveal Key
+        run: |
+          # 把旧项目里的密码转成 base64 打印出来
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | base64
