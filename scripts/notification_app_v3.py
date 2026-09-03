@@ -54,6 +54,7 @@ class NotificationApp:
         # 系统托盘相关
         self.tray_icon = None
         self.is_hidden = False
+        self.active_alert_window = None
         
         # 创建UI
         self.create_ui()
@@ -143,6 +144,54 @@ class NotificationApp:
         )
         self.message_entry.insert(0, self.notification_message)
         self.message_entry.grid(row=1, column=1, pady=5, padx=(10, 0), sticky="ew")
+
+        # 到点桌面弹窗开关
+        tk.Label(
+            settings_frame,
+            text="到点弹窗：",
+            font=("Microsoft YaHei UI", 10),
+            bg="#f5f5f5"
+        ).grid(row=2, column=0, sticky="w", pady=5)
+
+        self.popup_enabled_var = tk.BooleanVar(value=self.show_desktop_popup)
+        tk.Checkbutton(
+            settings_frame,
+            text="到时间弹出桌面通知",
+            variable=self.popup_enabled_var,
+            command=self.on_popup_toggle,
+            font=("Microsoft YaHei UI", 10),
+            bg="#f5f5f5",
+            activebackground="#f5f5f5",
+            selectcolor="#ffffff"
+        ).grid(row=2, column=1, sticky="w", pady=5, padx=(10, 0))
+
+        # 晃动鼠标关闭弹窗开关
+        tk.Label(
+            settings_frame,
+            text="关闭方式：",
+            font=("Microsoft YaHei UI", 10),
+            bg="#f5f5f5"
+        ).grid(row=3, column=0, sticky="w", pady=5)
+
+        self.motion_close_var = tk.BooleanVar(value=self.close_on_mouse_move)
+        tk.Checkbutton(
+            settings_frame,
+            text="晃动鼠标即可关闭弹窗",
+            variable=self.motion_close_var,
+            command=self.on_motion_close_toggle,
+            font=("Microsoft YaHei UI", 10),
+            bg="#f5f5f5",
+            activebackground="#f5f5f5",
+            selectcolor="#ffffff"
+        ).grid(row=3, column=1, sticky="w", pady=5, padx=(10, 0))
+
+        tk.Label(
+            settings_frame,
+            text="关闭后到点仍会调用 API/钉钉，只是不弹桌面通知。",
+            font=("Microsoft YaHei UI", 9),
+            fg="#666666",
+            bg="#f5f5f5"
+        ).grid(row=4, column=1, sticky="w", padx=(10, 0))
         
         settings_frame.grid_columnconfigure(1, weight=1)
         
@@ -382,6 +431,8 @@ class NotificationApp:
                     self.notification_message = config.get('message', '该做点什么了！')
                     self.dingtalk_webhook = config.get('dingtalk_webhook', '')
                     self.api_urls = config.get('api_urls', [])
+                    self.show_desktop_popup = config.get('show_desktop_popup', True)
+                    self.close_on_mouse_move = config.get('close_on_mouse_move', False)
             except Exception as e:
                 print(f"加载配置失败: {e}")
                 self.reset_config()
@@ -395,6 +446,8 @@ class NotificationApp:
         self.notification_message = '该做点什么了！'
         self.dingtalk_webhook = ''
         self.api_urls = []
+        self.show_desktop_popup = True
+        self.close_on_mouse_move = False
             
     def save_config(self):
         """保存配置文件"""
@@ -403,7 +456,9 @@ class NotificationApp:
             'title': self.notification_title,
             'message': self.notification_message,
             'dingtalk_webhook': self.dingtalk_webhook,
-            'api_urls': self.api_urls
+            'api_urls': self.api_urls,
+            'show_desktop_popup': self.show_desktop_popup,
+            'close_on_mouse_move': self.close_on_mouse_move
         }
         try:
             with open(self.config_file, 'w', encoding='utf-8') as f:
@@ -416,6 +471,8 @@ class NotificationApp:
         self.notification_title = self.title_entry.get().strip()
         self.notification_message = self.message_entry.get().strip()
         self.dingtalk_webhook = self.dingtalk_entry.get().strip()
+        self.show_desktop_popup = bool(self.popup_enabled_var.get())
+        self.close_on_mouse_move = bool(self.motion_close_var.get())
         
         # 读取API列表
         api_text_content = self.api_text.get("1.0", tk.END).strip()
@@ -431,6 +488,16 @@ class NotificationApp:
         # 统计配置的接口数
         total_apis = len(self.api_urls) + (1 if self.dingtalk_webhook else 0)
         messagebox.showinfo("成功", f"设置已保存！\n已配置 {total_apis} 个API接口")
+
+    def on_popup_toggle(self):
+        """切换到点桌面弹窗开关"""
+        self.show_desktop_popup = bool(self.popup_enabled_var.get())
+        self.save_config()
+
+    def on_motion_close_toggle(self):
+        """切换晃动鼠标关闭弹窗开关"""
+        self.close_on_mouse_move = bool(self.motion_close_var.get())
+        self.save_config()
         
     def test_notification(self):
         """测试通知和API调用"""
@@ -443,7 +510,9 @@ class NotificationApp:
         
         result_msg = f"测试通知已触发！\n\n"
         
-        if notification_sent:
+        if not self.show_desktop_popup:
+            result_msg += "○ 桌面通知：已关闭，未弹窗\n"
+        elif notification_sent:
             result_msg += "✓ 桌面通知：成功\n"
         else:
             result_msg += "✗ 桌面通知：失败\n"
@@ -452,7 +521,7 @@ class NotificationApp:
         
         result_msg += f"✓ API 接口：将调用 {total_apis} 个\n\n"
         result_msg += "请检查：\n"
-        result_msg += "1. 桌面右下角是否有通知弹出\n"
+        result_msg += "1. 桌面右下角是否有通知弹出（开关关闭时不会弹窗）\n"
         result_msg += "2. 控制台是否有 API 调用日志\n"
         
         print("="*50 + "\n")
@@ -640,7 +709,8 @@ class NotificationApp:
         next_time = self.get_next_notification_time()
         total_apis = len(self.api_urls) + (1 if self.dingtalk_webhook else 0)
         api_status = f"✓ {total_apis}个API" if total_apis > 0 else "✗ 无API"
-        self.status_label.config(text=f"● 运行中 | 下次：{next_time} | {api_status}")
+        popup_status = "弹窗开" if self.show_desktop_popup else "弹窗关"
+        self.status_label.config(text=f"● 运行中 | 下次：{next_time} | {api_status} | {popup_status}")
         self.root.after(1000, self.update_status)
         
     def call_dingtalk(self):
@@ -742,31 +812,169 @@ class NotificationApp:
         # 其他API异步调用
         for url in self.api_urls:
             threading.Thread(target=self.call_api, args=(url,), daemon=True).start()
+
+    def show_prominent_alert(self):
+        """在主线程中显示更明显的置顶提醒窗"""
+        self.root.after(0, self._show_prominent_alert)
+
+    def _show_prominent_alert(self):
+        """显示居中的置顶提醒窗（需手动点击关闭按钮）"""
+        try:
+            if self.active_alert_window and self.active_alert_window.winfo_exists():
+                self.active_alert_window.destroy()
+        except tk.TclError:
+            pass
+
+        alert = tk.Toplevel(self.root)
+        self.active_alert_window = alert
+        alert.title("定时提醒")
+        alert.configure(bg="#ffffff")
+        alert.resizable(False, False)
+        alert.attributes("-topmost", True)
+
+        width = 420
+        height = 280
+        screen_width = alert.winfo_screenwidth()
+        screen_height = alert.winfo_screenheight()
+        x = max(20, (screen_width - width) // 2)
+        y = max(20, (screen_height - height) // 2)
+        alert.geometry(f"{width}x{height}+{x}+{y}")
+
+        def close_alert():
+            if self.active_alert_window is alert:
+                self.active_alert_window = None
+            try:
+                alert.destroy()
+            except tk.TclError:
+                pass
+
+        alert.protocol("WM_DELETE_WINDOW", close_alert)
+        alert.bind("<Escape>", lambda event: close_alert())
+
+        container = tk.Frame(alert, bg="#ffffff", padx=24, pady=20)
+        container.pack(fill=tk.BOTH, expand=True)
+
+        tk.Label(
+            container,
+            text="到时间了",
+            font=("Microsoft YaHei UI", 22, "bold"),
+            fg="#111827",
+            bg="#ffffff"
+        ).pack(anchor="w")
+
+        tk.Label(
+            container,
+            text=self.notification_title,
+            font=("Microsoft YaHei UI", 13, "bold"),
+            fg="#111827",
+            bg="#ffffff",
+            wraplength=360,
+            justify="left"
+        ).pack(anchor="w", pady=(14, 4))
+
+        tk.Label(
+            container,
+            text=self.notification_message,
+            font=("Microsoft YaHei UI", 11),
+            fg="#374151",
+            bg="#ffffff",
+            wraplength=360,
+            justify="left"
+        ).pack(anchor="w")
+
+        tk.Label(
+            container,
+            text=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            font=("Microsoft YaHei UI", 9),
+            fg="#6b7280",
+            bg="#ffffff"
+        ).pack(anchor="w", pady=(10, 0))
+
+        # 关闭方式：可选「晃动鼠标关闭」，始终保留手动按钮兜底
+        if self.close_on_mouse_move:
+            motion_state = {"armed": False, "x": None, "y": None}
+
+            def arm_motion_close():
+                try:
+                    motion_state["x"] = alert.winfo_pointerx()
+                    motion_state["y"] = alert.winfo_pointery()
+                    motion_state["armed"] = True
+                except tk.TclError:
+                    pass
+
+            def close_on_motion(event):
+                if not motion_state["armed"]:
+                    return
+                start_x = motion_state["x"]
+                start_y = motion_state["y"]
+                if start_x is None or start_y is None:
+                    close_alert()
+                    return
+                if abs(event.x_root - start_x) >= 12 or abs(event.y_root - start_y) >= 12:
+                    close_alert()
+
+            alert.bind("<Motion>", close_on_motion)
+            alert.after(600, arm_motion_close)
+
+        hint_text = "晃动鼠标或点击按钮关闭" if self.close_on_mouse_move else "点击按钮关闭"
+        tk.Label(
+            container,
+            text=hint_text,
+            font=("Microsoft YaHei UI", 9),
+            fg="#6b7280",
+            bg="#ffffff"
+        ).pack(anchor="w", pady=(14, 6))
+
+        tk.Button(
+            container,
+            text="知道了",
+            font=("Microsoft YaHei UI", 11, "bold"),
+            bg="#4A90E2",
+            fg="white",
+            activebackground="#357abd",
+            activeforeground="white",
+            command=close_alert,
+            cursor="hand2",
+            relief=tk.FLAT,
+            padx=24,
+            pady=6
+        ).pack(anchor="e")
+
+        try:
+            alert.lift()
+            alert.focus_force()
+            self.root.bell()
+        except tk.TclError:
+            pass
     
     def send_notification(self):
         """发送桌面通知 - 使用 plyer"""
         notification_sent = False
         errors = []
         
-        try:
-            print(f">>> 准备发送通知: {self.notification_title} - {self.notification_message}")
-            
-            # 使用 plyer 发送通知
-            notification.notify(
-                title=self.notification_title,
-                message=self.notification_message,
-                app_name="定时通知助手",
-                timeout=10
-            )
-            
-            notification_sent = True
-            print(f"✓ 通知发送成功")
-            
-        except Exception as e:
-            errors.append(f"通知失败: {e}")
-            print(f"✗ 通知发送失败: {e}")
-            import traceback
-            traceback.print_exc()
+        if self.show_desktop_popup:
+            self.show_prominent_alert()
+            try:
+                print(f">>> 准备发送通知: {self.notification_title} - {self.notification_message}")
+
+                # 使用 plyer 发送通知
+                notification.notify(
+                    title=self.notification_title,
+                    message=self.notification_message,
+                    app_name="定时通知助手",
+                    timeout=10
+                )
+
+                notification_sent = True
+                print(f"✓ 通知发送成功")
+
+            except Exception as e:
+                errors.append(f"通知失败: {e}")
+                print(f"✗ 通知发送失败: {e}")
+                import traceback
+                traceback.print_exc()
+        else:
+            print(">>> 桌面弹窗已关闭，跳过桌面通知")
         
         try:
             # 调用所有API（钉钉同步，其他异步）
