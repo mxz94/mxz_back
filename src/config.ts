@@ -12,7 +12,7 @@ export const SITE: Site = {
     title: "首页",
     ogImage: "og-image.jpg",
     lightAndDarkMode: false,
-    posts: ["blog", "note"],
+    posts: ["blog"],
     siteTime: "06/30/2022 00:06:00"
 };
 export const SITE_TITLE = SITE.desc;

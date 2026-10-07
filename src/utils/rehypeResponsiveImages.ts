@@ -1,5 +1,5 @@
-const ARTICLE_IMAGE_SIZES =
-  "(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) 92vw, (max-width: 1439px) calc(100vw - 22rem), 1280px";
+// 正文图片：补上懒加载与异步解码。
+// 没再加 sizes —— 没有 srcset 时 sizes 不起作用，只会让标签变长。
 
 type HastNode = {
   type?: string;
@@ -18,7 +18,6 @@ function visit(node: HastNode) {
     if (src && !src.startsWith("data:")) {
       properties.loading ??= "lazy";
       properties.decoding ??= "async";
-      properties.sizes ??= ARTICLE_IMAGE_SIZES;
       node.properties = properties;
     }
   }

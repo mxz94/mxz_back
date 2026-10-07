@@ -7,6 +7,8 @@ mxz_back.iml
 /dist/
 # build output
 dist/
+# 列表缩略图由 scripts/gen-thumbs.mjs 生成，不入库
+public/thumb/
 .cache
 # dependencies
 node_modules/

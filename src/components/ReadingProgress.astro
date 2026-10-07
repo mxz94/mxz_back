@@ -1,49 +1,31 @@
-<!-- Reading Progress Bar -->
-<div id="reading-progress" class="fixed top-0 left-0 w-full h-1 bg-transparent z-50">
-  <div id="progress-bar" class="h-full bg-primary transition-all duration-150 ease-out" style="width: 0%"></div>
-</div>
+<div class="reading-progress" id="progress-bar" aria-hidden="true"></div>
 
 <script>
   function initReadingProgress() {
-    const progressBar = document.getElementById('progress-bar');
-    if (!progressBar) return;
-    if (progressBar.dataset.initialized === 'true') return;
-    progressBar.dataset.initialized = 'true';
+    const bar = document.getElementById("progress-bar");
+    if (!bar || bar.dataset.initialized === "true") return;
+    bar.dataset.initialized = "true";
 
     let ticking = false;
 
-    function updateProgress() {
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY;
-      const scrollableDistance = documentHeight - windowHeight;
-      const scrollPercentage = scrollableDistance > 0 ? (scrollTop / scrollableDistance) * 100 : 0;
-
-      progressBar.style.width = `${Math.min(scrollPercentage, 100)}%`;
+    function update() {
+      const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+      const ratio = scrollable > 0 ? window.scrollY / scrollable : 0;
+      bar.style.width = `${Math.min(ratio * 100, 100)}%`;
       ticking = false;
     }
 
-    function requestProgressUpdate() {
+    function requestUpdate() {
       if (ticking) return;
       ticking = true;
-      window.requestAnimationFrame(updateProgress);
+      window.requestAnimationFrame(update);
     }
 
-    window.addEventListener('scroll', requestProgressUpdate, { passive: true });
-    window.addEventListener('resize', requestProgressUpdate, { passive: true });
-    updateProgress();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate, { passive: true });
+    update();
   }
 
   initReadingProgress();
-  document.addEventListener('astro:page-load', initReadingProgress);
+  document.addEventListener("astro:page-load", initReadingProgress);
 </script>
-
-<style>
-  #reading-progress {
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  #progress-bar {
-    box-shadow: 0 0 10px rgba(var(--p), 0.5);
-  }
-</style>

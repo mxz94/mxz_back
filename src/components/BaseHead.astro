@@ -23,6 +23,29 @@ const socialImageURL = new URL(image, Astro.site ?? Astro.url);
 <link rel="canonical" href={canonicalURL} />
 <meta name="generator" content={Astro.generator} />
 
+<!-- 首屏前同步写入主题，避免深色模式闪白 -->
+<script is:inline>
+  (function () {
+    try {
+      var saved = localStorage.getItem("theme");
+      var dark = saved
+        ? saved === "dark"
+        : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      document.documentElement.dataset.theme = dark ? "dark" : "light";
+    } catch (e) {}
+  })();
+</script>
+
+{/* 禁用 JS 时不隐藏渐入元素 */}
+<noscript>
+  <style>
+    .reveal {
+      opacity: 1;
+      transform: none;
+    }
+  </style>
+</noscript>
+
 <!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="title" content={title} />

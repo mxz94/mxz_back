@@ -1,33 +1,29 @@
 ---
 import { getPublicAllPosts } from "../../utils";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import PageHeader from "../../components/PageHeader.astro";
 import getUniqueTags from "../../utils/getUniqueTags";
-import Tag from "@components/Tag.astro";
 
 const posts = await getPublicAllPosts();
 const { tags, tagCounts } = getUniqueTags(posts);
-const popularTags = [...tags]
-  .sort((tagA, tagB) => tagCounts[tagB] - tagCounts[tagA] || tagA.localeCompare(tagB))
-  .slice(0, 18);
-
+const sorted = [...tags].sort(
+  (a, b) => tagCounts[b] - tagCounts[a] || a.localeCompare(b)
+);
 ---
 
-<BaseLayout title="标签" sideBarActiveItemID="tags">
-  <PageHeader title="标签" description="按主题翻找文章，数量越多越容易被重新遇见。" count={`${tags.length} 个`} />
-  <div class="space-y-8">
-    <section>
-      <h2 class="mb-3 mt-0 text-xl font-bold text-base-content">Popular</h2>
-      <ul class="flex flex-wrap gap-3">
-        {popularTags.map((tag) => <Tag name={tag} size="lg" count={tagCounts[tag]} />)}
-      </ul>
-    </section>
+<BaseLayout title="标签">
+  <h1 class="page-title">标签</h1>
+  <p class="page-desc">共 {tags.length} 个标签，按篇数排列。</p>
 
-    <section>
-      <h2 class="mb-3 mt-0 border-t border-base-300 pt-5 text-xl font-bold text-base-content">All tags</h2>
-      <ul class="flex flex-wrap gap-2.5">
-        {tags.map((tag) => <Tag name={tag} count={tagCounts[tag]} />)}
-      </ul>
-    </section>
-  </div>
+  <ul class="tag-list" style="margin-top:1.75rem">
+    {
+      sorted.map((tag) => (
+        <li>
+          <a class="tag tag--lg" href={`/tag/${tag}/`}>
+            {tag}
+            <span class="tag-count">{tagCounts[tag]}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
 </BaseLayout>

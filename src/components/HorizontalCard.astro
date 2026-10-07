@@ -1,83 +1,51 @@
 ---
-const { title, img, desc, url, badge, tags, target = "_blank", priority = false } = Astro.props;
+const { title, img, desc, url, badge, tags = [], priority = false } = Astro.props;
 const imageLoading = priority ? "eager" : "lazy";
 const imageFetchPriority = priority ? "high" : undefined;
-const titleText = String(title || "");
-const visibleTags = tags?.slice(0, 3) || [];
-const hiddenTagCount = Math.max((tags?.length || 0) - visibleTags.length, 0);
+const visibleTags = tags.slice(0, 2);
 const displayDate = Astro.props.pubDatetime
   ? new Date(Astro.props.pubDatetime).toISOString().slice(0, 10)
   : undefined;
-import { Image } from "astro:assets";
+
+// 列表里的图只显示 136px 宽，原图动辄几百 KB。
+// 优先用预先生成的 400px 缩略图（scripts/gen-thumbs.mjs），
+// 万一缩略图缺失就回退到原图。
+const thumb =
+  img && img.startsWith("/img/")
+    ? "/thumb/" + img.slice(5).replace(/\.(jpe?g|png|webp)$/i, ".webp")
+    : img;
 ---
 
-<article
-  class:list={[
-    "group rounded-lg border border-base-200 bg-base-100/90 transition hover:border-base-300 hover:bg-base-100 hover:shadow-sm",
-    !img && "border-base-200/80 bg-base-100/70",
-  ]}
->
-  <div class="flex gap-4 p-3.5 sm:gap-5 sm:p-4">
+<li class="post-item reveal">
+  <a class="post-link" href={url}>
+    <div class="post-body">
+      <div class="post-meta">
+        {displayDate && <time datetime={displayDate}>{displayDate}</time>}
+        {badge && <span>· {badge}</span>}
+        {
+          visibleTags.length > 0 && (
+            <span style="margin-left:auto">{visibleTags.join(" · ")}</span>
+          )
+        }
+      </div>
+      <h2 class="post-title">{title}</h2>
+      {desc && <p class="post-desc">{desc}</p>}
+    </div>
     {
-      img ? (
-        <a
-          href={url}
-          target={target}
-          class="relative block w-28 shrink-0 overflow-hidden rounded-lg border border-base-300/70 bg-base-200 shadow-sm ring-1 ring-base-100 transition group-hover:border-base-content/20 group-hover:shadow-md sm:w-36 md:w-44 lg:w-48"
-        >
-          <Image
-            src={img}
-            width={384}
-            height={384}
-            format="webp"
-            alt={title}
+      img && (
+        <div class="post-thumb">
+          <img
+            src={thumb}
+            width="400"
+            height="300"
+            alt=""
             loading={imageLoading}
             fetchpriority={imageFetchPriority}
             decoding="async"
-            class="aspect-square w-full object-cover transition duration-300 group-hover:scale-[1.035]"
-            widths={[384]}
-            sizes="(max-width: 640px) 112px, (max-width: 768px) 144px, (max-width: 1024px) 176px, 192px"
+            onerror={`this.onerror=null;this.src=${JSON.stringify(img)}`}
           />
-          <span class="pointer-events-none absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/18 to-transparent opacity-70 transition group-hover:opacity-90" />
-        </a>
-      ) : null
-    }
-    <div class="min-w-0 grow">
-      <div class="flex min-h-full flex-col">
-        <div class="flex items-start gap-2">
-          <div class="min-w-0 sm:flex-1">
-            {displayDate && <time datetime={displayDate} class="mb-1 block text-xs text-base-content/45">{displayDate}</time>}
-            <h2 class="m-0 min-w-0 text-lg font-semibold leading-snug sm:text-xl">
-          <a href={url} target={target} class="hover:underline">
-            {title}
-          </a>
-          {badge && <span class="badge badge-secondary badge-sm ml-2 align-middle">{badge}</span>}
-            </h2>
-          </div>
-        {
-            visibleTags.length > 0 && (
-            <div class="ml-auto flex max-w-[42%] shrink-0 flex-wrap justify-end gap-1 pt-0.5 sm:max-w-[45%]">
-                {visibleTags.map((tag) => (
-                <a
-                  href={`/tag/${tag}`}
-                  class="badge badge-outline badge-sm h-auto min-h-0 px-2 py-0.5 text-[11px] leading-tight no-underline"
-                >
-                  {tag}
-                </a>
-              ))}
-                {hiddenTagCount > 0 && (
-                  <span class="badge badge-ghost badge-sm h-auto min-h-0 px-2 py-0.5 text-[11px] leading-tight">
-                    +{hiddenTagCount}
-                  </span>
-                )}
-            </div>
-          )
-        }
         </div>
-        <a href={url} target={target} class="block">
-          <p class="mt-2 line-clamp-2 text-sm leading-7 text-base-content/70 sm:line-clamp-3 sm:text-base">{desc}</p>
-        </a>
-      </div>
-    </div>
-  </div>
-</article>
+      )
+    }
+  </a>
+</li>

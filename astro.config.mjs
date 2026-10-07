@@ -11,8 +11,8 @@ import { rehypeResponsiveImages } from "./src/utils/rehypeResponsiveImages.ts";
 // https://astro.build/config
 export default defineConfig({
   site: SITE.website,
-  // 站内链接预取：鼠标悬停/进入视口即后台拉取，点文章近瞬时打开
-  prefetch: { prefetchAll: true, defaultStrategy: "viewport" },
+  // 站内链接预取：只在鼠标悬停/触摸时拉取，避免进页面就并发十几个请求反而拖慢
+  prefetch: { prefetchAll: true, defaultStrategy: "hover" },
   integrations: [mdx(), sitemap(), tailwind(), markdoc()],
   markdown: {
     remarkPlugins: [[remarkToc, { heading: "目录" }], bilibiliPlugin],

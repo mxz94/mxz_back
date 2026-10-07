@@ -1,0 +1,17 @@
+---
+import { SITE } from "../config";
+
+const today = new Date();
+const siteStart = new Date(SITE.siteTime);
+const runningDays = Math.max(
+  0,
+  Math.floor((today.getTime() - siteStart.getTime()) / (24 * 60 * 60 * 1000))
+);
+---
+
+<footer class="site-footer">
+  <div>&copy; {today.getFullYear()} {SITE.author} · 已记录 {runningDays} 天</div>
+  <div style="margin-top: .35rem">
+    <a href="/atom.xml">RSS</a>
+  </div>
+</footer>

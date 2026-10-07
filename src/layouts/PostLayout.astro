@@ -2,13 +2,11 @@
 import { type BlogSchema } from "../content/config";
 import BaseLayout from "./BaseLayout.astro";
 import dayjs from "dayjs";
-import TableOfContents from "../components/TableOfContents.astro";
 import ReadingProgress from "../components/ReadingProgress.astro";
 import CodeCopyButton from "../components/CodeCopyButton.astro";
 
 export interface Props extends BlogSchema {
   hasCode?: boolean;
-  hasToc?: boolean;
   hasArticleMedia?: boolean;
 }
 
@@ -21,192 +19,97 @@ const {
   tags = [],
   type,
   hasCode = false,
-  hasToc = false,
   hasArticleMedia = false,
 } = Astro.props;
-const displayDate = dayjs(pubDatetime).format("YYYY-MM-DD HH:mm");
+
+const displayDate = dayjs(pubDatetime).format("YYYY-MM-DD");
 const isBlog = type === "blog";
 const isNumber = title.startsWith("20");
-let url = `https://raw.githubusercontent.com/mxz94/mxz_back/master/src/content/${type}/${title}.md`;
+let sourceUrl = `https://raw.githubusercontent.com/mxz94/mxz_back/master/src/content/${type}/${title}.md`;
 
 if (isBlog) {
-  if (isNumber) {
-    url = `https://raw.githubusercontent.com/mxz94/mxz_back/master/src/content/${type}/${title.substring(0, 4)}/${title}.md`;
-  } else {
-    url = `https://raw.githubusercontent.com/mxz94/mxz_back/master/src/content/${type}/朝花夕拾/${title}.md`;
-  }
+  sourceUrl = isNumber
+    ? `https://raw.githubusercontent.com/mxz94/mxz_back/master/src/content/${type}/${title.substring(0, 4)}/${title}.md`
+    : `https://raw.githubusercontent.com/mxz94/mxz_back/master/src/content/${type}/朝花夕拾/${title}.md`;
 }
 ---
 
 <BaseLayout title={title} description={description} image={heroImage} ogType="article">
   <ReadingProgress />
-  <main class="post-shell w-full flex justify-center">
-    <article class="post-article prose prose-lg w-full max-w-full sm:max-w-[95%] md:max-w-[92%] lg:max-w-[900px] xl:max-w-[960px] 2xl:max-w-[1000px] prose-img:mx-auto px-0">
-      <header class="not-prose mb-7 border-b border-base-300 pb-5 sm:mb-8 sm:pb-6">
-        <div class="mb-3 flex flex-wrap items-center gap-3 text-sm text-base-content/60">
-          {pubDatetime && <time datetime={pubDatetime.toISOString()}>{displayDate}</time>}
-          {badge && <span class="badge badge-secondary">{badge}</span>}
-          <a class="btn btn-ghost btn-xs gap-1 text-base-content/60" href={url} aria-label="下载原文">
-            <svg viewBox="64 64 896 896" width="1em" height="1em" fill="currentColor" aria-hidden="true">
-              <path d="M624 706.3h-74.1V464c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v242.3H400c-6.7 0-10.4 7.7-6.3 12.9l112 141.7a8 8 0 0 0 12.6 0l112-141.7c4.1-5.2.4-12.9-6.3-12.9z"></path>
-              <path d="M811.4 366.7C765.6 245.9 648.9 160 512.2 160S258.8 245.8 213 366.6C127.3 389.1 64 467.2 64 560c0 110.5 89.5 200 199.9 200H304c4.4 0 8-3.6 8-8v-60c0-4.4-3.6-8-8-8h-40.1c-33.7 0-65.4-13.4-89-37.7-23.5-24.2-36-56.8-34.9-90.6.9-26.4 9.9-51.2 26.2-72.1 16.7-21.3 40.1-36.8 66.1-43.7l37.9-9.9 13.9-36.6c8.6-22.8 20.6-44.1 35.7-63.4a245.6 245.6 0 0 1 52.4-49.9c41.1-28.9 89.5-44.2 140-44.2s98.9 15.3 140 44.2c19.9 14 37.5 30.8 52.4 49.9 15.1 19.3 27.1 40.7 35.7 63.4l13.8 36.5 37.8 10C846.1 454.5 884 503.8 884 560c0 33.1-12.9 64.3-36.3 87.7a123.07 123.07 0 0 1-87.6 36.3H720c-4.4 0-8 3.6-8 8v60c0 4.4 3.6 8 8 8h40.1C870.5 760 960 670.5 960 560c0-92.7-63.1-170.7-148.6-193.3z"></path>
-            </svg>
-            原文
-          </a>
-        </div>
-        <div class="flex flex-wrap items-start justify-between gap-3">
-          <h1 class="title m-0 min-w-0 text-3xl font-bold leading-tight sm:flex-1 sm:text-4xl">{title}</h1>
-          {tags.length > 0 && (
-            <div class="flex max-w-full shrink-0 flex-wrap gap-1.5 pt-1 sm:max-w-[42%] sm:justify-end">
-              {tags.map((tag) => (
-                <a href={`/tag/${tag}`} class="badge badge-outline badge-sm h-auto min-h-0 px-2 py-0.5 text-[11px] leading-tight no-underline">
-                  {tag}
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
-      </header>
 
-      {description && <p class="not-prose mb-8 rounded-lg border border-base-200 bg-base-200/35 px-4 py-3 text-base leading-8 text-base-content/70 sm:px-5">{description}</p>}
+  <article class="post-article">
+    <header class="post-header">
+      <div class="post-meta">
+        <time datetime={pubDatetime?.toISOString()}>{displayDate}</time>
+        {badge && <span>· {badge}</span>}
+        <span style="margin-left:auto">
+          <a href={sourceUrl} rel="noreferrer">原文</a>
+        </span>
+      </div>
+      <h1 class="post-title-main">{title}</h1>
+      {
+        tags.length > 0 && (
+          <div class="tag-list post-header-tags">
+            {tags.map((tag) => (
+              <a class="tag" href={`/tag/${tag}/`}>{tag}</a>
+            ))}
+          </div>
+        )
+      }
+    </header>
 
+    {description && <p class="page-desc" style="margin-bottom:1.75rem">{description}</p>}
+
+    <div class="prose">
       <slot />
-    </article>
-    {hasToc && <TableOfContents />}
-  </main>
+    </div>
+
+    <a class="to-top" href="#top">↑ 回到顶部</a>
+  </article>
+
   {hasCode && <CodeCopyButton />}
 
-  {hasArticleMedia && <script is:inline>
-    const articleImageSizes = "(max-width: 767px) calc(100vw - 2rem), (max-width: 1023px) 92vw, (max-width: 1439px) calc(100vw - 22rem), 1280px";
+  {
+    hasArticleMedia && (
+      <script is:inline>
+        function setupLightbox() {
+          if (document.querySelector('.article-lightbox')) return;
 
-    function optimizeArticleMedia() {
-      const articles = document.querySelectorAll('article');
+          const lightbox = document.createElement('button');
+          lightbox.type = 'button';
+          lightbox.className = 'article-lightbox';
+          lightbox.setAttribute('aria-label', '关闭图片预览');
 
-      articles.forEach(article => {
-        const images = article.querySelectorAll('img');
-        images.forEach((image) => {
-          if (image.dataset.mediaEnhanced === 'true') return;
-          image.dataset.mediaEnhanced = 'true';
+          const image = document.createElement('img');
+          image.alt = '';
+          lightbox.appendChild(image);
+          document.body.appendChild(lightbox);
 
-          if (!image.hasAttribute('loading')) {
-            image.setAttribute('loading', 'lazy');
-          }
-          if (!image.hasAttribute('decoding')) {
-            image.setAttribute('decoding', 'async');
-          }
-          if (!image.hasAttribute('sizes')) {
-            image.setAttribute('sizes', articleImageSizes);
-          }
-          image.setAttribute('tabindex', '0');
-          image.setAttribute('role', 'button');
+          const close = () => {
+            lightbox.classList.remove('is-open');
+            image.removeAttribute('src');
+            document.documentElement.classList.remove('article-lightbox-open');
+          };
 
-          if (image.complete) {
-            image.classList.add('loaded');
-          } else {
-            image.addEventListener('load', () => {
-              image.classList.add('loaded');
-            }, { once: true });
-          }
+          lightbox.addEventListener('click', close);
+          document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') close();
+          });
 
-          const width = image.naturalWidth || image.width;
-          const height = image.naturalHeight || image.height;
+          document.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLImageElement)) return;
+            if (!target.closest('.post-article')) return;
+            image.src = target.currentSrc || target.src;
+            image.alt = target.alt || '';
+            lightbox.classList.add('is-open');
+            document.documentElement.classList.add('article-lightbox-open');
+          });
+        }
 
-          if (height > width) {
-            image.classList.add("landscape-img");
-          }
-        });
-
-        const videos = article.querySelectorAll('video');
-        videos.forEach((video) => {
-          if (video.dataset.mediaEnhanced === 'true') return;
-          video.dataset.mediaEnhanced = 'true';
-
-          if (!video.hasAttribute('preload')) {
-            video.setAttribute('preload', 'metadata');
-          }
-          if (!video.hasAttribute('playsinline')) {
-            video.setAttribute('playsinline', '');
-          }
-          if (!video.hasAttribute('webkit-playsinline')) {
-            video.setAttribute('webkit-playsinline', '');
-          }
-
-          video.addEventListener('loadedmetadata', function() {
-            if (video.videoHeight > video.videoWidth) {
-              video.classList.add("portrait");
-              video.closest('.video-wrapper')?.classList.add('portrait-video-wrapper');
-            }
-          }, { once: true });
-        });
-
-        const iframes = article.querySelectorAll('iframe');
-        iframes.forEach((iframe) => {
-          if (iframe.dataset.mediaEnhanced === 'true') return;
-          iframe.dataset.mediaEnhanced = 'true';
-
-          if (!iframe.hasAttribute('loading')) {
-            iframe.setAttribute('loading', 'lazy');
-          }
-          if (!iframe.hasAttribute('referrerpolicy')) {
-            iframe.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
-          }
-        });
-      });
-    }
-
-    optimizeArticleMedia();
-
-    function setupArticleLightbox() {
-      if (document.querySelector('.article-lightbox')) return;
-
-      const lightbox = document.createElement('button');
-      lightbox.type = 'button';
-      lightbox.className = 'article-lightbox';
-      lightbox.setAttribute('aria-label', 'Close image preview');
-
-      const image = document.createElement('img');
-      image.alt = '';
-      lightbox.appendChild(image);
-      document.body.appendChild(lightbox);
-
-      const close = () => {
-        lightbox.classList.remove('is-open');
-        image.removeAttribute('src');
-        document.documentElement.classList.remove('article-lightbox-open');
-      };
-
-      lightbox.addEventListener('click', close);
-      document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') close();
-      });
-
-      document.addEventListener('click', (event) => {
-        const target = event.target;
-        if (!(target instanceof HTMLImageElement)) return;
-        if (!target.closest('.post-article')) return;
-
-        image.src = target.currentSrc || target.src;
-        image.alt = target.alt || '';
-        lightbox.classList.add('is-open');
-        document.documentElement.classList.add('article-lightbox-open');
-      });
-
-      document.addEventListener('keydown', (event) => {
-        if (event.key !== 'Enter' && event.key !== ' ') return;
-        const target = event.target;
-        if (!(target instanceof HTMLImageElement)) return;
-        if (!target.closest('.post-article')) return;
-
-        event.preventDefault();
-        target.click();
-      });
-    }
-
-    setupArticleLightbox();
-
-    document.addEventListener('astro:page-load', () => {
-      optimizeArticleMedia();
-      setupArticleLightbox();
-    });
-  </script>}
+        setupLightbox();
+        document.addEventListener('astro:page-load', setupLightbox);
+      </script>
+    )
+  }
 </BaseLayout>

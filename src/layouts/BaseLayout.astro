@@ -1,127 +1,78 @@
 ---
 import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import SideBar from "../components/SideBar.astro";
-import BackToTop from "../components/BackToTop.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import SiteFooter from "../components/SiteFooter.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../config";
 
 const {
   image,
   title = SITE_TITLE,
   description = SITE_DESCRIPTION,
-  includeSidebar = true,
-  sideBarActiveItemID,
   ogType,
+  wide = false,
 } = Astro.props;
+
+const path = Astro.url.pathname.replace(/\/+$/, "") || "/";
+const navItems = [
+  { href: "/", label: "首页" },
+  { href: "/blog/", label: "日记" },
+  { href: "/tags/", label: "标签" },
+  { href: "/archives/", label: "归档" },
+];
+const activeHref =
+  path === "/"
+    ? "/"
+    : navItems.find((item) => item.href !== "/" && path.startsWith(item.href))?.href ?? "";
 ---
 
 <!doctype html>
-<html lang="zh-CN" data-theme="emerald">
+<html lang="zh-CN">
   <head>
     <meta name="msvalidate.01" content="554974539F0479DABBAF2B9C6886C920" />
     <meta name="baidu-site-verification" content="codeva-Zb1fJaVwQk" />
     <BaseHead title={title} description={description} image={image} ogType={ogType} />
-    <script is:inline>
-      try {
-        if (localStorage.getItem('mxz-sidebar-collapsed') === 'true') {
-          document.documentElement.classList.add('sidebar-collapsed-init');
-        }
-      } catch {
-        // localStorage can be unavailable in strict browser modes.
-      }
-    </script>
   </head>
   <body>
-    <div class="site-drawer bg-base-100 drawer lg:drawer-open" data-layout-drawer>
-      <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-content bg-base-100">
-        <Header title={SITE_TITLE} />
-        <div class="flex justify-center">
-          <main class="site-main w-full px-4 py-6 sm:px-5 sm:py-8 lg:px-6 xl:px-8 2xl:px-10">
-            <slot />
-          </main>
-        </div>
-        <Footer />
-      </div>
-      {includeSidebar && <SideBar sideBarActiveItemID={sideBarActiveItemID} />}
-    </div>
-    <BackToTop />
-    
-    <script>
-      // Prevent background scroll when mobile drawer is open
-      function initDrawerScrollLock() {
-        const drawer = document.getElementById('my-drawer');
-        if (!drawer) return;
-        if (drawer.dataset.scrollLockInitialized === 'true') return;
-        drawer.dataset.scrollLockInitialized = 'true';
+    <span id="top"></span>
+    <SiteHeader navItems={navItems} activeHref={activeHref} />
+    <main class:list={["site-main", wide && "site-main-wide"]}>
+      <slot />
+    </main>
+    <SiteFooter />
 
-        let scrollPosition = 0;
+    {/* 滚动渐入：一次性触发，尊重系统的「减少动态效果」设置 */}
+    <script is:inline>
+      (function () {
+        var els = document.querySelectorAll(".reveal");
+        if (!els.length) return;
 
-        drawer.addEventListener('change', (e) => {
-          if (e.target.checked) {
-            // Drawer is open - lock body scroll
-            scrollPosition = window.pageYOffset;
-            document.body.style.position = 'fixed';
-            document.body.style.top = `-${scrollPosition}px`;
-            document.body.style.width = '100%';
-            document.body.style.overflow = 'hidden';
-            document.documentElement.style.overflow = 'hidden';
-          } else {
-            // Drawer is closed - unlock body scroll
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.width = '';
-            document.body.style.overflow = '';
-            document.documentElement.style.overflow = '';
-            window.scrollTo(0, scrollPosition);
-          }
-        });
-      }
-
-      // Initialize on page load
-      initDrawerScrollLock();
-
-      // Re-initialize on Astro page transitions
-      document.addEventListener('astro:page-load', initDrawerScrollLock);
-
-      function initSidebarCollapse() {
-        const drawer = document.querySelector('[data-layout-drawer]');
-        const toggle = document.querySelector('[data-sidebar-toggle]');
-        if (!drawer || !toggle) return;
-        if (toggle.dataset.initialized === 'true') return;
-        toggle.dataset.initialized = 'true';
-
-        const storageKey = 'mxz-sidebar-collapsed';
-        const setCollapsed = (collapsed) => {
-          drawer.classList.toggle('sidebar-collapsed', collapsed);
-          document.documentElement.classList.toggle('sidebar-collapsed-init', collapsed);
-          toggle.setAttribute('aria-expanded', String(!collapsed));
-          toggle.setAttribute('title', collapsed ? '展开侧边栏' : '收起侧边栏');
+        var show = function (el) {
+          el.classList.add("is-visible");
         };
 
-        let storedCollapsed = false;
-        try {
-          storedCollapsed = localStorage.getItem(storageKey) === 'true';
-        } catch {
-          storedCollapsed = document.documentElement.classList.contains('sidebar-collapsed-init');
+        if (
+          !("IntersectionObserver" in window) ||
+          window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ) {
+          els.forEach(show);
+          return;
         }
 
-        setCollapsed(storedCollapsed);
+        var io = new IntersectionObserver(
+          function (entries) {
+            entries.forEach(function (entry) {
+              if (!entry.isIntersecting) return;
+              show(entry.target);
+              io.unobserve(entry.target);
+            });
+          },
+          { rootMargin: "0px 0px -6% 0px", threshold: 0.05 }
+        );
 
-        toggle.addEventListener('click', () => {
-          const collapsed = !drawer.classList.contains('sidebar-collapsed');
-          setCollapsed(collapsed);
-          try {
-            localStorage.setItem(storageKey, String(collapsed));
-          } catch {
-            // Ignore storage failures; the current view still updates.
-          }
+        els.forEach(function (el) {
+          io.observe(el);
         });
-      }
-
-      initSidebarCollapse();
-      document.addEventListener('astro:page-load', initSidebarCollapse);
+      })();
     </script>
   </body>
 </html>
