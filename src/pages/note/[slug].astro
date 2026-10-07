@@ -2,11 +2,11 @@
 import { CollectionEntry } from "astro:content";
 import { BlogSchema } from "../../content/config";
 import PostLayout from "../../layouts/PostLayout.astro";
-import {getNotes} from "../../utils";
+import { getPublicNotes } from "../../utils";
 import getHeroImageLinkFromMd from "../../utils/getHeroImageLinkFromMd";
 
 export async function getStaticPaths() {
-  const postEntries = await getNotes();
+  const postEntries = await getPublicNotes();
     return postEntries.map((entry, idx) => {
         const prev = postEntries[idx - 1]
         const next = postEntries[idx + 1]

@@ -10,7 +10,7 @@ export const SITE: Site = {
     author: "兰汐",
     desc: "兰汐",
     title: "首页",
-    ogImage: "astropaper-og.jpg",
+    ogImage: "og-image.jpg",
     lightAndDarkMode: false,
     posts: ["blog", "note"],
     siteTime: "06/30/2022 00:06:00"

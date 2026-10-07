@@ -6,16 +6,22 @@ import SideBar from "../components/SideBar.astro";
 import BackToTop from "../components/BackToTop.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "../config";
 
-const { image, title = SITE_TITLE, description = SITE_DESCRIPTION, includeSidebar = true, sideBarActiveItemID,ogType } = Astro.props;
+const {
+  image,
+  title = SITE_TITLE,
+  description = SITE_DESCRIPTION,
+  includeSidebar = true,
+  sideBarActiveItemID,
+  ogType,
+} = Astro.props;
 ---
 
 <!doctype html>
-<html lang="zh-CN" data-theme="lofi">
+<html lang="zh-CN" data-theme="emerald">
   <head>
-      <meta charset="utf-8"/>
-      <meta name="msvalidate.01" content="554974539F0479DABBAF2B9C6886C920" />
-      <meta name="baidu-site-verification" content="codeva-Zb1fJaVwQk" />
-    <BaseHead title={title} description={description} image={image} , ogType={ogType} />
+    <meta name="msvalidate.01" content="554974539F0479DABBAF2B9C6886C920" />
+    <meta name="baidu-site-verification" content="codeva-Zb1fJaVwQk" />
+    <BaseHead title={title} description={description} image={image} ogType={ogType} />
     <script is:inline>
       try {
         if (localStorage.getItem('mxz-sidebar-collapsed') === 'true') {

@@ -10,14 +10,46 @@ import sys
 from datetime import datetime
 import threading
 import time
+import random
+import re
+import html
 from plyer import notification
 import requests
 import hmac
 import hashlib
 import base64
 from urllib.parse import quote_plus
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageTk
 import pystray
+
+# 弹窗强制停留时长（秒）：倒计时结束后才能关闭
+REST_SECONDS = 15
+
+# 弹窗对外文案（不出现"休息"字样，外部看只是张普通的卡片）
+ALERT_WINDOW_TITLE = "便签"
+ALERT_COUNTDOWN_TEXT = "稍等 %ds"
+ALERT_UNLOCK_TEXT = "知道了"
+
+# 内置默认题库（未找到 content_library.json 时兜底）
+# 格式说明：不需要写 type，程序按内容自动识别
+#   纯字符串            → 文本
+#   以 .jpg/.png 等结尾 → 图片
+#   含 <b> 等标签       → HTML
+#   {"title","content"} → 知识点卡片
+#   {"q","options","answer","why"} → 答题（点击选项即时判分）
+DEFAULT_LIBRARY = [
+    {"title": "小笑话", "content": "为什么程序员分不清万圣节和圣诞节？因为 Oct 31 == Dec 25。"},
+    {"title": "想一想", "content": "如果让你用一句话向别人解释「沉没成本」，你会怎么说？试着组织下语言，越通俗越好。"},
+    "人在注意力高度集中 20 分钟后，眨眼频率会掉到正常状态的三分之一——所以盯屏幕久了会觉得干涩。",
+    {"title": "图推·做题总纲", "content": "元素组成相同 → 位置规律（平移、旋转、翻转）\n元素组成相似 → 样式规律（加减同异、黑白运算）\n元素组成不同 → 先属性（对称、曲直、开闭）\n　　　　　　　后数量（面、线、点、素）"},
+    {"title": "论证·削弱力度排序", "content": "否定论点 > 拆桥 > 否定论据 > 他因削弱\n因果倒置 > 否定论据 > 他因削弱\n\n加强力度：搭桥 / 必要条件 > 解释原因 > 举例"},
+    {"title": "翻译推理·逆否等价", "content": "A → B 等价于 非B → 非A\n口诀：肯前必肯后，否后必否前；\n否前、肯后无必然结论。"},
+    {"title": "行测·数量", "q": "1，3，6，10，15，(  )", "options": ["A. 18", "B. 20", "C. 21", "D. 19"], "answer": "C",
+     "why": "相邻两项之差为 2、3、4、5，下一差为 6，15+6=21。二级等差数列，也可看作三角形数 n(n+1)/2。"},
+    {"title": "行测·言语", "q": "与「坚韧不拔」意思最接近的是：", "options": ["A. 半途而废", "B. 锲而不舍", "C. 知难而退", "D. 浅尝辄止"], "answer": "B",
+     "why": "坚韧不拔形容意志坚定、不可动摇，与锲而不舍（不断雕刻，比喻持之以恒）语义最接近。其余三项均为反义或消极表述。"},
+]
+
 
 class NotificationApp:
     def __init__(self, root):
@@ -36,7 +68,10 @@ class NotificationApp:
             # 开发环境运行
             application_path = os.path.dirname(__file__)
         
+        self.application_path = application_path
         self.config_file = os.path.join(application_path, "notification_config.json")
+        self.library_path = os.path.join(application_path, "content_library.json")
+        self.stats_path = os.path.join(application_path, "quiz_stats.json")
         
         # 默认通知时间
         self.default_times = [
@@ -46,6 +81,11 @@ class NotificationApp:
         
         # 加载配置
         self.load_config()
+
+        # 加载内容题库（弹窗展示的内容）
+        self.library = self.load_library()
+        # 加载答题统计（错题优先重抽）
+        self.quiz_stats = self.load_stats()
         
         # 通知线程运行标志
         self.running = False
@@ -813,34 +853,351 @@ class NotificationApp:
         for url in self.api_urls:
             threading.Thread(target=self.call_api, args=(url,), daemon=True).start()
 
+    # ---------- 内容题库 ----------
+    def load_library(self):
+        """加载 content_library.json 题库，返回条目列表；失败则用内置默认题库兜底"""
+        items = []
+        try:
+            if os.path.exists(self.library_path):
+                with open(self.library_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                if isinstance(data, list):
+                    for raw in data:
+                        it = self._parse_library_item(raw)
+                        if it:
+                            items.append(it)
+        except Exception as e:
+            print(f"加载题库失败: {e}")
+        if not items:
+            items = [dict(x) for x in DEFAULT_LIBRARY]
+        return items
+
+    def _parse_library_item(self, raw):
+        """把一个题库条目解析为统一 dict，无需 type 字段，按内容自动识别：
+        {kind, title, content, src, caption, html, q, options, answer, why}
+        kind 取值：quiz（答题）/ image / html / text
+        """
+        if isinstance(raw, str):
+            s = raw.strip()
+            if not s:
+                return None
+            low = s.lower()
+            if low.endswith(('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp')):
+                return {"kind": "image", "src": s, "caption": ""}
+            if re.search(r'<[a-zA-Z/][^>]*>', s):
+                return {"kind": "html", "html": s}
+            return {"kind": "text", "title": "", "content": s}
+
+        if isinstance(raw, dict):
+            # 答题：有题干 + 选项 + 答案
+            q = raw.get("q") or raw.get("question") or raw.get("stem") or ""
+            opts = raw.get("options") or raw.get("choices") or raw.get("opts") or []
+            ans = raw.get("answer") or raw.get("ans") or raw.get("right") or ""
+            if q and isinstance(opts, (list, tuple)) and len(opts) >= 2 and str(ans).strip():
+                options = [str(o).strip() for o in opts if str(o).strip()]
+                if len(options) >= 2:
+                    return {"kind": "quiz",
+                            "title": raw.get("title", "") or "行测小测",
+                            "q": str(q).strip(),
+                            "options": options,
+                            "answer": str(ans).strip(),
+                            "why": raw.get("why") or raw.get("explain") or raw.get("analysis") or ""}
+
+            src = raw.get("src") or raw.get("path") or raw.get("image") or ""
+            if src:
+                return {"kind": "image",
+                        "src": str(src).strip(),
+                        "caption": raw.get("caption") or raw.get("text") or ""}
+
+            if raw.get("html"):
+                return {"kind": "html", "title": raw.get("title", ""),
+                        "html": raw.get("html")}
+
+            content = raw.get("content") or raw.get("text") or raw.get("desc") or ""
+            if content or raw.get("title"):
+                return {"kind": "text",
+                        "title": raw.get("title", ""),
+                        "content": str(content)}
+        return None
+
+    def pick_random_item(self):
+        """从题库随机抽一条；30% 概率从曾答错的题里抽，强化薄弱点"""
+        if not self.library:
+            self.library = [dict(x) for x in DEFAULT_LIBRARY]
+        quizzes = [it for it in self.library if it.get("kind") == "quiz"]
+        if quizzes and random.random() < 0.3:
+            wrong_pool = [it for it in quizzes
+                          if (self.quiz_stats.get(self._quiz_id(it)) or {}).get("wrong", 0) > 0]
+            if wrong_pool:
+                return random.choice(wrong_pool)
+        return random.choice(self.library)
+
+    def _quiz_id(self, item):
+        """用题干+首选项算稳定的 12 位 id（题库内容稳定后 id 就不变）"""
+        opts = item.get("options") or [""]
+        s = (item.get("q") or "") + "|" + str(opts[0])
+        return hashlib.md5(s.encode("utf-8")).hexdigest()[:12]
+
+    def load_stats(self):
+        """加载 quiz_stats.json，返回 {id: {shown, wrong, last}}"""
+        try:
+            if os.path.exists(self.stats_path):
+                with open(self.stats_path, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+                if isinstance(data, dict):
+                    return data
+        except Exception as e:
+            print(f"加载答题统计失败: {e}")
+        return {}
+
+    def save_stats(self):
+        try:
+            with open(self.stats_path, 'w', encoding='utf-8') as f:
+                json.dump(self.quiz_stats, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            print(f"保存答题统计失败: {e}")
+
+    def record_quiz_answer(self, qid, correct):
+        """记录一次答题（异步落盘）"""
+        s = self.quiz_stats.setdefault(qid, {"shown": 0, "wrong": 0, "last": ""})
+        s["shown"] += 1
+        if not correct:
+            s["wrong"] += 1
+        s["last"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        threading.Thread(target=self.save_stats, daemon=True).start()
+
+    def _render_text_body(self, parent, item):
+        content = item.get("content") or item.get("text") or ""
+        tk.Label(parent, text=content, font=("Microsoft YaHei UI", 12),
+                 fg="#1f2937", bg="#ffffff", justify="left",
+                 wraplength=380, anchor="nw").pack(fill=tk.BOTH, expand=True)
+
+    def _render_html_body(self, parent, html_str):
+        text = tk.Text(parent, font=("Microsoft YaHei UI", 12), bg="#ffffff",
+                       fg="#1f2937", wrap="word", borderwidth=0,
+                       highlightthickness=0, relief="flat", cursor="arrow")
+        text.pack(fill=tk.BOTH, expand=True)
+        text.tag_configure("b", font=("Microsoft YaHei UI", 12, "bold"))
+        text.tag_configure("i", font=("Microsoft YaHei UI", 12, "italic"))
+        self._insert_html(text, html_str or "")
+        text.configure(state="disabled")
+
+    def _insert_html(self, text_widget, html_str):
+        """把简单 HTML（b/strong/i/em/br/p/font color）渲染进 Text 控件"""
+        s = html.unescape(html_str or "")
+        s = re.sub(r'<br\s*/?>', '\n', s, flags=re.I)
+        s = re.sub(r'</p\s*>', '\n\n', s, flags=re.I)
+        s = re.sub(r'</div\s*>', '\n', s, flags=re.I)
+        # 剥离除 b/strong/i/em/font 之外的标签（保留标签内文本）
+        s = re.sub(r'<(?!b\b|/b\b|strong\b|/strong\b|i\b|/i\b|em\b|/em\b|font\b|/font\b)[^>]*>',
+                   '', s, flags=re.I)
+        token_re = re.compile(
+            r'(<b\b>|</b\b>|<strong\b>|</strong\b>|<i\b>|</i\b>|<em\b>|</em\b>|<font\b[^>]*>|</font\b>)',
+            re.I)
+        bold = False
+        italic = False
+        color = None
+        pos = 0
+        for m in token_re.finditer(s):
+            if m.start() > pos:
+                self._insert_styled(text_widget, s[pos:m.start()], bold, italic, color)
+            tag = m.group(0).lower()
+            if tag in ("<b>", "<strong>"):
+                bold = True
+            elif tag in ("</b>", "</strong>"):
+                bold = False
+            elif tag in ("<i>", "<em>"):
+                italic = True
+            elif tag in ("</i>", "</em>"):
+                italic = False
+            elif tag.startswith("<font"):
+                cm = re.search(r'color\s*=\s*["\']?([^"\'>\s]+)', tag, re.I)
+                color = cm.group(1) if cm else None
+            elif tag == "</font>":
+                color = None
+            pos = m.end()
+        if pos < len(s):
+            self._insert_styled(text_widget, s[pos:], bold, italic, color)
+
+    def _insert_styled(self, text_widget, text, bold, italic, color):
+        tags = []
+        if bold:
+            tags.append("b")
+        if italic:
+            tags.append("i")
+        name = None
+        if color:
+            name = "c_" + str(color).lstrip("#")
+            try:
+                text_widget.tag_configure(name, foreground=color)
+            except tk.TclError:
+                name = None
+            if name:
+                tags.append(name)
+        if text:
+            text_widget.insert("end", text, tuple(tags) if tags else ())
+
+    def _render_image_body(self, parent, item):
+        src = item.get("src") or ""
+        caption = item.get("caption") or ""
+        path = src
+        if src and not os.path.isabs(src):
+            path = os.path.join(self.application_path, src)
+        photo = None
+        if path and os.path.exists(path):
+            try:
+                img = Image.open(path)
+                img.thumbnail((420, 380))
+                photo = ImageTk.PhotoImage(img)
+            except Exception as e:
+                print(f"图片加载失败 {path}: {e}")
+                photo = None
+        if photo:
+            parent._photo = photo  # 持有引用，防止被垃圾回收
+            tk.Label(parent, image=photo, bg="#ffffff").pack()
+        else:
+            tk.Label(parent, text="（图片未找到：%s）" % (src or "?"),
+                     font=("Microsoft YaHei UI", 11), fg="#94a3b8",
+                     bg="#ffffff", wraplength=380, justify="center").pack(pady=40)
+        if caption:
+            tk.Label(parent, text=caption, font=("Microsoft YaHei UI", 11),
+                     fg="#475569", bg="#ffffff", wraplength=380,
+                     justify="center").pack(pady=(10, 0))
+
+    def _render_quiz_body(self, parent, item):
+        """渲染答题条目：题干 + 选项按钮，点击即时判分并显示解析"""
+        # 题干可能含 <b> 等强调标签，Label 不支持，先剥掉
+        question = re.sub(r'<br\s*/?>', '\n', str(item.get("q") or ""), flags=re.I)
+        question = re.sub(r'<[^>]+>', '', question)
+        options = item.get("options") or []
+        answer = str(item.get("answer") or "").strip().upper()
+        why = item.get("why") or ""
+
+        # 历史统计徽标
+        qid = self._quiz_id(item)
+        st = self.quiz_stats.get(qid) or {}
+        shown = st.get("shown", 0); wrong = st.get("wrong", 0)
+        if shown > 0:
+            rate = (shown - wrong) * 100 // shown
+            if wrong > 0:
+                hist_text = "⏪ 上次答错过 · 再做一次 · 历史正确率 %d%%（%d/%d）" % (rate, shown - wrong, shown)
+                hist_fg = "#b45309"
+            else:
+                hist_text = "✅ 历史全对 · 历史正确率 %d%%（%d/%d）" % (rate, shown, shown)
+                hist_fg = "#15803d"
+            tk.Label(parent, text=hist_text,
+                     font=("Microsoft YaHei UI", 9),
+                     fg=hist_fg, bg="#fff7ed" if wrong > 0 else "#f0fdf4",
+                     justify="left", anchor="w").pack(fill=tk.X, pady=(0, 8))
+
+        tk.Label(parent, text=question, font=("Microsoft YaHei UI", 12),
+                 fg="#111827", bg="#ffffff", justify="left",
+                 wraplength=400, anchor="nw").pack(fill=tk.X, pady=(0, 10))
+
+        btns = []
+        result_label = tk.Label(parent, text="", font=("Microsoft YaHei UI", 11, "bold"),
+                                bg="#ffffff", fg="#111827", justify="left",
+                                wraplength=400, anchor="nw")
+        why_box = tk.Text(parent, font=("Microsoft YaHei UI", 10), bg="#f8fafc",
+                          fg="#334155", wrap="word", borderwidth=0,
+                          highlightthickness=0, relief="flat", height=4,
+                          cursor="arrow", padx=8, pady=8)
+
+        def answer_key(text):
+            """从选项文本里取出开头的字母标号 A/B/C/D"""
+            m = re.match(r'^\s*([A-Da-d])[\.、\s\)：:]', str(text))
+            if m:
+                return m.group(1).upper()
+            m = re.search(r'([A-Da-d])[\.、\)：:]', str(text)[:12])
+            return m.group(1).upper() if m else ""
+
+        def on_pick(idx):
+            picked = answer_key(options[idx]) or chr(ord('A') + idx)
+            correct = (picked == answer)
+            for i, b in enumerate(btns):
+                b.configure(state="disabled", cursor="arrow")
+                key = answer_key(options[i]) or chr(ord('A') + i)
+                if key == answer:
+                    b.configure(bg="#dcfce7", fg="#15803d",
+                                activebackground="#dcfce7", activeforeground="#15803d")
+                elif i == idx:
+                    b.configure(bg="#fee2e2", fg="#b91c1c",
+                                activebackground="#fee2e2", activeforeground="#b91c1c")
+                else:
+                    b.configure(bg="#f1f5f9", fg="#94a3b8",
+                                activebackground="#f1f5f9", activeforeground="#f1f3b0")
+            if correct:
+                result_label.configure(text="✅ 答对了！", fg="#15803d")
+            else:
+                result_label.configure(text="❌ 答错了，正确答案是 %s" % answer, fg="#b91c1c")
+            result_label.pack(fill=tk.X, pady=(10, 6))
+            if why:
+                why_box.configure(state="normal")
+                why_box.delete("1.0", "end")
+                self._insert_html(why_box, why)
+                why_box.configure(state="disabled")
+                why_box.pack(fill=tk.X, pady=(0, 4))
+            # 记录到统计
+            self.record_quiz_answer(qid, correct)
+
+        opt_frame = tk.Frame(parent, bg="#ffffff")
+        opt_frame.pack(fill=tk.X)
+        for i, opt in enumerate(options):
+            b = tk.Button(
+                opt_frame, text=str(opt),
+                font=("Microsoft YaHei UI", 11),
+                bg="#ffffff", fg="#1f2937",
+                activebackground="#eff6ff", activeforeground="#1d4ed8",
+                relief=tk.GROOVE, bd=1, padx=10, pady=6,
+                cursor="hand2", anchor="w", justify="left",
+                wraplength=370,
+                command=lambda i=i: on_pick(i)
+            )
+            b.pack(fill=tk.X, pady=3)
+            btns.append(b)
+
     def show_prominent_alert(self):
-        """在主线程中显示更明显的置顶提醒窗"""
+        """在主线程中显示置顶提醒窗"""
         self.root.after(0, self._show_prominent_alert)
 
     def _show_prominent_alert(self):
-        """显示居中的置顶提醒窗（需手动点击关闭按钮）"""
+        """右下角小卡片：展示题库随机内容，停留 REST_SECONDS 秒后才能关闭"""
         try:
             if self.active_alert_window and self.active_alert_window.winfo_exists():
                 self.active_alert_window.destroy()
         except tk.TclError:
             pass
 
+        # 每次弹窗都重新读取，改完 json 下次提醒立即生效
+        self.library = self.load_library()
+        item = self.pick_random_item()
+        itype = item.get("kind", "text")
+
         alert = tk.Toplevel(self.root)
         self.active_alert_window = alert
-        alert.title("定时提醒")
+        alert.title(ALERT_WINDOW_TITLE)
         alert.configure(bg="#ffffff")
         alert.resizable(False, False)
         alert.attributes("-topmost", True)
 
-        width = 420
-        height = 280
-        screen_width = alert.winfo_screenwidth()
-        screen_height = alert.winfo_screenheight()
-        x = max(20, (screen_width - width) // 2)
-        y = max(20, (screen_height - height) // 2)
+        if itype == "image":
+            width, height = 460, 560
+        elif itype == "quiz":
+            width, height = 450, 460
+        else:
+            width, height = 440, 320
+
+        screen_w = alert.winfo_screenwidth()
+        screen_h = alert.winfo_screenheight()
+        x = max(8, screen_w - width - 24)
+        y = max(8, screen_h - height - 70)
         alert.geometry(f"{width}x{height}+{x}+{y}")
 
+        state = {"locked": True, "remaining": REST_SECONDS}
+
         def close_alert():
+            if state["locked"]:
+                return
             if self.active_alert_window is alert:
                 self.active_alert_window = None
             try:
@@ -851,46 +1208,72 @@ class NotificationApp:
         alert.protocol("WM_DELETE_WINDOW", close_alert)
         alert.bind("<Escape>", lambda event: close_alert())
 
-        container = tk.Frame(alert, bg="#ffffff", padx=24, pady=20)
-        container.pack(fill=tk.BOTH, expand=True)
+        # 顶部标题栏
+        header_title = item.get("title") or (
+            "每日一题" if itype == "quiz" else "看看这张图" if itype == "image" else "小知识")
+        header = tk.Frame(alert, bg="#4A90E2", height=52)
+        header.pack(fill=tk.X)
+        header.pack_propagate(False)
+        tk.Label(header, text=header_title, font=("Microsoft YaHei UI", 14, "bold"),
+                 bg="#4A90E2", fg="white").pack(pady=13)
 
-        tk.Label(
-            container,
-            text="到时间了",
-            font=("Microsoft YaHei UI", 22, "bold"),
-            fg="#111827",
-            bg="#ffffff"
-        ).pack(anchor="w")
+        # 内容区（答题时内容较多，给个可滚动容器）
+        if itype == "quiz":
+            body_outer = tk.Frame(alert, bg="#ffffff")
+            body_outer.pack(fill=tk.BOTH, expand=True, padx=20, pady=16)
+            body = tk.Frame(body_outer, bg="#ffffff")
+            body.pack(fill=tk.BOTH, expand=True)
+        else:
+            body = tk.Frame(alert, bg="#ffffff")
+            body.pack(fill=tk.BOTH, expand=True, padx=20, pady=16)
 
-        tk.Label(
-            container,
-            text=self.notification_title,
-            font=("Microsoft YaHei UI", 13, "bold"),
-            fg="#111827",
-            bg="#ffffff",
-            wraplength=360,
-            justify="left"
-        ).pack(anchor="w", pady=(14, 4))
+        if itype == "image":
+            self._render_image_body(body, item)
+        elif itype == "html":
+            self._render_html_body(body, item.get("html", ""))
+        elif itype == "quiz":
+            self._render_quiz_body(body, item)
+        else:
+            self._render_text_body(body, item)
 
-        tk.Label(
-            container,
-            text=self.notification_message,
-            font=("Microsoft YaHei UI", 11),
-            fg="#374151",
-            bg="#ffffff",
-            wraplength=360,
-            justify="left"
-        ).pack(anchor="w")
+        # 底部倒计时按钮
+        footer = tk.Frame(alert, bg="#ffffff")
+        footer.pack(fill=tk.X, padx=20, pady=(0, 18))
 
-        tk.Label(
-            container,
-            text=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-            font=("Microsoft YaHei UI", 9),
-            fg="#6b7280",
-            bg="#ffffff"
-        ).pack(anchor="w", pady=(10, 0))
+        btn = tk.Button(
+            footer,
+            text=ALERT_COUNTDOWN_TEXT % state['remaining'],
+            font=("Microsoft YaHei UI", 12, "bold"),
+            bg="#cbd5e1", fg="#64748b",
+            activebackground="#cbd5e1", activeforeground="#64748b",
+            relief=tk.FLAT, padx=20, pady=8, cursor="arrow",
+            state="disabled"
+        )
+        btn.pack(fill=tk.X)
 
-        # 关闭方式：可选「晃动鼠标关闭」，始终保留手动按钮兜底
+        def unlock():
+            state["locked"] = False
+            btn.config(text=ALERT_UNLOCK_TEXT, state="normal",
+                       bg="#10b981", fg="white",
+                       activebackground="#059669", activeforeground="white",
+                       cursor="hand2", command=close_alert)
+
+        def tick():
+            try:
+                if not alert.winfo_exists():
+                    return
+            except tk.TclError:
+                return
+            if state["remaining"] > 0:
+                state["remaining"] -= 1
+                btn.config(text=ALERT_COUNTDOWN_TEXT % state['remaining'])
+                alert.after(1000, tick)
+            else:
+                unlock()
+
+        alert.after(1000, tick)
+
+        # 晃动鼠标关闭（倒计时结束后才生效）
         if self.close_on_mouse_move:
             motion_state = {"armed": False, "x": None, "y": None}
 
@@ -903,42 +1286,18 @@ class NotificationApp:
                     pass
 
             def close_on_motion(event):
-                if not motion_state["armed"]:
+                if not motion_state["armed"] or state["locked"]:
                     return
-                start_x = motion_state["x"]
-                start_y = motion_state["y"]
-                if start_x is None or start_y is None:
+                sx = motion_state["x"]
+                sy = motion_state["y"]
+                if sx is None or sy is None:
                     close_alert()
                     return
-                if abs(event.x_root - start_x) >= 12 or abs(event.y_root - start_y) >= 12:
+                if abs(event.x_root - sx) >= 30 or abs(event.y_root - sy) >= 30:
                     close_alert()
 
             alert.bind("<Motion>", close_on_motion)
-            alert.after(600, arm_motion_close)
-
-        hint_text = "晃动鼠标或点击按钮关闭" if self.close_on_mouse_move else "点击按钮关闭"
-        tk.Label(
-            container,
-            text=hint_text,
-            font=("Microsoft YaHei UI", 9),
-            fg="#6b7280",
-            bg="#ffffff"
-        ).pack(anchor="w", pady=(14, 6))
-
-        tk.Button(
-            container,
-            text="知道了",
-            font=("Microsoft YaHei UI", 11, "bold"),
-            bg="#4A90E2",
-            fg="white",
-            activebackground="#357abd",
-            activeforeground="white",
-            command=close_alert,
-            cursor="hand2",
-            relief=tk.FLAT,
-            padx=24,
-            pady=6
-        ).pack(anchor="e")
+            alert.after(700, arm_motion_close)
 
         try:
             alert.lift()
