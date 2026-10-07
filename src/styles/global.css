@@ -176,18 +176,34 @@ body {
     align-items: flex-start;
 }
 
+/* 右下角「回到顶部」按钮是 fixed 的（约 80px 见方含边距），
+   中等宽度下正文列会贴到视口右侧，滚动时被它盖住文字。
+   桌面端对称留白保持居中，窄屏只在右侧留白。 */
+@media (min-width: 1024px) {
+    .post-shell {
+        padding-inline: 5rem;
+    }
+}
+
+@media (max-width: 1023px) {
+    .post-shell {
+        padding-right: 4.5rem;
+    }
+}
+
 .post-article {
     --post-media-width: min(100%, 1280px);
 }
 
 @media (min-width: 1024px) {
     .post-article {
-        --post-media-width: min(1280px, calc(100vw - 22rem));
+        /* 媒体可以比正文列宽，但不能撑破安全区（含左右留白 10rem） */
+        --post-media-width: min(1280px, calc(100vw - 32rem));
     }
 
     .site-drawer.sidebar-collapsed .post-article,
     html.sidebar-collapsed-init .site-drawer .post-article {
-        --post-media-width: min(1360px, calc(100vw - 10rem));
+        --post-media-width: min(1360px, calc(100vw - 20rem));
     }
 }
 
@@ -364,9 +380,22 @@ html.article-lightbox-open body {
 }
 
 /* Show TOC only when there is enough room beside wider media. */
-@media (min-width: 1800px) {
+@media (min-width: 1920px) {
     .toc-wrapper {
         display: block;
+    }
+}
+
+/* While the floating TOC is visible, cap oversized media so its right edge
+   never runs under the TOC panel (TOC needs 264px + breathing room). */
+@media (min-width: 1920px) {
+    .post-article {
+        --post-media-width: min(1280px, calc(100vw - 52rem));
+    }
+
+    .site-drawer.sidebar-collapsed .post-article,
+    html.sidebar-collapsed-init .site-drawer .post-article {
+        --post-media-width: min(1280px, calc(100vw - 46rem));
     }
 }
 
