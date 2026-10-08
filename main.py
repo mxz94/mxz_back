@@ -293,7 +293,8 @@ def main(token, repo_name, issue_number=None):
         save_issue(issue, me)
         add_issue_id(issue.number)
         init_archives_table_readme()
-        init_note_archives_table_readme()
+        # 笔记板块已在站点改版中移除（src/pages/note 已删除），不再生成 /note/ 归档页
+        # init_note_archives_table_readme()
 
 
 template = '''---
