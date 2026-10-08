@@ -74,5 +74,77 @@ const activeHref =
         });
       })();
     </script>
+
+    {/* 无限滚动：仅在带 #post-list / #infinite-sentinel 的列表页生效，
+        其余页面直接跳过。无 JS 时由 <noscript> 里的分页导航兜底 */}
+    <script is:inline>
+      (function () {
+        var list = document.getElementById("post-list");
+        var sentinel = document.getElementById("infinite-sentinel");
+        if (!list || !sentinel) return;
+
+        var next = sentinel.getAttribute("data-next") || "";
+        if (!next) return;
+
+        var loading = false;
+
+        var io = new IntersectionObserver(
+          function (entries) {
+            if (entries[0].isIntersecting && next && !loading) loadNext();
+          },
+          { rootMargin: "800px 0px" }
+        );
+        io.observe(sentinel);
+
+        function setHint(html) {
+          sentinel.innerHTML = html;
+        }
+
+        function loadNext() {
+          loading = true;
+          setHint(
+            '<span class="infinite-hint"><span class="spinner" aria-hidden="true"></span>加载中…</span>'
+          );
+
+          fetch(next, { credentials: "same-origin" })
+            .then(function (res) {
+              if (!res.ok) throw new Error(String(res.status));
+              return res.text();
+            })
+            .then(function (html) {
+              var doc = new DOMParser().parseFromString(html, "text/html");
+              var nextList = doc.getElementById("post-list");
+              if (nextList) {
+                // 只移动「元素」子节点，跳过 Astro 在 <ul> 标签间生成的空白文本节点；
+                // 否则 nextList.firstChild 可能是文本节点，node.classList 不存在会抛错导致整页加载失败
+                while (nextList.firstElementChild) {
+                  var node = nextList.firstElementChild;
+                  node.classList.add("is-visible"); // 触发渐入，避免被 .reveal 隐藏
+                  list.appendChild(node);
+                }
+              }
+              var nextSentinel = doc.getElementById("infinite-sentinel");
+              next = nextSentinel
+                ? ensureSlash(nextSentinel.getAttribute("data-next") || "")
+                : "";
+              if (next) {
+                setHint('<span class="infinite-hint">下滑加载更多</span>');
+              } else {
+                setHint('<span class="infinite-end">· 已经到底了 ·</span>');
+                io.disconnect();
+              }
+              loading = false;
+            })
+            .catch(function () {
+              setHint(
+                '<a class="infinite-retry" href="' +
+                  next +
+                  '" rel="next">加载失败，点此查看下一页 →</a>'
+              );
+              loading = false;
+            });
+        }
+      })();
+    </script>
   </body>
 </html>

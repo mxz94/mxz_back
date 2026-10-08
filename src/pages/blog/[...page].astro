@@ -24,7 +24,7 @@ const postItems = buildPostListItems(page.data);
     page.data.length === 0 ? (
       <p class="page-desc" style="margin-top:2rem">暂时还没有内容。</p>
     ) : (
-      <ul class="post-list">
+      <ul class="post-list" id="post-list">
         {postItems.map(({ post, img, desc, url, priority }) => (
           <HorizontalCard
             title={post.data.title}
@@ -41,16 +41,32 @@ const postItems = buildPostListItems(page.data);
     )
   }
 
-  {
-    page.lastPage > 1 && (
-      <Pagination
-        firstPage={firstPage}
-        previousPage={page.url.prev}
-        nextPage={page.url.next}
-        lastPage={lastPage}
-        currentPage={page.currentPage}
-        totalPages={page.lastPage}
-      />
-    )
-  }
+  <div
+    id="infinite-sentinel"
+    data-next={page.url.next || ""}
+    aria-live="polite"
+  >
+    {
+      page.url.next ? (
+        <span class="infinite-hint">下滑加载更多</span>
+      ) : (
+        <span class="infinite-end">· 已经到底了 ·</span>
+      )
+    }
+  </div>
+
+  <noscript>
+    {
+      page.lastPage > 1 && (
+        <Pagination
+          firstPage={firstPage}
+          previousPage={page.url.prev}
+          nextPage={page.url.next}
+          lastPage={lastPage}
+          currentPage={page.currentPage}
+          totalPages={page.lastPage}
+        />
+      )
+    }
+  </noscript>
 </BaseLayout>
