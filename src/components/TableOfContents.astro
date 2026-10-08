@@ -1,6 +1,110 @@
 ---
 ---
 
+<style is:global>
+/* 文章目录 TOC：桌面宽屏右侧 fixed 浮层，跟随滚动；窄屏隐藏避免挤压单列内容 */
+.toc-wrapper {
+    position: fixed;
+    top: 84px;
+    right: max(1rem, calc((100vw - 54rem) / 2 - 248px));
+    width: 220px;
+    max-height: calc(100vh - 110px);
+    overflow-y: auto;
+    z-index: 40;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    scrollbar-width: thin;
+}
+
+.toc-inner {
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--card);
+    padding: 0.85rem 0.95rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.toc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.55rem;
+}
+
+.toc-head-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+}
+
+.toc-head-top {
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+    text-decoration: none;
+}
+
+.toc-head-top:hover {
+    color: var(--ink);
+}
+
+.toc,
+.toc > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* 层级缩进：嵌套 ul 用左线体现从属 */
+.toc li > ul {
+    margin: 0.1rem 0 0.15rem 0.65rem;
+    padding-left: 0.55rem;
+    border-left: 1px solid var(--line);
+}
+
+.toc li {
+    margin: 0.12rem 0;
+}
+
+.toc a {
+    display: flex;
+    align-items: baseline;
+    gap: 0.4rem;
+    color: var(--ink-soft);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.toc a:hover {
+    color: var(--ink);
+}
+
+.toc a .box {
+    flex-shrink: 0;
+    width: 5px;
+    height: 5px;
+    margin-top: 0.45rem;
+    border-radius: 50%;
+    background: var(--ink-faint);
+    transition: background 0.15s ease;
+}
+
+.toc li.active > a {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.toc li.active > a .box {
+    background: var(--accent);
+}
+
+@media (max-width: 1360px) {
+    .toc-wrapper {
+        display: none;
+    }
+}
+</style>
+
 <script type="module">
   function createTocLink(heading) {
     const link = document.createElement('a');
@@ -19,6 +123,8 @@
 
   function setupToc() {
     if (document.querySelector('.toc-wrapper')) return;
+
+    const motionOK = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const article = document.querySelector('article');
     if (!article) return;
@@ -105,7 +211,7 @@
         if (!target) return;
 
         event.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        target.scrollIntoView({ behavior: motionOK ? 'smooth' : 'auto', block: 'start' });
         history.pushState(null, '', `#${targetId}`);
         setActive(targetId);
       });

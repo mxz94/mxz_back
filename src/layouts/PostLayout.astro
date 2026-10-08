@@ -4,10 +4,12 @@ import BaseLayout from "./BaseLayout.astro";
 import dayjs from "dayjs";
 import ReadingProgress from "../components/ReadingProgress.astro";
 import CodeCopyButton from "../components/CodeCopyButton.astro";
+import TableOfContents from "../components/TableOfContents.astro";
 
 export interface Props extends BlogSchema {
   hasCode?: boolean;
   hasArticleMedia?: boolean;
+  hasToc?: boolean;
 }
 
 const {
@@ -20,6 +22,7 @@ const {
   type,
   hasCode = false,
   hasArticleMedia = false,
+  hasToc = false,
 } = Astro.props;
 
 const displayDate = dayjs(pubDatetime).format("YYYY-MM-DD");
@@ -66,6 +69,8 @@ if (isBlog) {
 
     <a class="to-top" href="#top">↑ 回到顶部</a>
   </article>
+
+  {hasToc && <TableOfContents />}
 
   {hasCode && <CodeCopyButton />}
 
