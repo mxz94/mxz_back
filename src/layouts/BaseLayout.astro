@@ -9,6 +9,9 @@ const {
   title = SITE_TITLE,
   description = SITE_DESCRIPTION,
   ogType,
+  datePublished,
+  dateModified,
+  author,
   wide = false,
 } = Astro.props;
 
@@ -30,7 +33,7 @@ const activeHref =
   <head>
     <meta name="msvalidate.01" content="554974539F0479DABBAF2B9C6886C920" />
     <meta name="baidu-site-verification" content="codeva-Zb1fJaVwQk" />
-    <BaseHead title={title} description={description} image={image} ogType={ogType} />
+    <BaseHead title={title} description={description} image={image} ogType={ogType} datePublished={datePublished} dateModified={dateModified} author={author} />
   </head>
   <body>
     <span id="top"></span>

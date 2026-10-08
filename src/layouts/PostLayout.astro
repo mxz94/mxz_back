@@ -16,6 +16,7 @@ const {
   title,
   description,
   pubDatetime,
+  updatedDate,
   heroImage,
   badge,
   tags = [],
@@ -37,7 +38,14 @@ if (isBlog) {
 }
 ---
 
-<BaseLayout title={title} description={description} image={heroImage} ogType="article">
+<BaseLayout
+  title={title}
+  description={description}
+  image={heroImage}
+  ogType="article"
+  datePublished={pubDatetime?.toISOString()}
+  dateModified={updatedDate?.toISOString()}
+>
   <ReadingProgress />
 
   <article class="post-article">

@@ -59,6 +59,8 @@ const { navItems = [], activeHref = "" } = Astro.props;
     var root = document.documentElement;
     var next = root.dataset.theme === "dark" ? "light" : "dark";
     root.dataset.theme = next;
+    var meta = document.getElementById("theme-color-meta");
+    if (meta) meta.content = next === "dark" ? "#16181b" : "#fbfaf8";
     try {
       localStorage.setItem("theme", next);
     } catch (e) {}
